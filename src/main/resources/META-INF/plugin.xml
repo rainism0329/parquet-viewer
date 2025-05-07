@@ -1,0 +1,28 @@
+<idea-plugin>
+  <id>com.bigphil.parquetviewer</id>
+  <name>Parquet Viewer</name>
+  <version>1.0</version>
+  <vendor email="371418433@qq.com">Phil Zhang</vendor>
+
+  <description>Plugin for viewing Parquet files with column filtering and searching.</description>
+
+  <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
+                id="Parquet Viewer"
+                icon="/icons/Parquet Viewer T.svg"
+                anchor="bottom"/>
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
