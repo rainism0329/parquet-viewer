@@ -2,7 +2,7 @@
   <id>com.bigphil.parquetviewer</id>
   <name>Parquet Viewer</name>
   <version>1.0</version>
-  <vendor email="371418433@qq.com">Phil Zhang</vendor>
+  <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
   <description>Plugin for viewing Parquet files with column filtering and searching.</description>
 
