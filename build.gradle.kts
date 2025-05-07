@@ -1,17 +1,17 @@
 plugins {
-    kotlin("jvm") version "1.9.23" // 或者 1.8.22 等你喜欢的版本
+    kotlin("jvm") version "1.9.23"
     id("java")
     id("org.jetbrains.intellij") version "1.17.2"
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(11))  // 使用 Java 17
+    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 }
 
 intellij {
-    version.set("2021.2")         // 指定 IntelliJ IDEA 的版本
-    type.set("IU")                  // “IC” 表示 Community Edition
-    plugins.set(listOf("java"))           // 可选：添加依赖插件，例如 "java", "Kotlin" 等
+    version.set("2021.2")
+    type.set("IC")
+    plugins.set(listOf("java"))
 }
 
 repositories {
@@ -47,13 +47,13 @@ dependencies {
 
 tasks {
     patchPluginXml {
-        sinceBuild.set("212")       // 最低兼容的 IntelliJ 版本
-        untilBuild.set("241.*")     // 最高兼容的 IntelliJ 版本
+        sinceBuild.set("212")
+        untilBuild.set("241.*")
     }
 
     runIde {
 
-        jvmArgs = listOf("--add-opens=java.base/java.lang=ALL-UNNAMED")  // 有助于避免反射错误
+        jvmArgs = listOf("--add-opens=java.base/java.lang=ALL-UNNAMED")
     }
 }
 

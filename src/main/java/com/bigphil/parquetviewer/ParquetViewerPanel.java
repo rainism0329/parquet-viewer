@@ -77,6 +77,7 @@ public class ParquetViewerPanel {
         schemaArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
         dataTable = new JTable();
+        dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         dataScrollPane = new JScrollPane(dataTable);
 
         dataFilterField = new JTextField();
@@ -166,6 +167,15 @@ public class ParquetViewerPanel {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(mainPanel) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
+
+                if (!file.getName().toLowerCase().endsWith(".parquet")) {
+                    JOptionPane.showMessageDialog(mainPanel,
+                            "Please select a valid .parquet file.",
+                            "Invalid File Type",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 try {
                     loadFile(file);
                 } catch (IOException ex) {
@@ -310,8 +320,8 @@ public class ParquetViewerPanel {
 
         for (int i = 0; i < dataTable.getColumnCount(); i++) {
             TableColumn column = dataTable.getColumnModel().getColumn(i);
-            column.setPreferredWidth(150);
-            column.setMaxWidth(300);
+            column.setMinWidth(40);
+            column.setPreferredWidth(100);
         }
 
         int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
