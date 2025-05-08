@@ -25,9 +25,8 @@
             <li>Compare Parquet file contents without leaving your IDE</li>
           </ul>
 
-          <b>License:</b><br/>
-            This plugin is proprietary and distributed in binary form only. The source code is not publicly available.<br/>
-            © 2025 Phil Zhang. All rights reserved. Redistribution or reverse-engineering is prohibited.
+          <b>License:</b>
+          <p>Apache 2.0</p>
         ]]>
     </description>
 
