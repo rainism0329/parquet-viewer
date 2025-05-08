@@ -112,7 +112,9 @@ public class ParquetViewerPanel {
         mainPanel.add(contentPanel, BorderLayout.CENTER);
 
         // ===== Bottom: Pagination Controls + Show All Option + Export =====
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton prevButton = new JButton("<< Prev");
         JButton nextButton = new JButton("Next >>");
         pageInfoLabel = new JLabel("Page 0 of 0");
@@ -156,14 +158,17 @@ public class ParquetViewerPanel {
         totalRowLabel = new JLabel("Total rows: 0");
         filterCountLabel = new JLabel("Showing 0 of 0 rows");
 
-        bottomPanel.add(prevButton);
-        bottomPanel.add(pageInfoLabel);
-        bottomPanel.add(nextButton);
-        bottomPanel.add(showAllRowsCheckbox);
-        bottomPanel.add(exportCsvButton);
-        bottomPanel.add(Box.createHorizontalStrut(20));
-        bottomPanel.add(filterCountLabel);
-        bottomPanel.add(totalRowLabel);
+        leftBottomPanel.add(prevButton);
+        leftBottomPanel.add(pageInfoLabel);
+        leftBottomPanel.add(nextButton);
+        leftBottomPanel.add(showAllRowsCheckbox);
+        leftBottomPanel.add(exportCsvButton);
+
+        rightBottomPanel.add(filterCountLabel);
+        rightBottomPanel.add(Box.createHorizontalStrut(10));
+        rightBottomPanel.add(totalRowLabel);
+        bottomPanel.add(leftBottomPanel, BorderLayout.WEST);
+        bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -332,6 +337,7 @@ public class ParquetViewerPanel {
         int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
         pageInfoLabel.setText(showAllRowsCheckbox.isSelected() ? "All rows shown" : "Page " + currentPage + " of " + totalPages);
         tabbedPane.setSelectedIndex(1);
+        updateFilterCountLabel();
     }
 
     private void applyDataFilter() {
@@ -449,10 +455,7 @@ public class ParquetViewerPanel {
         sorter.setRowFilter(combinedFilter);
         dataTable.setRowSorter(sorter);
 
-        int total = dataTable.getModel().getRowCount();
-        int shown = dataTable.getRowCount();
-        String format = String.format("Showing %,d of %,d rows", shown, total);
-        filterCountLabel.setText(format);
+        updateFilterCountLabel();
     }
 
     private int getColumnIndex(String columnName) {
@@ -539,5 +542,26 @@ public class ParquetViewerPanel {
                         "• Spaces around operators are allowed";
 
         JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE, icon);
+    }
+
+    private void updateFilterCountLabel() {
+        TableModel model = dataTable.getModel();
+        RowSorter<? extends TableModel> sorter = dataTable.getRowSorter();
+
+        if (model == null) {
+            filterCountLabel.setText("No data loaded");
+            return;
+        }
+
+        int total = model.getRowCount();
+        int shown;
+
+        if (sorter != null && sorter.getViewRowCount() >= 0) {
+            shown = sorter.getViewRowCount();
+        } else {
+            shown = total;
+        }
+
+        filterCountLabel.setText(String.format("Showing %,d of %,d rows", shown, total));
     }
 }
