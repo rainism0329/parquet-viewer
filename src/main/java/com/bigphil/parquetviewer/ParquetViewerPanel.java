@@ -34,6 +34,7 @@ public class ParquetViewerPanel {
     private final JLabel totalRowLabel;
     private final JCheckBox showAllRowsCheckbox;
     private final JButton exportCsvButton;
+    private final JLabel filterCountLabel;
 
     private File currentFile;
     private MessageType currentSchema;
@@ -152,12 +153,16 @@ public class ParquetViewerPanel {
 
         exportCsvButton.addActionListener(e -> exportCurrentTableToCSV());
 
+        totalRowLabel = new JLabel("Total rows: 0");
+        filterCountLabel = new JLabel("Showing 0 of 0 rows");
+
         bottomPanel.add(prevButton);
         bottomPanel.add(pageInfoLabel);
         bottomPanel.add(nextButton);
         bottomPanel.add(showAllRowsCheckbox);
         bottomPanel.add(exportCsvButton);
-        totalRowLabel = new JLabel("Total rows: 0");
+        bottomPanel.add(Box.createHorizontalStrut(20));
+        bottomPanel.add(filterCountLabel);
         bottomPanel.add(totalRowLabel);
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -443,6 +448,11 @@ public class ParquetViewerPanel {
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(dataTable.getModel());
         sorter.setRowFilter(combinedFilter);
         dataTable.setRowSorter(sorter);
+
+        int total = dataTable.getModel().getRowCount();
+        int shown = dataTable.getRowCount();
+        String format = String.format("Showing %,d of %,d rows", shown, total);
+        filterCountLabel.setText(format);
     }
 
     private int getColumnIndex(String columnName) {
@@ -514,7 +524,7 @@ public class ParquetViewerPanel {
     }
 
     private void showFilterHelpDialog() {
-        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/donate1.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/donate3.png"));
         String helpText =
                 "Supported filter syntax (case-insensitive):\n\n" +
                         "name=Alice             — exact match\n" +
