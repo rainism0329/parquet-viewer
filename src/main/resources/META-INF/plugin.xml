@@ -1,28 +1,54 @@
 <idea-plugin>
-  <id>com.bigphil.parquetviewer</id>
-  <name>Parquet Viewer</name>
-  <version>1.0</version>
-  <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
+    <id>com.bigphil.parquetviewer</id>
+    <name>Parquet Viewer</name>
+    <version>1.0</version>
+    <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
-  <description>Plugin for viewing Parquet files with column filtering and searching.</description>
+    <description>
+        <![CDATA[
+          <b>Parquet Viewer</b> is a lightweight and efficient IntelliJ IDEA plugin that allows you to open and explore <code>.parquet</code> files directly within the IDE — no external tools required.<br/><br/>
 
-  <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
-  <idea-version since-build="173.0"/>
+          <b>Features:</b>
+          <ul>
+            <li>View Parquet schema in a tree format</li>
+            <li>Display data in a table with pagination and column filtering</li>
+            <li>Select specific columns to display</li>
+            <li>Auto-adjust column widths for better readability</li>
+            <li>Export current page or full data to CSV</li>
+            <li>Open multiple files with tabbed browsing</li>
+          </ul>
 
-  <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
-       on how to target different products -->
-  <depends>com.intellij.modules.platform</depends>
+          <b>Use Cases:</b>
+          <ul>
+            <li>Inspect Parquet files in big data, Spark, or Hadoop projects</li>
+            <li>Debug ETL pipelines and data flows within IntelliJ</li>
+            <li>Compare Parquet file contents without leaving your IDE</li>
+          </ul>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
-                id="Parquet Viewer"
-                icon="/icons/Parquet Viewer T.svg"
-                anchor="bottom"/>
-    <!-- Add your extensions here -->
-  </extensions>
+          <b>License:</b><br/>
+            This plugin is proprietary and distributed in binary form only. The source code is not publicly available.<br/>
+            © 2025 Phil Zhang. All rights reserved. Redistribution or reverse-engineering is prohibited.
+        ]]>
+    </description>
 
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
+                    id="Parquet Viewer"
+                    icon="/icons/Parquet Viewer T.svg"
+                    anchor="bottom"/>
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
 
 </idea-plugin>
