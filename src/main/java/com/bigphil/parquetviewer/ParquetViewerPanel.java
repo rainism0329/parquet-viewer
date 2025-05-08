@@ -514,6 +514,7 @@ public class ParquetViewerPanel {
     }
 
     private void showFilterHelpDialog() {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/donate1.png"));
         String helpText =
                 "Supported filter syntax (case-insensitive):\n\n" +
                         "name=Alice             — exact match\n" +
@@ -527,6 +528,6 @@ public class ParquetViewerPanel {
                         "• Strings are matched ignoring case\n" +
                         "• Spaces around operators are allowed";
 
-        JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE, icon);
     }
 }
