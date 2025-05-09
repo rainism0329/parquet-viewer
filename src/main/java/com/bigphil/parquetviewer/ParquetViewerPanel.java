@@ -35,6 +35,8 @@ public class ParquetViewerPanel {
     private final JCheckBox showAllRowsCheckbox;
     private final JButton exportCsvButton;
     private final JLabel filterCountLabel;
+    private final JButton applyColumnFilterBtn;
+    private boolean hasMatchingColumns = true;
 
     private File currentFile;
     private MessageType currentSchema;
@@ -66,8 +68,14 @@ public class ParquetViewerPanel {
 
         checkboxPanel = new JPanel();
         checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
+        applyColumnFilterBtn = new JButton("✔"); // or ✓
+        applyColumnFilterBtn.setToolTipText("Apply column filter and refresh data");
+        applyColumnFilterBtn.setPreferredSize(new Dimension(24, 20));
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.add(columnSearchField, BorderLayout.NORTH);
+        JPanel filterRow = new JPanel(new BorderLayout());
+        filterRow.add(columnSearchField, BorderLayout.CENTER);
+        filterRow.add(applyColumnFilterBtn, BorderLayout.EAST);
+        leftPanel.add(filterRow, BorderLayout.NORTH);
         leftPanel.add(new JScrollPane(checkboxPanel), BorderLayout.CENTER);
         leftPanel.setPreferredSize(new Dimension(200, 500));
         mainPanel.add(leftPanel, BorderLayout.WEST);
@@ -154,6 +162,8 @@ public class ParquetViewerPanel {
         });
 
         exportCsvButton.addActionListener(e -> exportCurrentTableToCSV());
+        exportCsvButton.setEnabled(false);
+        exportCsvButton.setToolTipText("Load a Parquet file to enable export");
 
         totalRowLabel = new JLabel("Total rows: 0");
         filterCountLabel = new JLabel("Showing 0 of 0 rows");
@@ -195,12 +205,22 @@ public class ParquetViewerPanel {
         });
 
         columnSearchField.addActionListener(e -> {
-            if (tabbedPane.getSelectedIndex() == 1 && currentFile!=null){
+            if (hasMatchingColumns && tabbedPane.getSelectedIndex() == 1 && currentFile!=null){
                 currentPage =1;
                 try {
                     showDataView(currentFile);
                 } catch (IOException ex) {
                     showError("❌ Failed to read file: " + ex.getMessage());
+                }
+            }
+        });
+
+        applyColumnFilterBtn.addActionListener(e -> {
+            if (tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
+                try {
+                    showDataView(currentFile);
+                } catch (IOException ex) {
+                    showError("❌ Failed to update data: " + ex.getMessage());
                 }
             }
         });
@@ -221,6 +241,8 @@ public class ParquetViewerPanel {
             currentPage = 1;
             totalRowCount = estimateTotalRowCount(file);
             totalRowLabel.setText("Total rows: " + totalRowCount);
+            exportCsvButton.setEnabled(true);
+            exportCsvButton.setToolTipText("Export current table to CSV file");
             showSchemaView();
             showDataView(file);
         }
@@ -240,6 +262,8 @@ public class ParquetViewerPanel {
     private void updateCheckboxes() {
         checkboxPanel.removeAll();
         String filter = columnSearchField.getText().trim().toLowerCase();
+
+        List<JCheckBox> matchingCheckBoxes = new ArrayList<>();
 
         for (String column : allColumns) {
             if (filter.isEmpty() || column.toLowerCase().contains(filter)) {
@@ -262,16 +286,23 @@ public class ParquetViewerPanel {
                     }
                 });
 
+                matchingCheckBoxes.add(checkBox);
                 checkboxPanel.add(checkBox);
             }
         }
 
+        if (matchingCheckBoxes.isEmpty()) {
+            checkboxPanel.add(new JLabel("No matching columns."));
+            hasMatchingColumns = false;
+            applyColumnFilterBtn.setEnabled(false);
+            pageInfoLabel.setText("No data");
+        } else {
+            hasMatchingColumns = true;
+            applyColumnFilterBtn.setEnabled(true);
+        }
+
         checkboxPanel.revalidate();
         checkboxPanel.repaint();
-
-        if (currentSchema != null ){
-            schemaArea.setText(currentSchema.toString());
-        }
     }
 
     private void showSchemaView() {
@@ -338,6 +369,7 @@ public class ParquetViewerPanel {
         pageInfoLabel.setText(showAllRowsCheckbox.isSelected() ? "All rows shown" : "Page " + currentPage + " of " + totalPages);
         tabbedPane.setSelectedIndex(1);
         updateFilterCountLabel();
+        exportCsvButton.setEnabled(true);
     }
 
     private void applyDataFilter() {
@@ -524,22 +556,28 @@ public class ParquetViewerPanel {
     private void showError(String message) {
         schemaArea.setText(message);
         tabbedPane.setSelectedIndex(0);
+        exportCsvButton.setEnabled(false);
+        exportCsvButton.setToolTipText("Load a Parquet file to enable export");
     }
 
     private void showFilterHelpDialog() {
         ImageIcon icon = new ImageIcon(getClass().getResource("/icons/donate3.png"));
         String helpText =
-                "Supported filter syntax (case-insensitive):\n\n" +
-                        "name=Alice             — exact match\n" +
-                        "age!=30                — not equal\n" +
-                        "score>80               — greater than\n" +
-                        "score<=90              — less than or equal\n" +
-                        "email~gmail            — contains substring\n" +
-                        "country=US AND age<40  — combine multiple conditions\n\n" +
-                        "Notes:\n" +
-                        "• Use AND to combine multiple filters\n" +
-                        "• Strings are matched ignoring case\n" +
-                        "• Spaces around operators are allowed";
+                "<html><body>" +
+                        "<h3>Supported Filter Syntax</h3>" +
+                        "<table cellpadding='6' cellspacing='0'>" +
+                        "<tr><td><b>name=Alice</b></td><td>Exact match</td></tr>" +
+                        "<tr><td><b>age!=30</b></td><td>Not equal</td></tr>" +
+                        "<tr><td><b>score&gt;80</b></td><td>Greater than</td></tr>" +
+                        "<tr><td><b>score&lt;=90</b></td><td>Less than or equal</td></tr>" +
+                        "<tr><td><b>email~gmail</b></td><td>Contains substring</td></tr>" +
+                        "<tr><td><b>country=US AND age&lt;40</b></td><td>Combine multiple filters</td></tr>" +
+                        "</table>" +
+                        "<br><i>Notes:</i>" +
+                        "<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Case-insensitive.</i>" +
+                        "<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Use AND to chain conditions.</i>" +
+                        "<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ means 'contains'.</i>" +
+                        "</body></html>";
 
         JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE, icon);
     }
