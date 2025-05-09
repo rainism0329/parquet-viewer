@@ -33,6 +33,8 @@ public class ParquetViewerPanel {
     private final JLabel pageInfoLabel;
     private final JLabel totalRowLabel;
     private final JCheckBox showAllRowsCheckbox;
+    private final JButton prevButton;
+    private final JButton nextButton;
     private final JButton exportCsvButton;
     private final JLabel filterCountLabel;
     private final JButton applyColumnFilterBtn;
@@ -61,9 +63,17 @@ public class ParquetViewerPanel {
         columnSearchField = new JTextField();
         columnSearchField.setToolTipText("Search columns");
         columnSearchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateCheckboxes(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateCheckboxes(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateCheckboxes(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateCheckboxes();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateCheckboxes();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateCheckboxes();
+            }
         });
 
         checkboxPanel = new JPanel();
@@ -92,9 +102,17 @@ public class ParquetViewerPanel {
         dataFilterField = new JTextField();
         dataFilterField.setToolTipText("Filter by value (any column)");
         dataFilterField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { applyDataFilter(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { applyDataFilter(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { applyDataFilter(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                applyDataFilter();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                applyDataFilter();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                applyDataFilter();
+            }
         });
 
         JPanel filterBar = new JPanel(new BorderLayout(5, 5));
@@ -123,8 +141,8 @@ public class ParquetViewerPanel {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton prevButton = new JButton("<< Prev");
-        JButton nextButton = new JButton("Next >>");
+        prevButton = new JButton("<< Prev");
+        nextButton = new JButton("Next >>");
         pageInfoLabel = new JLabel("Page 0 of 0");
         showAllRowsCheckbox = new JCheckBox("Show all rows");
         exportCsvButton = new JButton("Export CSV");
@@ -162,7 +180,10 @@ public class ParquetViewerPanel {
         });
 
         exportCsvButton.addActionListener(e -> exportCurrentTableToCSV());
+        prevButton.setEnabled(false);
+        nextButton.setEnabled(false);
         exportCsvButton.setEnabled(false);
+        showAllRowsCheckbox.setEnabled(false);
         exportCsvButton.setToolTipText("Load a Parquet file to enable export");
 
         totalRowLabel = new JLabel("Total rows: 0");
@@ -205,8 +226,8 @@ public class ParquetViewerPanel {
         });
 
         columnSearchField.addActionListener(e -> {
-            if (hasMatchingColumns && tabbedPane.getSelectedIndex() == 1 && currentFile!=null){
-                currentPage =1;
+            if (hasMatchingColumns && tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
+                currentPage = 1;
                 try {
                     showDataView(currentFile);
                 } catch (IOException ex) {
@@ -241,7 +262,10 @@ public class ParquetViewerPanel {
             currentPage = 1;
             totalRowCount = estimateTotalRowCount(file);
             totalRowLabel.setText("Total rows: " + totalRowCount);
+            prevButton.setEnabled(true);
+            nextButton.setEnabled(true);
             exportCsvButton.setEnabled(true);
+            showAllRowsCheckbox.setEnabled(true);
             exportCsvButton.setToolTipText("Export current table to CSV file");
             showSchemaView();
             showDataView(file);
@@ -272,7 +296,7 @@ public class ParquetViewerPanel {
 
                 checkBox.addActionListener(e -> {
                     int selectedCount = getSelectedColumns().size();
-                    if(!checkBox.isSelected()&& selectedCount<=0){
+                    if (!checkBox.isSelected() && selectedCount <= 0) {
                         checkBox.setSelected(true);
                         JOptionPane.showMessageDialog(mainPanel, "Please select at least one column.", "Warning", JOptionPane.WARNING_MESSAGE);
                     }
@@ -295,10 +319,15 @@ public class ParquetViewerPanel {
             checkboxPanel.add(new JLabel("No matching columns."));
             hasMatchingColumns = false;
             applyColumnFilterBtn.setEnabled(false);
-            pageInfoLabel.setText("No data");
+            showAllRowsCheckbox.setEnabled(false);
+            prevButton.setEnabled(false);
+            nextButton.setEnabled(false);
         } else {
             hasMatchingColumns = true;
             applyColumnFilterBtn.setEnabled(true);
+            showAllRowsCheckbox.setEnabled(true);
+            prevButton.setEnabled(true);
+            nextButton.setEnabled(true);
         }
 
         checkboxPanel.revalidate();
@@ -369,6 +398,22 @@ public class ParquetViewerPanel {
         pageInfoLabel.setText(showAllRowsCheckbox.isSelected() ? "All rows shown" : "Page " + currentPage + " of " + totalPages);
         tabbedPane.setSelectedIndex(1);
         updateFilterCountLabel();
+        if (!showAllRowsCheckbox.isSelected()){
+            if (currentPage == totalPages) {
+                prevButton.setEnabled(true);
+                nextButton.setEnabled(false);
+            } else if (currentPage == 1) {
+                prevButton.setEnabled(false);
+                nextButton.setEnabled(true);
+            } else {
+                prevButton.setEnabled(true);
+                nextButton.setEnabled(true);
+            }
+        } else {
+            prevButton.setEnabled(false);
+            nextButton.setEnabled(false);
+        }
+        showAllRowsCheckbox.setEnabled(true);
         exportCsvButton.setEnabled(true);
     }
 
@@ -556,6 +601,9 @@ public class ParquetViewerPanel {
     private void showError(String message) {
         schemaArea.setText(message);
         tabbedPane.setSelectedIndex(0);
+        prevButton.setEnabled(false);
+        nextButton.setEnabled(false);
+        showAllRowsCheckbox.setEnabled(false);
         exportCsvButton.setEnabled(false);
         exportCsvButton.setToolTipText("Load a Parquet file to enable export");
     }
