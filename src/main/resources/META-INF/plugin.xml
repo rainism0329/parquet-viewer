@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -15,14 +15,13 @@
             <li>Select specific columns to display</li>
             <li>Auto-adjust column widths for better readability</li>
             <li>Export current page or full data to CSV</li>
-            <li>Open multiple files with tabbed browsing</li>
           </ul>
 
           <b>Use Cases:</b>
           <ul>
             <li>Inspect Parquet files in big data, Spark, or Hadoop projects</li>
-            <li>Debug ETL pipelines and data flows within IntelliJ</li>
-            <li>Compare Parquet file contents without leaving your IDE</li>
+            <li>Quickly inspect and analyze a single Parquet file directly within IntelliJ.<li>
+	        <li>Built-in pagination, column filtering, and CSV export for efficient single-file data exploration.<li>
           </ul>
 
           <b>License:</b>
@@ -32,9 +31,7 @@
 
     <change-notes><![CDATA[
             <ul>
-                <li>Added multi-row filtering</li>
-                <li>Improved column auto-resize behavior</li>
-                <li>Minor UI fixes</li>
+                <li>Accurate description</li>
             </ul>
         ]]>
     </change-notes>
