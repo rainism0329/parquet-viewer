@@ -21,7 +21,7 @@
 
 ## Getting Started
 
-1. Install the plugin from [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/7306-parquet-viewer)
+1. Install the plugin from [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/27306-parquet-viewer)
 2. Launch IntelliJ IDEA
 3. Open the **Parquet Viewer Tool Window**
 4. Click **"Open File"** and select a `.parquet` file
