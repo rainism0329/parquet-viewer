@@ -1,6 +1,13 @@
 # Parquet Viewer for IntelliJ IDEA
 
+
+[![Version](https://img.shields.io/jetbrains/plugin/v/27306-parquet-viewer)](https://plugins.jetbrains.com/plugin/27306-parquet-viewer)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/27306-parquet-viewer)](https://plugins.jetbrains.com/plugin/27306-parquet-viewer)
+
+
+
 **Parquet Viewer** is a lightweight and intuitive IntelliJ IDEA plugin that allows you to open and explore `.parquet` files directly within the IDE — no need for external tools like Spark, Hadoop, or Jupyter.
+
 
 ---
 
@@ -19,7 +26,7 @@
 
 ## Getting Started
 
-1. Install the plugin from [Parquet View](https://plugins.jetbrains.com/plugin/27306-parquet-viewer) [![JetBrains Plugin](https://img.shields.io/jetbrains/plugin/v/27306-parquet-viewer.svg)](https://plugins.jetbrains.com/plugin/27306-parquet-viewer)
+1. Install the plugin from [JETBRAINS Marketplace](https://plugins.jetbrains.com/plugin/27306-parquet-viewer) 
 2. Launch IntelliJ IDEA
 3. Open the **Parquet Viewer Tool Window**
 4. Click **"Choose Parquet File"** and select a `.parquet` file
@@ -30,8 +37,7 @@
 ## Screenshots
 
 ![image](https://github.com/user-attachments/assets/beed502e-4a0d-4c63-9f5b-ba0ef14d9b87)
-![image](https://github.com/user-attachments/assets/8d67a4db-06cf-4b84-b1a1-4b9b2ed04cc3)
-
+<img src="https://github.com/user-attachments/assets/8d67a4db-06cf-4b84-b1a1-4b9b2ed04cc3" width="500"/>
 
 ---
 
