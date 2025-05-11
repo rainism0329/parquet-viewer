@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -31,9 +31,7 @@
 
     <change-notes><![CDATA[
             <ul>
-                <li>Add colourful icon</li>
-                <li>Support drag to open</li>
-                <li>Add filter hint</li>
+                <li>Removed some bugs and the people who wrote them.</li>
             </ul>
         ]]>
     </change-notes>
