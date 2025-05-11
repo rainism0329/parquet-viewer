@@ -15,6 +15,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +51,20 @@ public class ParquetViewerPanel {
     private final int pageSize = 500;
     private int totalRowCount = 0;
 
+    private boolean isDragOver = false;
+    private final Color normalBackground = UIManager.getColor("Panel.background");
+    private final Color highlightBackground = new Color(220, 240, 255);
+    private final JLabel dropHintLabel = new JLabel("Drop to open...");
+
     public ParquetViewerPanel() {
         mainPanel = new JPanel(new BorderLayout());
+        dropHintLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dropHintLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        dropHintLabel.setForeground(new Color(100, 100, 100, 160));
+        dropHintLabel.setVisible(false);
+
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(dropHintLabel, BorderLayout.CENTER);
 
         // ===== Top: File Selection + File Name =====
         JButton chooseFileButton = new JButton("📁 Choose Parquet File");
@@ -60,7 +75,7 @@ public class ParquetViewerPanel {
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
         // ===== Left: Column Selection + Search =====
-        columnSearchField = new JTextField();
+        columnSearchField = new HintTextField("Type column name...");
         columnSearchField.setToolTipText("Search columns");
         columnSearchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
@@ -99,7 +114,7 @@ public class ParquetViewerPanel {
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         dataScrollPane = new JScrollPane(dataTable);
 
-        dataFilterField = new JTextField();
+        dataFilterField = new HintTextField("e.g. name~Alice AND age>30");
         dataFilterField.setToolTipText("Filter by value (any column)");
         dataFilterField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
@@ -223,6 +238,62 @@ public class ParquetViewerPanel {
                     showError("❌ Failed to read file: " + ex.getMessage());
                 }
             }
+        });
+
+        new DropTarget(mainPanel, new DropTargetListener() {
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+                isDragOver = true;
+                mainPanel.setBackground(highlightBackground);
+                dropHintLabel.setVisible(true);
+                mainPanel.repaint();
+                dtde.acceptDrag(DnDConstants.ACTION_COPY);
+            }
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {
+                isDragOver = false;
+                mainPanel.setBackground(normalBackground);
+                dropHintLabel.setVisible(false);
+                mainPanel.repaint();
+            }
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                isDragOver = false;
+                mainPanel.setBackground(normalBackground);
+                dropHintLabel.setVisible(false);
+                mainPanel.repaint();
+
+                try {
+                    dtde.acceptDrop(DnDConstants.ACTION_COPY);
+                    Transferable transferable = dtde.getTransferable();
+                    if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                        @SuppressWarnings("unchecked")
+                        List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+                        for (File file : files) {
+                            if (file.getName().toLowerCase().endsWith(".parquet")) {
+                                loadFile(file);
+                                return;
+                            }
+                        }
+
+                        JOptionPane.showMessageDialog(mainPanel,
+                                "Only .parquet files are supported.",
+                                "Unsupported File",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    showError("❌ Failed to open dropped file: " + ex.getMessage());
+                } finally {
+                    dtde.dropComplete(true);
+                }
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {}
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {}
         });
 
         columnSearchField.addActionListener(e -> {
