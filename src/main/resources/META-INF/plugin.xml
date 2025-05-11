@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -20,8 +20,8 @@
           <b>Use Cases:</b>
           <ul>
             <li>Inspect Parquet files in big data, Spark, or Hadoop projects</li>
-            <li>Quickly inspect and analyze a single Parquet file directly within IntelliJ.<li>
-	        <li>Built-in pagination, column filtering, and CSV export for efficient single-file data exploration.<li>
+            <li>Quickly inspect and analyze a single Parquet file directly within IntelliJ.</li>
+	        <li>Built-in pagination, column filtering, and CSV export for efficient single-file data exploration.</li>
           </ul>
 
           <b>License:</b>
