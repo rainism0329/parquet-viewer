@@ -18,6 +18,8 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -316,6 +318,11 @@ public class ParquetViewerPanel {
                 }
             }
         });
+
+        schemaArea.setTransferHandler(null);
+        columnSearchField.setTransferHandler(null);
+        dataFilterField.setTransferHandler(null);
+//        dataTable.setTransferHandler(null);
     }
 
     public JPanel getContent() {
@@ -469,7 +476,7 @@ public class ParquetViewerPanel {
         pageInfoLabel.setText(showAllRowsCheckbox.isSelected() ? "All rows shown" : "Page " + currentPage + " of " + totalPages);
         tabbedPane.setSelectedIndex(1);
         updateFilterCountLabel();
-        if (!showAllRowsCheckbox.isSelected()){
+        if (!showAllRowsCheckbox.isSelected()) {
             if (currentPage == totalPages) {
                 prevButton.setEnabled(true);
                 nextButton.setEnabled(false);
