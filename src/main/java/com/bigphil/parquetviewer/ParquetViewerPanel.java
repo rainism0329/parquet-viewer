@@ -64,9 +64,15 @@ public class ParquetViewerPanel {
         // ===== Top: File Selection + File Name =====
         JButton chooseFileButton = new JButton("📁 Choose Parquet File");
         fileLabel = new JLabel("No file selected");
+        JLabel tipLabel = new JLabel("Tip: You can also drag and drop a .parquet file to open it.");
+        tipLabel.setForeground(Color.GRAY);
+        tipLabel.setFont(tipLabel.getFont().deriveFont(Font.ITALIC, 11f));
+        tipLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(chooseFileButton, BorderLayout.WEST);
         topPanel.add(fileLabel, BorderLayout.CENTER);
+        topPanel.add(tipLabel, BorderLayout.EAST);
         wholeContentPanel.add(topPanel, BorderLayout.NORTH);
 
         // ===== Left: Column Selection + Search =====
@@ -259,19 +265,6 @@ public class ParquetViewerPanel {
         schemaArea.setTransferHandler(null);
         columnSearchField.setTransferHandler(null);
         dataFilterField.setTransferHandler(null);
-//        dataTable.setTransferHandler(null);
-
-//        DropOverlayPanel dropOverlay = new DropOverlayPanel();
-//        dropOverlay.setOpaque(false);
-//        mainPanel.add(dropOverlay);
-//        mainPanel.setComponentZOrder(dropOverlay, 0); // put overlay at the front
-//
-//        mainPanel.addComponentListener(new ComponentAdapter() {
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//                dropOverlay.setBounds(0, 0, mainPanel.getWidth(), mainPanel.getHeight());
-//            }
-//        });
 
         ParquetDropSupport.install(mainPanel, file -> {
             try {
