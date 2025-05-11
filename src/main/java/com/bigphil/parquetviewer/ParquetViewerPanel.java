@@ -466,73 +466,29 @@ public class ParquetViewerPanel {
                     if (colIndex == -1) continue;
                     filters.add(RowFilter.notFilter(RowFilter.regexFilter("(?i)^" + java.util.regex.Pattern.quote(val) + "$", getColumnIndex(col))));
                 }
-            } else if (part.contains(">=")) {
+            } if (part.contains(">=")) {
                 String[] kv = part.split(">=");
                 if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    double val = Double.parseDouble(kv[1].trim());
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(new RowFilter<>() {
-                        public boolean include(Entry<?, ?> entry) {
-                            try {
-                                return Double.parseDouble(entry.getValue(getColumnIndex(col)).toString()) >= val;
-                            } catch (Exception e) {
-                                return false;
-                            }
-                        }
-                    });
+                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), ">=", kv[1].trim());
+                    if (f != null) filters.add(f);
                 }
             } else if (part.contains("<=")) {
                 String[] kv = part.split("<=");
                 if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    double val = Double.parseDouble(kv[1].trim());
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(new RowFilter<>() {
-                        public boolean include(Entry<?, ?> entry) {
-                            try {
-                                return Double.parseDouble(entry.getValue(getColumnIndex(col)).toString()) <= val;
-                            } catch (Exception e) {
-                                return false;
-                            }
-                        }
-                    });
+                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), "<=", kv[1].trim());
+                    if (f != null) filters.add(f);
                 }
             } else if (part.contains(">")) {
                 String[] kv = part.split(">");
                 if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    double val = Double.parseDouble(kv[1].trim());
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(new RowFilter<>() {
-                        public boolean include(Entry<?, ?> entry) {
-                            try {
-                                return Double.parseDouble(entry.getValue(getColumnIndex(col)).toString()) > val;
-                            } catch (Exception e) {
-                                return false;
-                            }
-                        }
-                    });
+                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), ">", kv[1].trim());
+                    if (f != null) filters.add(f);
                 }
             } else if (part.contains("<")) {
                 String[] kv = part.split("<");
                 if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    double val = Double.parseDouble(kv[1].trim());
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(new RowFilter<>() {
-                        public boolean include(Entry<?, ?> entry) {
-                            try {
-                                return Double.parseDouble(entry.getValue(getColumnIndex(col)).toString()) < val;
-                            } catch (Exception e) {
-                                return false;
-                            }
-                        }
-                    });
+                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), "<", kv[1].trim());
+                    if (f != null) filters.add(f);
                 }
             } else if (part.contains("~")) {
                 String[] kv = part.split("~");
@@ -677,5 +633,40 @@ public class ParquetViewerPanel {
         }
 
         filterCountLabel.setText(String.format("Showing %,d of %,d rows", shown, total));
+    }
+
+    private RowFilter<Object, Object> createComparisonFilter(String col, String op, String valStr) {
+        int colIndex = getColumnIndex(col);
+        if (colIndex == -1) return null;
+
+        double target;
+        try {
+            target = Double.parseDouble(valStr);
+        } catch (NumberFormatException e) {
+            return null; // Invalid number
+        }
+
+        return new RowFilter<>() {
+            public boolean include(Entry<?, ?> entry) {
+                Object cellObj = entry.getValue(colIndex);
+                if (cellObj == null) return false;
+
+                String cell = cellObj.toString();
+                double actual;
+                try {
+                    actual = Double.parseDouble(cell);
+                } catch (NumberFormatException e) {
+                    return false; // Not a number: exclude
+                }
+
+                switch (op) {
+                    case ">":  return actual >  target;
+                    case "<":  return actual <  target;
+                    case ">=": return actual >= target;
+                    case "<=": return actual <= target;
+                    default:   return false;
+                }
+            }
+        };
     }
 }
