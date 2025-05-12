@@ -186,10 +186,14 @@ public class ParquetViewerPanel {
 
         showAllRowsCheckbox.addActionListener(e -> {
             currentPage = 1;
-            try {
-                showDataView(currentFile);
-            } catch (IOException ex) {
-                showError("❌ Failed to update data: " + ex.getMessage());
+            if (showAllRowsCheckbox.isSelected()) {
+                showAllRowsWithLoadingDialog(currentFile);
+            } else {
+                try {
+                    showDataView(currentFile);
+                } catch (IOException ex) {
+                    showError("❌ Failed to update data: " + ex.getMessage());
+                }
             }
         });
 
@@ -666,5 +670,45 @@ public class ParquetViewerPanel {
                 }
             }
         };
+    }
+
+    private void showAllRowsWithLoadingDialog(File file) {
+        // Create dialog
+        JDialog loadingDialog = new JDialog((Frame) null, "Loading", false); // Non-modal
+        loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        loadingDialog.setResizable(false);
+        loadingDialog.setAlwaysOnTop(true);
+
+        // Content panel with custom icon + text
+        JPanel content = new JPanel(new BorderLayout(10, 10));
+        content.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/icons/loading.gif"));
+        Image scaledImage = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_DEFAULT);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        JLabel iconLabel = new JLabel(scaledIcon);
+        JLabel textLabel = new JLabel("Loading all rows, please wait...");
+        textLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+        content.add(iconLabel, BorderLayout.WEST);
+        content.add(textLabel, BorderLayout.CENTER);
+
+        loadingDialog.getContentPane().add(content);
+        loadingDialog.pack();
+
+        // Center relative to main panel
+        loadingDialog.setLocationRelativeTo(mainPanel);
+        loadingDialog.setVisible(true);
+
+        // Start background thread
+        new Thread(() -> {
+            try {
+                showDataView(file);
+            } catch (IOException e) {
+                SwingUtilities.invokeLater(() -> showError("❌ Failed to load data: " + e.getMessage()));
+            } finally {
+                SwingUtilities.invokeLater(loadingDialog::dispose);
+            }
+        }).start();
     }
 }

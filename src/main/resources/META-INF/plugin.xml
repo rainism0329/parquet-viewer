@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.2.4</version>
+    <version>1.2.6</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -48,8 +48,8 @@
         <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
                     id="Parquet Viewer"
                     icon="/icons/Parquet Viewer T.svg"
-                    anchor="bottom"/>
-        <!-- Add your extensions here -->
+                        anchor="bottom"/>
+            <!-- Add your extensions here -->
     </extensions>
 
     <actions>

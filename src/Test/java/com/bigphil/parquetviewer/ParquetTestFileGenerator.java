@@ -14,7 +14,6 @@ import java.io.IOException;
 
 public class ParquetTestFileGenerator {
     public static void main(String[] args) throws Exception {
-        // 1. 定义 Avro schema（用字符串写最方便）
         String schemaJson = "{\n" +
                 "  \"type\": \"record\",\n" +
                 "  \"name\": \"TestRecord\",\n" +
@@ -46,30 +45,23 @@ public class ParquetTestFileGenerator {
 
         Schema schema = new Schema.Parser().parse(schemaJson);
 
-        // 2. 创建 ParquetWriter
         File file = new File("test/test2.parquet");
 
-// 确保目录存在
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
             parent.mkdirs();
         }
-
-// 如果文件已存在，删除
         if (file.exists()) {
             if (!file.delete()) {
                 throw new IOException("Failed to delete existing file: " + file.getAbsolutePath());
             }
         }
-
-// 然后创建 ParquetWriter，路径保持一致
         ParquetWriter<GenericRecord> writer = AvroParquetWriter.<GenericRecord>builder(new Path(file.getPath()))
                 .withSchema(schema)
                 .withCompressionCodec(CompressionCodecName.SNAPPY)
                 .build();
 
-        // 3. 写入数据
-        for (int i = 1; i <= 5010; i++) {
+        for (int i = 1; i <= 1005010; i++) {
             GenericRecord record = new GenericData.Record(schema);
             record.put("id", i);
             record.put("name", "item-" + i);
