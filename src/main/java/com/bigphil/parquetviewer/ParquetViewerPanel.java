@@ -292,6 +292,7 @@ public class ParquetViewerPanel {
             currentPage = 1;
             totalRowCount = estimateTotalRowCount(file);
             totalRowLabel.setText("Total rows: " + totalRowCount);
+            showAllRowsCheckbox.setSelected(false);
             prevButton.setEnabled(true);
             nextButton.setEnabled(true);
             exportCsvButton.setEnabled(true);
