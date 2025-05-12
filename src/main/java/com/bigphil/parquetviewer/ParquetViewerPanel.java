@@ -511,6 +511,26 @@ public class ParquetViewerPanel {
                     if (colIndex == -1) continue;
                     filters.add(RowFilter.regexFilter("(?i)^" + java.util.regex.Pattern.quote(val) + "$", getColumnIndex(col)));
                 }
+            } else if (part.toUpperCase().endsWith("IS NULL")) {
+                String col = part.substring(0, part.toUpperCase().indexOf("IS NULL")).trim();
+                int colIndex = getColumnIndex(col);
+                if (colIndex == -1) continue;
+                filters.add(new RowFilter<>() {
+                    public boolean include(Entry<?, ?> entry) {
+                        Object val = entry.getValue(colIndex);
+                        return val == null || val.toString().isEmpty();
+                    }
+                });
+            } else if (part.toUpperCase().endsWith("IS NOT NULL")) {
+                String col = part.substring(0, part.toUpperCase().indexOf("IS NOT NULL")).trim();
+                int colIndex = getColumnIndex(col);
+                if (colIndex == -1) continue;
+                filters.add(new RowFilter<>() {
+                    public boolean include(Entry<?, ?> entry) {
+                        Object val = entry.getValue(colIndex);
+                        return val != null && !val.toString().isEmpty();
+                    }
+                });
             }
         }
 
@@ -606,6 +626,8 @@ public class ParquetViewerPanel {
                         "<tr><td><b>score&gt;80</b></td><td>Greater than</td></tr>" +
                         "<tr><td><b>score&lt;=90</b></td><td>Less than or equal</td></tr>" +
                         "<tr><td><b>email~gmail</b></td><td>Contains substring</td></tr>" +
+                        "<tr><td><b>email IS NULL</b></td><td>Is null</td></tr>" +
+                        "<tr><td><b>email IS NOT NULL</b></td><td>Is not null</td></tr>" +
                         "<tr><td><b>country=US AND age&lt;40</b></td><td>Combine multiple filters</td></tr>" +
                         "</table>" +
                         "<br><i>Notes:</i>" +
