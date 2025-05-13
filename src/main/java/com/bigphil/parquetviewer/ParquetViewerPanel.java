@@ -154,9 +154,6 @@ public class ParquetViewerPanel {
         wholeContentPanel.add(contentPanel, BorderLayout.CENTER);
 
         // ===== Bottom: Pagination Controls + Show All Option + Export =====
-//        JPanel bottomPanel = new JPanel(new BorderLayout());
-//        JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-//        JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 10, 5, 10);
@@ -223,11 +220,7 @@ public class ParquetViewerPanel {
             if (currentPage > 1) {
                 currentPage--;
                 withLoadingDialog("Refreshing data...", () -> {
-                    try {
-                        showDataView(currentFile);
-                    } catch (IOException ex) {
-                        SwingUtilities.invokeLater(() -> showError("❌ Failed to read file: " + ex.getMessage()));
-                    }
+                    triggerShowDataViewDebounced(currentFile);
                 });
             }
         });
@@ -237,11 +230,7 @@ public class ParquetViewerPanel {
             if (currentPage < totalPages) {
                 currentPage++;
                 withLoadingDialog("Refreshing data...", () -> {
-                    try {
-                        showDataView(currentFile);
-                    } catch (IOException ex) {
-                        SwingUtilities.invokeLater(() -> showError("❌ Failed to read file: " + ex.getMessage()));
-                    }
+                    triggerShowDataViewDebounced(currentFile);
                 });
             }
         });
@@ -249,11 +238,7 @@ public class ParquetViewerPanel {
         showAllRowsCheckbox.addActionListener(e -> {
             currentPage = 1;
             withLoadingDialog("Refreshing data...", () -> {
-                try {
-                    showDataView(currentFile);
-                } catch (IOException ex) {
-                    SwingUtilities.invokeLater(() -> showError("❌ Failed to refresh: " + ex.getMessage()));
-                }
+                triggerShowDataViewDebounced(currentFile);
             });
         });
 
@@ -277,19 +262,6 @@ public class ParquetViewerPanel {
         exportButton.setEnabled(false);
         showAllRowsCheckbox.setEnabled(false);
         exportButton.setToolTipText("Load a Parquet file to enable export");
-
-//        leftBottomPanel.add(prevButton);
-//        leftBottomPanel.add(pageInfoLabel);
-//        leftBottomPanel.add(nextButton);
-//        leftBottomPanel.add(showAllRowsCheckbox);
-//        leftBottomPanel.add(exportFormatBox);
-//        leftBottomPanel.add(exportButton);
-//
-//        rightBottomPanel.add(filterCountLabel);
-//        rightBottomPanel.add(Box.createHorizontalStrut(10));
-//        rightBottomPanel.add(totalRowLabel);
-//        bottomPanel.add(leftBottomPanel, BorderLayout.WEST);
-//        bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
 
         wholeContentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -319,11 +291,7 @@ public class ParquetViewerPanel {
             if (hasMatchingColumns && tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
                 currentPage = 1;
                 withLoadingDialog("Refreshing data...", () -> {
-                    try {
-                        showDataView(currentFile);
-                    } catch (IOException ex) {
-                        SwingUtilities.invokeLater(() -> showError("❌ Failed to read file: " + ex.getMessage()));
-                    }
+                    triggerShowDataViewDebounced(currentFile);
                 });
             }
         });
@@ -331,11 +299,7 @@ public class ParquetViewerPanel {
         applyColumnFilterBtn.addActionListener(e -> {
             if (tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
                 withLoadingDialog("Refreshing data...", () -> {
-                    try {
-                        showDataView(currentFile);
-                    } catch (IOException ex) {
-                        SwingUtilities.invokeLater(() -> showError("❌ Failed to read file: " + ex.getMessage()));
-                    }
+                    triggerShowDataViewDebounced(currentFile);
                 });
             }
         });
@@ -417,11 +381,7 @@ public class ParquetViewerPanel {
                     if (tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
                         currentPage = 1;
                         withLoadingDialog("Refreshing data...", () -> {
-                            try {
-                                showDataView(currentFile);
-                            } catch (IOException ex) {
-                                SwingUtilities.invokeLater(() -> showError("❌ Failed to read file: " + ex.getMessage()));
-                            }
+                            triggerShowDataViewDebounced(currentFile);
                         });
                     }
                 });
@@ -883,5 +843,24 @@ public class ParquetViewerPanel {
                 SwingUtilities.invokeLater(loadingDialog::dispose);
             }
         }).start();
+    }
+
+    private Timer debounceTimer;
+
+    private void triggerShowDataViewDebounced(File file) {
+        if (debounceTimer != null && debounceTimer.isRunning()) {
+            debounceTimer.stop(); // cancel the previous showDataView
+        }
+
+        debounceTimer = new Timer(200, e -> {
+            try {
+                showDataView(file); // only run th last time
+            } catch (IOException ex) {
+                showError("❌ Failed to load data: " + ex.getMessage());
+            }
+        });
+
+        debounceTimer.setRepeats(false); // only run once
+        debounceTimer.start(); // start after 200ms
     }
 }
