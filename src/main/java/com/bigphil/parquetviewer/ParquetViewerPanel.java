@@ -1,5 +1,6 @@
 package com.bigphil.parquetviewer;
 
+import com.intellij.openapi.ui.ComboBox;
 import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.convert.GroupRecordConverter;
@@ -38,10 +39,11 @@ public class ParquetViewerPanel {
     private final JCheckBox showAllRowsCheckbox;
     private final JButton prevButton;
     private final JButton nextButton;
-    private final JButton exportCsvButton;
+    private final JButton exportButton;
     private final JLabel filterCountLabel;
     private final JButton applyColumnFilterBtn;
     private boolean hasMatchingColumns = true;
+    private final JComboBox<String> exportFormatBox;
 
     private File currentFile;
     private MessageType currentSchema;
@@ -159,7 +161,9 @@ public class ParquetViewerPanel {
         nextButton = new JButton("Next >>");
         pageInfoLabel = new JLabel("Page 0 of 0");
         showAllRowsCheckbox = new JCheckBox("Show all rows");
-        exportCsvButton = new JButton("Export CSV");
+        exportFormatBox = new ComboBox<>(new String[]{"CSV", "JSON"});
+        exportFormatBox.setSelectedItem("CSV");
+        exportButton = new JButton("Export CSV");
 
         prevButton.addActionListener(e -> {
             if (currentPage > 1) {
@@ -199,12 +203,25 @@ public class ParquetViewerPanel {
             });
         });
 
-        exportCsvButton.addActionListener(e -> exportCurrentTableToCSV());
+        exportFormatBox.addActionListener(e -> {
+            String selected = (String) exportFormatBox.getSelectedItem();
+            exportButton.setText("Export " + selected.toUpperCase());
+        });
+
+        exportButton.addActionListener(e -> {
+            String format = (String) exportFormatBox.getSelectedItem();
+            if ("JSON".equalsIgnoreCase(format)) {
+                exportTableToJson();
+            } else {
+                exportCurrentTableToCSV();
+            }
+        });
         prevButton.setEnabled(false);
         nextButton.setEnabled(false);
-        exportCsvButton.setEnabled(false);
+        exportFormatBox.setEnabled(false);
+        exportButton.setEnabled(false);
         showAllRowsCheckbox.setEnabled(false);
-        exportCsvButton.setToolTipText("Load a Parquet file to enable export");
+        exportButton.setToolTipText("Load a Parquet file to enable export");
 
         totalRowLabel = new JLabel("Total rows: 0");
         filterCountLabel = new JLabel("Showing 0 of 0 rows");
@@ -213,7 +230,8 @@ public class ParquetViewerPanel {
         leftBottomPanel.add(pageInfoLabel);
         leftBottomPanel.add(nextButton);
         leftBottomPanel.add(showAllRowsCheckbox);
-        leftBottomPanel.add(exportCsvButton);
+        leftBottomPanel.add(exportFormatBox);
+        leftBottomPanel.add(exportButton);
 
         rightBottomPanel.add(filterCountLabel);
         rightBottomPanel.add(Box.createHorizontalStrut(10));
@@ -301,9 +319,10 @@ public class ParquetViewerPanel {
             showAllRowsCheckbox.setSelected(false);
             prevButton.setEnabled(true);
             nextButton.setEnabled(true);
-            exportCsvButton.setEnabled(true);
+            exportFormatBox.setEnabled(true);
+            exportButton.setEnabled(true);
             showAllRowsCheckbox.setEnabled(true);
-            exportCsvButton.setToolTipText("Export current table to CSV file");
+            exportButton.setToolTipText("Export current table to "+exportFormatBox.getSelectedItem()+" file");
             showSchemaView();
             withLoadingDialog("Refreshing data...", () -> {
                 try {
@@ -459,7 +478,8 @@ public class ParquetViewerPanel {
             nextButton.setEnabled(false);
         }
         showAllRowsCheckbox.setEnabled(true);
-        exportCsvButton.setEnabled(true);
+        exportFormatBox.setEnabled(true);
+        exportButton.setEnabled(true);
     }
 
     private void applyDataFilter() {
@@ -621,6 +641,58 @@ public class ParquetViewerPanel {
         }
     }
 
+    private void exportTableToJson() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Export JSON");
+
+        if (currentFile != null) {
+            String defaultName = currentFile.getName().replaceAll("\\.parquet$", "") + ".json";
+            fileChooser.setSelectedFile(new File(defaultName));
+        }
+
+        int userSelection = fileChooser.showSaveDialog(mainPanel);
+        if (userSelection != JFileChooser.APPROVE_OPTION) return;
+
+        File fileToSave = fileChooser.getSelectedFile();
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fileToSave))) {
+            TableModel model = dataTable.getModel();
+            TableRowSorter<?> sorter = (TableRowSorter<?>) dataTable.getRowSorter();
+
+            int rowCount = dataTable.getRowCount();
+            pw.println("[");
+            for (int viewRow = 0; viewRow < rowCount; viewRow++) {
+                int modelRow = dataTable.convertRowIndexToModel(viewRow);
+                pw.print("  {");
+                for (int col = 0; col < model.getColumnCount(); col++) {
+                    String key = jsonEscape(model.getColumnName(col));
+                    Object val = model.getValueAt(modelRow, col);
+                    String jsonVal = val == null ? "null" : "\"" + jsonEscape(val.toString()) + "\"";
+                    pw.print("\"" + key + "\":" + jsonVal);
+                    if (col < model.getColumnCount() - 1) pw.print(", ");
+                }
+                pw.print("}");
+                if (viewRow < rowCount - 1) pw.println(",");
+                else pw.println();
+            }
+            pw.println("]");
+
+            JOptionPane.showMessageDialog(mainPanel, "Exported to:\n" + fileToSave.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(mainPanel, "Failed to export JSON: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private String jsonEscape(String s) {
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t")
+                .replace("\b", "\\b")
+                .replace("\f", "\\f");
+    }
+
     private String escapeForCsv(Object value) {
         if (value == null) return "";
         String str = value.toString();
@@ -637,8 +709,9 @@ public class ParquetViewerPanel {
         prevButton.setEnabled(false);
         nextButton.setEnabled(false);
         showAllRowsCheckbox.setEnabled(false);
-        exportCsvButton.setEnabled(false);
-        exportCsvButton.setToolTipText("Load a Parquet file to enable export");
+        exportFormatBox.setEnabled(false);
+        exportButton.setEnabled(false);
+        exportButton.setToolTipText("Load a Parquet file to enable export");
     }
 
     private void showFilterHelpDialog() {
