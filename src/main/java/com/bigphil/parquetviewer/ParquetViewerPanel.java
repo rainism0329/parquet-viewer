@@ -596,18 +596,20 @@ public class ParquetViewerPanel {
             TableModel model = dataTable.getModel();
             TableRowSorter<?> sorter = (TableRowSorter<?>) dataTable.getRowSorter();
 
+            // Header
             for (int col = 0; col < model.getColumnCount(); col++) {
-                pw.print(model.getColumnName(col));
+                pw.print(escapeForCsv(model.getColumnName(col)));
                 if (col < model.getColumnCount() - 1) pw.print(",");
             }
             pw.println();
 
+            // Rows (filtered view)
             int rowCount = dataTable.getRowCount();
             for (int viewRow = 0; viewRow < rowCount; viewRow++) {
                 int modelRow = dataTable.convertRowIndexToModel(viewRow);
                 for (int col = 0; col < model.getColumnCount(); col++) {
                     Object val = model.getValueAt(modelRow, col);
-                    pw.print(val != null ? val.toString().replaceAll(",", " ") : "");
+                    pw.print(escapeForCsv(val));
                     if (col < model.getColumnCount() - 1) pw.print(",");
                 }
                 pw.println();
@@ -617,6 +619,16 @@ public class ParquetViewerPanel {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(mainPanel, "Failed to export CSV: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private String escapeForCsv(Object value) {
+        if (value == null) return "";
+        String str = value.toString();
+        if (str.contains(",") || str.contains("\"") || str.contains("\n")) {
+            str = str.replace("\"", "\"\"");
+            return "\"" + str + "\"";
+        }
+        return str;
     }
 
     private void showError(String message) {

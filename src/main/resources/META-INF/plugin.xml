@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -32,7 +32,7 @@
     <change-notes><![CDATA[
             <ul>
                 <li>Added support for newer IntelliJ IDEA versions.</li>
-                <li>Removed some bugs and the people who wrote them.</li>
+                <li>Improve export CSV function.</li>
             </ul>
         ]]>
     </change-notes>
