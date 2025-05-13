@@ -154,16 +154,70 @@ public class ParquetViewerPanel {
         wholeContentPanel.add(contentPanel, BorderLayout.CENTER);
 
         // ===== Bottom: Pagination Controls + Show All Option + Export =====
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+//        JPanel bottomPanel = new JPanel(new BorderLayout());
+//        JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+//        JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 10, 5, 10);
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+
         prevButton = new JButton("<< Prev");
         nextButton = new JButton("Next >>");
         pageInfoLabel = new JLabel("Page 0 of 0");
         showAllRowsCheckbox = new JCheckBox("Show all rows");
         exportFormatBox = new ComboBox<>(new String[]{"CSV", "JSON"});
+
+        JLabel exportInfoLabel = new JLabel("Export type:");
         exportFormatBox.setSelectedItem("CSV");
+        exportFormatBox.setToolTipText("Select export format");
         exportButton = new JButton("Export CSV");
+        totalRowLabel = new JLabel("Total rows: 0");
+        filterCountLabel = new JLabel("Showing 0 of 0 rows");
+
+        // ===== Left Group: Pagination Controls =====
+        JPanel leftGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        prevButton.setPreferredSize(new Dimension(80, 26));
+        nextButton.setPreferredSize(new Dimension(80, 26));
+        pageInfoLabel.setPreferredSize(new Dimension(110, 26));
+        showAllRowsCheckbox.setPreferredSize(new Dimension(130, 26));
+        leftGroup.add(prevButton);
+        leftGroup.add(pageInfoLabel);
+        leftGroup.add(nextButton);
+        leftGroup.add(showAllRowsCheckbox);
+
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 0.3;
+        bottomPanel.add(leftGroup, gbc);
+
+        // ===== Center Group: Show All + Export =====
+        JPanel centerGroup = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        exportInfoLabel.setPreferredSize(new Dimension(90, 26));
+        exportFormatBox.setPreferredSize(new Dimension(90, 26));
+        exportButton.setPreferredSize(new Dimension(120, 26));
+        centerGroup.add(exportInfoLabel);
+        centerGroup.add(exportFormatBox);
+        centerGroup.add(exportButton);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 0.4;
+        bottomPanel.add(centerGroup, gbc);
+
+        // ===== Right Group: Row Count Summary =====
+        JPanel rightGroup = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        filterCountLabel.setPreferredSize(new Dimension(200, 26));
+        totalRowLabel.setPreferredSize(new Dimension(140, 26));
+        rightGroup.add(filterCountLabel);
+        rightGroup.add(totalRowLabel);
+
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.weightx = 0.3;
+        bottomPanel.add(rightGroup, gbc);
 
         prevButton.addActionListener(e -> {
             if (currentPage > 1) {
@@ -205,6 +259,7 @@ public class ParquetViewerPanel {
 
         exportFormatBox.addActionListener(e -> {
             String selected = (String) exportFormatBox.getSelectedItem();
+            exportButton.setToolTipText("Export current table to " + selected + " file");
             exportButton.setText("Export " + selected.toUpperCase());
         });
 
@@ -223,21 +278,18 @@ public class ParquetViewerPanel {
         showAllRowsCheckbox.setEnabled(false);
         exportButton.setToolTipText("Load a Parquet file to enable export");
 
-        totalRowLabel = new JLabel("Total rows: 0");
-        filterCountLabel = new JLabel("Showing 0 of 0 rows");
-
-        leftBottomPanel.add(prevButton);
-        leftBottomPanel.add(pageInfoLabel);
-        leftBottomPanel.add(nextButton);
-        leftBottomPanel.add(showAllRowsCheckbox);
-        leftBottomPanel.add(exportFormatBox);
-        leftBottomPanel.add(exportButton);
-
-        rightBottomPanel.add(filterCountLabel);
-        rightBottomPanel.add(Box.createHorizontalStrut(10));
-        rightBottomPanel.add(totalRowLabel);
-        bottomPanel.add(leftBottomPanel, BorderLayout.WEST);
-        bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
+//        leftBottomPanel.add(prevButton);
+//        leftBottomPanel.add(pageInfoLabel);
+//        leftBottomPanel.add(nextButton);
+//        leftBottomPanel.add(showAllRowsCheckbox);
+//        leftBottomPanel.add(exportFormatBox);
+//        leftBottomPanel.add(exportButton);
+//
+//        rightBottomPanel.add(filterCountLabel);
+//        rightBottomPanel.add(Box.createHorizontalStrut(10));
+//        rightBottomPanel.add(totalRowLabel);
+//        bottomPanel.add(leftBottomPanel, BorderLayout.WEST);
+//        bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
 
         wholeContentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -322,7 +374,7 @@ public class ParquetViewerPanel {
             exportFormatBox.setEnabled(true);
             exportButton.setEnabled(true);
             showAllRowsCheckbox.setEnabled(true);
-            exportButton.setToolTipText("Export current table to "+exportFormatBox.getSelectedItem()+" file");
+            exportButton.setToolTipText("Export current table to " + exportFormatBox.getSelectedItem() + " file");
             showSchemaView();
             withLoadingDialog("Refreshing data...", () -> {
                 try {
@@ -503,7 +555,8 @@ public class ParquetViewerPanel {
                     if (colIndex == -1) continue;
                     filters.add(RowFilter.notFilter(RowFilter.regexFilter("(?i)^" + java.util.regex.Pattern.quote(val) + "$", getColumnIndex(col))));
                 }
-            } if (part.contains(">=")) {
+            }
+            if (part.contains(">=")) {
                 String[] kv = part.split(">=");
                 if (kv.length == 2) {
                     RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), ">=", kv[1].trim());
@@ -784,11 +837,16 @@ public class ParquetViewerPanel {
                 }
 
                 switch (op) {
-                    case ">":  return actual >  target;
-                    case "<":  return actual <  target;
-                    case ">=": return actual >= target;
-                    case "<=": return actual <= target;
-                    default:   return false;
+                    case ">":
+                        return actual > target;
+                    case "<":
+                        return actual < target;
+                    case ">=":
+                        return actual >= target;
+                    case "<=":
+                        return actual <= target;
+                    default:
+                        return false;
                 }
             }
         };
