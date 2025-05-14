@@ -140,28 +140,27 @@ public class MvelExpressionPreprocessor {
     private static String buildLikeCondition(String field, String pattern, boolean negation) {
         // Convert the SQL wildcard pattern to a condition.
         // We handle leading/trailing '%' wildcards.
-        String lcPattern = pattern.toLowerCase();  // case-insensitive matching
         String condition;
-        if (lcPattern.startsWith("%") && lcPattern.endsWith("%")) {
+        if (pattern.startsWith("%") && pattern.endsWith("%")) {
             // Both leading and trailing wildcard: use contains
-            String inner = lcPattern.substring(1, lcPattern.length() - 1);
+            String inner = pattern.substring(1, pattern.length() - 1);
             // Escape quotes and backslashes in the pattern for safe insertion into the string literal
             String safeInner = inner.replace("\\", "\\\\").replace("\"", "\\\"");
-            condition = field + " != null && " + field + ".toLowerCase().contains(\"" + safeInner + "\")";
-        } else if (lcPattern.startsWith("%")) {
+            condition = field + " != null && " + field + ".contains(\"" + safeInner + "\")";
+        } else if (pattern.startsWith("%")) {
             // Leading wildcard only: use endsWith
-            String inner = lcPattern.substring(1);
+            String inner = pattern.substring(1);
             String safeInner = inner.replace("\\", "\\\\").replace("\"", "\\\"");
-            condition = field + " != null && " + field + ".toLowerCase().endsWith(\"" + safeInner + "\")";
-        } else if (lcPattern.endsWith("%")) {
+            condition = field + " != null && " + field + ".endsWith(\"" + safeInner + "\")";
+        } else if (pattern.endsWith("%")) {
             // Trailing wildcard only: use startsWith
-            String inner = lcPattern.substring(0, lcPattern.length() - 1);
+            String inner = pattern.substring(0, pattern.length() - 1);
             String safeInner = inner.replace("\\", "\\\\").replace("\"", "\\\"");
-            condition = field + " != null && " + field + ".toLowerCase().startsWith(\"" + safeInner + "\")";
+            condition = field + " != null && " + field + ".startsWith(\"" + safeInner + "\")";
         } else {
             // No wildcards: use equals for exact match (case-insensitive)
-            String safePattern = lcPattern.replace("\\", "\\\\").replace("\"", "\\\"");
-            condition = field + " != null && " + field + ".toLowerCase().equals(\"" + safePattern + "\")";
+            String safePattern = pattern.replace("\\", "\\\\").replace("\"", "\\\"");
+            condition = field + " != null && " + field + ".equals(\"" + safePattern + "\")";
         }
         if (negation) {
             // For NOT LIKE, negate the entire condition.
@@ -240,14 +239,12 @@ public class MvelExpressionPreprocessor {
         condition.append(field).append(" != null && (");
         for (int idx = 0; idx < values.size(); idx++) {
             String val = values.get(idx);
-            boolean valIsString = isString.get(idx);
             if (idx > 0) {
                 condition.append(" || ");
             }
             if (hasStringValue) {
-                String lowerVal = val.toLowerCase();
-                String safeVal = lowerVal.replace("\\", "\\\\").replace("\"", "\\\"");
-                condition.append(field).append(".toLowerCase().equals(\"").append(safeVal).append("\")");
+                String safeVal = val.replace("\\", "\\\\").replace("\"", "\\\"");
+                condition.append(field).append(".equals(\"").append(safeVal).append("\")");
             } else {
                 condition.append(field).append(" == ").append(val.trim());
             }
