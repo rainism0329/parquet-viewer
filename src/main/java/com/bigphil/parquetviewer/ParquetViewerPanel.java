@@ -21,7 +21,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiPredicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ParquetViewerPanel {
     private final JPanel mainPanel;
@@ -495,97 +501,12 @@ public class ParquetViewerPanel {
     }
 
     private void applyDataFilter() {
-        String filterText = dataFilterField.getText().trim();
-        if (filterText.isEmpty()) {
-            dataTable.setRowSorter(null);
-            return;
-        }
-
-        String[] parts = filterText.split("(?i)\\s+AND\\s+");
-        List<RowFilter<Object, Object>> filters = new ArrayList<>();
-
-        for (String part : parts) {
-            part = part.trim();
-            if (part.contains("!=")) {
-                String[] kv = part.split("!=");
-                if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    String val = kv[1].trim();
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(RowFilter.notFilter(RowFilter.regexFilter("(?i)^" + java.util.regex.Pattern.quote(val) + "$", getColumnIndex(col))));
-                }
-            }
-            if (part.contains(">=")) {
-                String[] kv = part.split(">=");
-                if (kv.length == 2) {
-                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), ">=", kv[1].trim());
-                    if (f != null) filters.add(f);
-                }
-            } else if (part.contains("<=")) {
-                String[] kv = part.split("<=");
-                if (kv.length == 2) {
-                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), "<=", kv[1].trim());
-                    if (f != null) filters.add(f);
-                }
-            } else if (part.contains(">")) {
-                String[] kv = part.split(">");
-                if (kv.length == 2) {
-                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), ">", kv[1].trim());
-                    if (f != null) filters.add(f);
-                }
-            } else if (part.contains("<")) {
-                String[] kv = part.split("<");
-                if (kv.length == 2) {
-                    RowFilter<Object, Object> f = createComparisonFilter(kv[0].trim(), "<", kv[1].trim());
-                    if (f != null) filters.add(f);
-                }
-            } else if (part.contains("~")) {
-                String[] kv = part.split("~");
-                if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    String val = kv[1].trim();
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(val), getColumnIndex(col)));
-                }
-            } else if (part.contains("=")) {
-                String[] kv = part.split("=");
-                if (kv.length == 2) {
-                    String col = kv[0].trim();
-                    String val = kv[1].trim();
-                    int colIndex = getColumnIndex(col);
-                    if (colIndex == -1) continue;
-                    filters.add(RowFilter.regexFilter("(?i)^" + java.util.regex.Pattern.quote(val) + "$", getColumnIndex(col)));
-                }
-            } else if (part.toUpperCase().endsWith("IS NULL")) {
-                String col = part.substring(0, part.toUpperCase().indexOf("IS NULL")).trim();
-                int colIndex = getColumnIndex(col);
-                if (colIndex == -1) continue;
-                filters.add(new RowFilter<>() {
-                    public boolean include(Entry<?, ?> entry) {
-                        Object val = entry.getValue(colIndex);
-                        return val == null || val.toString().isEmpty();
-                    }
-                });
-            } else if (part.toUpperCase().endsWith("IS NOT NULL")) {
-                String col = part.substring(0, part.toUpperCase().indexOf("IS NOT NULL")).trim();
-                int colIndex = getColumnIndex(col);
-                if (colIndex == -1) continue;
-                filters.add(new RowFilter<>() {
-                    public boolean include(Entry<?, ?> entry) {
-                        Object val = entry.getValue(colIndex);
-                        return val != null && !val.toString().isEmpty();
-                    }
-                });
-            }
-        }
-
-        RowFilter<Object, Object> combinedFilter = RowFilter.andFilter(filters);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(dataTable.getModel());
-        sorter.setRowFilter(combinedFilter);
+        TableModel model = dataTable.getModel();
+        String text = dataFilterField.getText();
+        RowFilter<TableModel, Integer> filter = new DataFilterParser(model).parse(text);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+        sorter.setRowFilter(filter);
         dataTable.setRowSorter(sorter);
-
         updateFilterCountLabel();
     }
 
@@ -733,19 +654,28 @@ public class ParquetViewerPanel {
                 "<html><body>" +
                         "<h3>Supported Filter Syntax</h3>" +
                         "<table cellpadding='6' cellspacing='0'>" +
-                        "<tr><td><b>name=Alice</b></td><td>Exact match</td></tr>" +
-                        "<tr><td><b>age!=30</b></td><td>Not equal</td></tr>" +
-                        "<tr><td><b>score&gt;80</b></td><td>Greater than</td></tr>" +
-                        "<tr><td><b>score&lt;=90</b></td><td>Less than or equal</td></tr>" +
-                        "<tr><td><b>email~gmail</b></td><td>Contains substring</td></tr>" +
-                        "<tr><td><b>email IS NULL</b></td><td>Is null</td></tr>" +
-                        "<tr><td><b>email IS NOT NULL</b></td><td>Is not null</td></tr>" +
-                        "<tr><td><b>country=US AND age&lt;40</b></td><td>Combine multiple filters</td></tr>" +
+                        "<tr><td><b>name = Alice</b></td><td>Exact match</td></tr>" +
+                        "<tr><td><b>age != 30</b></td><td>Not equal</td></tr>" +
+                        "<tr><td><b>score &gt; 80</b></td><td>Greater than</td></tr>" +
+                        "<tr><td><b>score &lt;= 90</b></td><td>Less than or equal</td></tr>" +
+                        "<tr><td><b>email ~ gmail</b></td><td>Contains substring</td></tr>" +
+                        "<tr><td><b>email IS NULL</b></td><td>Value is null</td></tr>" +
+                        "<tr><td><b>email IS NOT NULL</b></td><td>Value is not null</td></tr>" +
+                        "<tr><td><b>country IN (US, UK)</b></td><td>One of the listed values</td></tr>" +
+                        "<tr><td><b>status NOT IN (expired, closed)</b></td><td>None of the listed values</td></tr>" +
+                        "<tr><td><b>name LIKE Al%</b></td><td>Starts with 'Al'</td></tr>" +
+                        "<tr><td><b>name NOT LIKE %bob%</b></td><td>Does not contain 'bob'</td></tr>" +
+                        "<tr><td><b>age &gt; 25 AND country = US</b></td><td>Multiple conditions (AND)</td></tr>" +
+                        "<tr><td><b>city = NY OR city = LA</b></td><td>Either condition (OR)</td></tr>" +
                         "</table>" +
                         "<br><i>Notes:</i>" +
-                        "<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Case-insensitive.</i>" +
-                        "<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Use AND to chain conditions.</i>" +
-                        "<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ~ means 'contains'.</i>" +
+                        "<ul>" +
+                        "<li>Case-insensitive matching</li>" +
+                        "<li>Use AND / OR to combine conditions</li>" +
+                        "<li>IN/NOT IN use comma-separated values in parentheses</li>" +
+                        "<li>LIKE supports % wildcard (e.g., %foo, bar%)</li>" +
+                        "<li>~ means 'contains substring'</li>" +
+                        "</ul>" +
                         "</body></html>";
 
         JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE, icon);
