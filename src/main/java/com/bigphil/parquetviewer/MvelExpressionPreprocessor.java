@@ -178,9 +178,8 @@ public class MvelExpressionPreprocessor {
      * @return a string representing the equivalent MVEL condition for the IN list
      */
     private static String buildInCondition(String field, String valuesStr, boolean negation) {
-        // Parse the values inside the IN (...) list. They may be quoted strings or unquoted numbers/identifiers.
         List<String> values = new ArrayList<>();
-        List<Boolean> isString = new ArrayList<>();  // parallel list to mark which values are strings
+        List<Boolean> isString = new ArrayList<>();
         String s = valuesStr.trim();
         int len = s.length();
         StringBuilder token = new StringBuilder();
@@ -188,28 +187,23 @@ public class MvelExpressionPreprocessor {
         for (int i = 0; i < len; i++) {
             char c = s.charAt(i);
             if (inQuote) {
-                // Currently reading a quoted string value
                 if (c == '\\' && i + 1 < len) {
-                    // Handle escape sequence by skipping the backslash and adding the next char literally
                     token.append(s.charAt(i + 1));
                     i++;
                 } else if (c == '\'') {
-                    // End of quoted value
                     inQuote = false;
                     values.add(token.toString());
                     isString.add(true);
                     token.setLength(0);
                 } else {
-                    // Regular character inside quotes
                     token.append(c);
                 }
             } else {
-                // Not currently inside a quote
                 if (c == '\'') {
-                    // Begin quoted string
                     inQuote = true;
+                    // bug fix here, clear the token before "'"
+                    token.setLength(0);
                 } else if (c == ',') {
-                    // Comma delimiter between values
                     String val = token.toString().trim();
                     if (!val.isEmpty()) {
                         values.add(val);
@@ -217,22 +211,17 @@ public class MvelExpressionPreprocessor {
                     }
                     token.setLength(0);
                 } else if (c == ')') {
-                    // End of list
                     String val = token.toString().trim();
                     if (!val.isEmpty()) {
                         values.add(val);
                         isString.add(false);
                     }
                     token.setLength(0);
-                    // We don't break here because we want to finish loop, but
-                    // effectively there should be no more values after ')'.
                 } else {
-                    // Part of an unquoted value (number or identifier)
                     token.append(c);
                 }
             }
         }
-        // If there's a token accumulated and not added (in case the list didn't end with a comma or quote)
         if (token.length() > 0) {
             String val = token.toString().trim();
             if (!val.isEmpty()) {
@@ -241,25 +230,14 @@ public class MvelExpressionPreprocessor {
             }
         }
 
-        // Build the condition string.
         if (values.isEmpty()) {
-            // No values in the list: "field IN ()" is always false, "field NOT IN ()" is always true.
             return negation ? "true" : "false";
         }
 
-        // Determine if any value is a string (to decide case-insensitive comparison).
-        boolean hasStringValue = false;
-        for (boolean strFlag : isString) {
-            if (strFlag) {
-                hasStringValue = true;
-                break;
-            }
-        }
+        boolean hasStringValue = isString.contains(true);
 
         StringBuilder condition = new StringBuilder();
         condition.append(field).append(" != null && (");
-        // We include a null-check to avoid NullPointer if field is null.
-        // (In an IN list, if field is null, the condition will evaluate to false for IN, true for NOT IN after negation.)
         for (int idx = 0; idx < values.size(); idx++) {
             String val = values.get(idx);
             boolean valIsString = isString.get(idx);
@@ -267,23 +245,16 @@ public class MvelExpressionPreprocessor {
                 condition.append(" || ");
             }
             if (hasStringValue) {
-                // If any value is a string, we perform case-insensitive string comparison for all values.
-                // (Treat numeric values as strings as well if mixed, to be consistent in comparison type.)
                 String lowerVal = val.toLowerCase();
-                // Quote and escape the value for inclusion in the expression string.
                 String safeVal = lowerVal.replace("\\", "\\\\").replace("\"", "\\\"");
                 condition.append(field).append(".toLowerCase().equals(\"").append(safeVal).append("\")");
             } else {
-                // All values are non-string (numbers or booleans). Use direct equality.
                 condition.append(field).append(" == ").append(val.trim());
             }
         }
         condition.append(")");
 
         String condStr = condition.toString();
-        if (negation) {
-            return "!(" + condStr + ")";
-        }
-        return condStr;
+        return negation ? "!(" + condStr + ")" : condStr;
     }
 }
