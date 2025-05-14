@@ -38,6 +38,8 @@ dependencies {
     implementation("org.apache.parquet:parquet-common:1.13.1") {
         exclude(group = "org.slf4j")
     }
+    // build.gradle
+    implementation("org.mvel:mvel2:2.4.12.Final")
 
     // JUnit 测试框架
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

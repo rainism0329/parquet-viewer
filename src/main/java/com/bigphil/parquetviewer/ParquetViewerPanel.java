@@ -121,21 +121,9 @@ public class ParquetViewerPanel {
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         dataScrollPane = new JScrollPane(dataTable);
 
-        dataFilterField = new HintTextField("e.g. name~Alice AND age>30");
-        dataFilterField.setToolTipText("Filter by value (any column)");
-        dataFilterField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                applyDataFilter();
-            }
-
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                applyDataFilter();
-            }
-
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                applyDataFilter();
-            }
-        });
+        dataFilterField = new HintTextField("e.g. name='Alice' AND age<30 — press Enter to apply");
+        dataFilterField.setToolTipText("Type filter expression and press Enter to apply");
+        dataFilterField.addActionListener(e -> applyDataFilter());
 
         JPanel filterBar = new JPanel(new BorderLayout(5, 5));
         filterBar.add(dataFilterField, BorderLayout.CENTER);
@@ -501,13 +489,19 @@ public class ParquetViewerPanel {
     }
 
     private void applyDataFilter() {
-        TableModel model = dataTable.getModel();
-        String text = dataFilterField.getText();
-        RowFilter<TableModel, Integer> filter = new DataFilterParser(model).parse(text);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
-        sorter.setRowFilter(filter);
-        dataTable.setRowSorter(sorter);
-        updateFilterCountLabel();
+        String filterText = dataFilterField.getText().trim();
+        try {
+            DataFilterParser parser = new DataFilterParser(dataTable.getModel());
+            RowFilter<TableModel, Integer> filter = parser.parse(filterText);
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(dataTable.getModel());
+            sorter.setRowFilter(filter);
+            dataTable.setRowSorter(sorter);
+            updateFilterCountLabel();
+        } catch (Exception e) {
+//            System.err.println("Filter parse error: " + e.getMessage());
+            // Optional: show user-friendly message or fallback
+            JOptionPane.showMessageDialog(mainPanel, "Invalid filter syntax", "Filter Error", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private int getColumnIndex(String columnName) {
@@ -651,32 +645,30 @@ public class ParquetViewerPanel {
     private void showFilterHelpDialog() {
         ImageIcon icon = new ImageIcon(getClass().getResource("/icons/donate3.png"));
         String helpText =
-                "<html><body>" +
-                        "<h3>Supported Filter Syntax</h3>" +
-                        "<table cellpadding='6' cellspacing='0'>" +
-                        "<tr><td><b>name = Alice</b></td><td>Exact match</td></tr>" +
-                        "<tr><td><b>age != 30</b></td><td>Not equal</td></tr>" +
-                        "<tr><td><b>score &gt; 80</b></td><td>Greater than</td></tr>" +
-                        "<tr><td><b>score &lt;= 90</b></td><td>Less than or equal</td></tr>" +
-                        "<tr><td><b>email ~ gmail</b></td><td>Contains substring</td></tr>" +
-                        "<tr><td><b>email IS NULL</b></td><td>Value is null</td></tr>" +
-                        "<tr><td><b>email IS NOT NULL</b></td><td>Value is not null</td></tr>" +
-                        "<tr><td><b>country IN (US, UK)</b></td><td>One of the listed values</td></tr>" +
-                        "<tr><td><b>status NOT IN (expired, closed)</b></td><td>None of the listed values</td></tr>" +
-                        "<tr><td><b>name LIKE Al%</b></td><td>Starts with 'Al'</td></tr>" +
-                        "<tr><td><b>name NOT LIKE %bob%</b></td><td>Does not contain 'bob'</td></tr>" +
-                        "<tr><td><b>age &gt; 25 AND country = US</b></td><td>Multiple conditions (AND)</td></tr>" +
-                        "<tr><td><b>city = NY OR city = LA</b></td><td>Either condition (OR)</td></tr>" +
-                        "</table>" +
-                        "<br><i>Notes:</i>" +
-                        "<ul>" +
-                        "<li>Case-insensitive matching</li>" +
-                        "<li>Use AND / OR to combine conditions</li>" +
-                        "<li>IN/NOT IN use comma-separated values in parentheses</li>" +
-                        "<li>LIKE supports % wildcard (e.g., %foo, bar%)</li>" +
-                        "<li>~ means 'contains substring'</li>" +
-                        "</ul>" +
-                        "</body></html>";
+                "<html><body style='width: 320px'>"
+                        + "<h3>Supported Filter Syntax</h3>"
+                        + "<table cellpadding='4' cellspacing='0'>"
+                        + "<tr><td><b>name = 'Alice'</b></td><td>String equals</td></tr>"
+                        + "<tr><td><b>age != 30</b></td><td>Not equal</td></tr>"
+                        + "<tr><td><b>score &gt;= 80</b></td><td>Numeric comparison</td></tr>"
+                        + "<tr><td><b>country IN ('US', 'UK')</b></td><td>In list</td></tr>"
+                        + "<tr><td><b>status NOT IN ('X', 'Y')</b></td><td>Not in list</td></tr>"
+                        + "<tr><td><b>email IS NULL</b></td><td>Is null</td></tr>"
+                        + "<tr><td><b>email IS NOT NULL</b></td><td>Not null</td></tr>"
+                        + "<tr><td><b>name LIKE '%son'</b></td><td>Ends with 'son'</td></tr>"
+                        + "<tr><td><b>status NOT LIKE '%error%'</b></td><td>Does not contain 'error'</td></tr>"
+                        + "<tr><td><b>name = 'Alice' AND age &lt; 30</b></td><td>Combine conditions</td></tr>"
+                        + "<tr><td><b>(region = 'EU' OR region = 'US')</b></td><td>Group with parentheses</td></tr>"
+                        + "</table>"
+                        + "<p><b>Notes:</b></p>"
+                        + "<ul>"
+                        + "<li>All string comparisons are case-sensitive</li>"
+                        + "<li>Use single quotes around string values</li>"
+                        + "<li>Supported operators: =, !=, &gt;, &lt;, &gt;=, &lt;=</li>"
+                        + "<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IN, NOT IN, LIKE, NOT LIKE, IS NULL, IS NOT NULL</li>"
+                        + "<li>Use AND / OR and parentheses to combine expressions</li>"
+                        + "</ul>"
+                        + "</body></html>";
 
         JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE, icon);
     }
