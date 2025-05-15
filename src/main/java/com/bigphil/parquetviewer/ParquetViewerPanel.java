@@ -213,9 +213,7 @@ public class ParquetViewerPanel {
         prevButton.addActionListener(e -> {
             if (currentPage > 1) {
                 currentPage--;
-                withLoadingDialog("Refreshing data...", () -> {
-                    triggerShowDataViewDebounced(currentFile);
-                });
+                withDebouncedLoadingDataView(currentFile, "Refreshing data...");
             }
         });
 
@@ -223,17 +221,13 @@ public class ParquetViewerPanel {
             int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
             if (currentPage < totalPages) {
                 currentPage++;
-                withLoadingDialog("Refreshing data...", () -> {
-                    triggerShowDataViewDebounced(currentFile);
-                });
+                withDebouncedLoadingDataView(currentFile, "Refreshing data...");
             }
         });
 
         showAllRowsCheckbox.addActionListener(e -> {
             currentPage = 1;
-            withLoadingDialog("Refreshing data...", () -> {
-                triggerShowDataViewDebounced(currentFile);
-            });
+            withDebouncedLoadingDataView(currentFile, "Refreshing data...");
         });
 
         exportFormatBox.addActionListener(e -> {
@@ -284,17 +278,13 @@ public class ParquetViewerPanel {
         columnSearchField.addActionListener(e -> {
             if (hasMatchingColumns && tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
                 currentPage = 1;
-                withLoadingDialog("Refreshing data...", () -> {
-                    triggerShowDataViewDebounced(currentFile);
-                });
+                withDebouncedLoadingDataView(currentFile, "Refreshing data...");
             }
         });
 
         applyColumnFilterBtn.addActionListener(e -> {
             if (tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
-                withLoadingDialog("Refreshing data...", () -> {
-                    triggerShowDataViewDebounced(currentFile);
-                });
+                withDebouncedLoadingDataView(currentFile, "Refreshing data...");
             }
         });
 
@@ -374,9 +364,7 @@ public class ParquetViewerPanel {
                     }
                     if (tabbedPane.getSelectedIndex() == 1 && currentFile != null) {
                         currentPage = 1;
-                        withLoadingDialog("Refreshing data...", () -> {
-                            triggerShowDataViewDebounced(currentFile);
-                        });
+                        withDebouncedLoadingDataView(currentFile, "Refreshing data...");
                     }
                 });
 
@@ -743,10 +731,9 @@ public class ParquetViewerPanel {
         JPanel content = new JPanel(new BorderLayout(10, 10));
         content.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/icons/loading.gif"));
-        Image scaledImage = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_DEFAULT);
-        ImageIcon scaledIcon = new ImageIcon(scaledImage);
-        JLabel iconLabel = new JLabel(scaledIcon);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/loading.gif"));
+        Image scaled = icon.getImage().getScaledInstance(32, 32, Image.SCALE_DEFAULT);
+        JLabel iconLabel = new JLabel(new ImageIcon(scaled));
         JLabel textLabel = new JLabel(message);
         textLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
@@ -756,11 +743,14 @@ public class ParquetViewerPanel {
         loadingDialog.getContentPane().add(content);
         loadingDialog.pack();
         loadingDialog.setLocationRelativeTo(mainPanel);
-        loadingDialog.setVisible(true);
 
+        // 执行线程
         new Thread(() -> {
             try {
+                SwingUtilities.invokeLater(() -> loadingDialog.setVisible(true));
                 task.run();
+            } catch (Exception ex) {
+                SwingUtilities.invokeLater(() -> showError("❌ Failed: " + ex.getMessage()));
             } finally {
                 SwingUtilities.invokeLater(loadingDialog::dispose);
             }
@@ -769,20 +759,23 @@ public class ParquetViewerPanel {
 
     private Timer debounceTimer;
 
-    private void triggerShowDataViewDebounced(File file) {
+    private void withDebouncedLoadingDataView(File file, String loadingMessage) {
         if (debounceTimer != null && debounceTimer.isRunning()) {
-            debounceTimer.stop(); // cancel the previous showDataView
+            debounceTimer.stop();
         }
 
         debounceTimer = new Timer(200, e -> {
-            try {
-                showDataView(file); // only run th last time
-            } catch (IOException ex) {
-                showError("❌ Failed to load data: " + ex.getMessage());
-            }
+            withLoadingDialog(loadingMessage, () -> {
+                try {
+                    showDataView(file);
+                } catch (IOException ex) {
+                    showError("❌ Failed to load data: " + ex.getMessage());
+                }
+            });
         });
 
-        debounceTimer.setRepeats(false); // only run once
-        debounceTimer.start(); // start after 200ms
+        debounceTimer.setRepeats(false);
+        debounceTimer.start();
     }
+
 }
