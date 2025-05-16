@@ -1,6 +1,8 @@
 package com.bigphil.parquetviewer;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.JBColor;
 import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.convert.GroupRecordConverter;
@@ -16,6 +18,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -631,7 +635,6 @@ public class ParquetViewerPanel {
     }
 
     private void showFilterHelpDialog() {
-        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/donate3.png"));
         String helpText =
                 "<html><body style='width: 320px'>"
                         + "<h3>Supported Filter Syntax</h3>"
@@ -652,13 +655,71 @@ public class ParquetViewerPanel {
                         + "<ul>"
                         + "<li>All string comparisons are case-sensitive</li>"
                         + "<li>Use single quotes around string values</li>"
-                        + "<li>Supported operators: =, !=, &gt;, &lt;, &gt;=, &lt;=</li>"
-                        + "<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IN, NOT IN, LIKE, NOT LIKE, IS NULL, IS NOT NULL</li>"
                         + "<li>Use AND / OR and parentheses to combine expressions</li>"
                         + "</ul>"
                         + "</body></html>";
 
-        JOptionPane.showMessageDialog(mainPanel, helpText, "Data Filter Help", JOptionPane.INFORMATION_MESSAGE, icon);
+        JLabel htmlLabel = new JLabel(helpText);
+        htmlLabel.setPreferredSize(new Dimension(400, 320));
+
+        JPanel panel = new JPanel(new BorderLayout(10, 0));
+        panel.add(createDonationPanel(), BorderLayout.WEST);
+        panel.add(htmlLabel, BorderLayout.CENTER);
+
+        JOptionPane.showMessageDialog(mainPanel, panel, "Data Filter Help", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private JPanel createDonationPanel() {
+        // Load QR image (donate3.png as your main donation QR)
+        ImageIcon qrIcon = new ImageIcon(getClass().getResource("/icons/donate3.png"));
+        JLabel qrLabel = new JLabel(qrIcon);
+        qrLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Emotion-triggering message
+        JLabel supportLabel = new JLabel("Enjoying the plugin?");
+        supportLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
+        supportLabel.setForeground(new Color(0xCC6600)); // Warm orange
+        supportLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Clickable PayPal label
+        JLabel paypalLabel = new JLabel("<html><u>Donate via PayPal</u></html>");
+        paypalLabel.setForeground(JBColor.BLUE);
+        paypalLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        paypalLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        paypalLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BrowserUtil.browse("https://www.paypal.me/bigphilzhang");
+            }
+        });
+
+        // Clickable Ko-fi label
+        JLabel kofiLabel = new JLabel("<html><u>Donate via Ko-fi</u></html>");
+        kofiLabel.setForeground(JBColor.BLUE);
+        kofiLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        kofiLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        kofiLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BrowserUtil.browse("https://ko-fi.com/philipzhang51603");
+            }
+        });
+
+        /// Panel using BoxLayout (same visual effect as Box.createVerticalBox)
+        JPanel donationPanel = new JPanel();
+        donationPanel.setLayout(new BoxLayout(donationPanel, BoxLayout.Y_AXIS));
+        donationPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        donationPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        donationPanel.add(qrLabel);
+        donationPanel.add(Box.createVerticalStrut(10));
+        donationPanel.add(supportLabel);
+        donationPanel.add(Box.createVerticalStrut(8));
+        donationPanel.add(paypalLabel);
+        donationPanel.add(Box.createVerticalStrut(4));
+        donationPanel.add(kofiLabel);
+
+        return donationPanel;
     }
 
     private void updateFilterCountLabel() {

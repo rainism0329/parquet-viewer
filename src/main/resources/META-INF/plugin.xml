@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.4.8</version>
+    <version>1.4.9</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -28,6 +28,14 @@
 
           <b>License:</b>
           <p>Apache 2.0</p>
+
+          <b>Support:</b>
+          <br/>If you find this plugin useful, consider supporting it:<br/>
+          <a href="https://www.paypal.me/bigphilzhang">Donate via PayPal</a><br/>
+          <a href="https://ko-fi.com/philipzhang51603">Donate via Ko-fi</a><br/>
+          Donate via Alipay:<br/>
+          <img src="https://raw.githubusercontent.com/rainism0329/springclouddemo/master/1341746696680_.pic.jpg" width="160"/>
+
         ]]>
     </description>
 
