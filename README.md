@@ -36,14 +36,22 @@
 
 ## Screenshots
 
-![image](https://github.com/user-attachments/assets/beed502e-4a0d-4c63-9f5b-ba0ef14d9b87)
-<img src="https://github.com/user-attachments/assets/8d67a4db-06cf-4b84-b1a1-4b9b2ed04cc3" width="500"/>
+![image](https://github.com/user-attachments/assets/ab3521f3-3753-4b97-956b-b0740f9b365e)
+<img src="https://github.com/user-attachments/assets/0c00aaeb-c0bc-4038-8c4a-17fa52e88858" width="500"/>
 
 ---
 
 ## Donate / 支持作者
 
 If you find this plugin useful, consider supporting its development:
+ 
+[**Donate via PayPal**](https://www.paypal.com/paypalme/bigphilzhang)
+
+OR
+
+[**Donate via Ko-fi**](https://ko-fi.com/philipzhang51603)
+
+OR
 
 **Alipay (支付宝打赏二维码):**
 
