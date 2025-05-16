@@ -14,7 +14,6 @@ public class ParquetDropSupport {
         overlay.setOpaque(false);
         overlay.setVisible(false);
 
-        // 若不是 OverlayLayout，设为 OverlayLayout
         if (!(target.getLayout() instanceof OverlayLayout)) {
             target.setLayout(new OverlayLayout(target));
         }

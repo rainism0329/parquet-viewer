@@ -496,16 +496,6 @@ public class ParquetViewerPanel {
         }
     }
 
-    private int getColumnIndex(String columnName) {
-        TableModel model = dataTable.getModel();
-        for (int i = 0; i < model.getColumnCount(); i++) {
-            if (model.getColumnName(i).equalsIgnoreCase(columnName.trim())) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     private List<String> getSelectedColumns() {
         List<String> selected = new ArrayList<>();
         for (Component comp : checkboxPanel.getComponents()) {
@@ -743,46 +733,6 @@ public class ParquetViewerPanel {
         filterCountLabel.setText(String.format("Showing %,d of %,d rows", shown, total));
     }
 
-    private RowFilter<Object, Object> createComparisonFilter(String col, String op, String valStr) {
-        int colIndex = getColumnIndex(col);
-        if (colIndex == -1) return null;
-
-        double target;
-        try {
-            target = Double.parseDouble(valStr);
-        } catch (NumberFormatException e) {
-            return null; // Invalid number
-        }
-
-        return new RowFilter<>() {
-            public boolean include(Entry<?, ?> entry) {
-                Object cellObj = entry.getValue(colIndex);
-                if (cellObj == null) return false;
-
-                String cell = cellObj.toString();
-                double actual;
-                try {
-                    actual = Double.parseDouble(cell);
-                } catch (NumberFormatException e) {
-                    return false; // Not a number: exclude
-                }
-
-                switch (op) {
-                    case ">":
-                        return actual > target;
-                    case "<":
-                        return actual < target;
-                    case ">=":
-                        return actual >= target;
-                    case "<=":
-                        return actual <= target;
-                    default:
-                        return false;
-                }
-            }
-        };
-    }
-
     private void withLoadingDialog(String message, Runnable task) {
         JDialog loadingDialog = new JDialog((Frame) null, "Loading", false);
         loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -805,7 +755,6 @@ public class ParquetViewerPanel {
         loadingDialog.pack();
         loadingDialog.setLocationRelativeTo(mainPanel);
 
-        // 执行线程
         new Thread(() -> {
             try {
                 SwingUtilities.invokeLater(() -> loadingDialog.setVisible(true));
