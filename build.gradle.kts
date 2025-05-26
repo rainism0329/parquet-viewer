@@ -50,7 +50,7 @@ dependencies {
 tasks {
     patchPluginXml {
         sinceBuild.set("212")
-        untilBuild.set("251.*")
+        untilBuild.set("252.*")
     }
 
     runIde {
