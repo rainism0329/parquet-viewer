@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -40,15 +40,18 @@
     </description>
 
     <change-notes><![CDATA[
-            <ul>
-                <li>Added support for newer IntelliJ IDEA versions.</li>
-                <li>Improve export CSV function.</li>
-                <li>Improve data filtering logic to support "OR", "LIKE" and "NOT LIKE"</li>
-                <li>Add export JSON function.</li>
-                <li>Reformat UI layout.</li>
-                <li>Removed some bugs and the people who wrote them.</li>
-            </ul>
-        ]]>
+        <ul>
+            <li>✨ Enhanced readability for list and map fields:
+                <ul>
+                    <li>📋 Lists now display as <code>[1.1 2.2 3.3]</code></li>
+                    <li>🗺️ Maps now display as <code>{apple: 1.0, orange: 1.2}</code></li>
+                    <li>🏗️ Nested group fields shown as <code>{lat: 1.23, lon: 4.56}</code></li>
+                </ul>
+            </li>
+            <li>🔍 Improved formatting for string, number, boolean, and null values</li>
+            <li>🙌 Thanks to <b>Balint Varga</b> for the great suggestion!</li>
+        </ul>
+    ]]>
     </change-notes>
 
 

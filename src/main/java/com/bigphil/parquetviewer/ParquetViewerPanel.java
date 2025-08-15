@@ -432,7 +432,7 @@ public class ParquetViewerPanel {
                     for (int j = 0; j < selectedColumns.size(); j++) {
                         try {
                             int fieldIndex = currentSchema.getFieldIndex(selectedColumns.get(j));
-                            row[j] = group.getValueToString(fieldIndex, 0);
+                            row[j] = ParquetValueFormatter.format(group, fieldIndex);
                         } catch (Exception e) {
                             row[j] = "";
                         }

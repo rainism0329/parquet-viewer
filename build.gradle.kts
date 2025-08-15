@@ -5,11 +5,11 @@ plugins {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 intellij {
-    version.set("2021.2")
+    version.set("2023.2.2")
     type.set("IC")
     plugins.set(listOf("java"))
 }
