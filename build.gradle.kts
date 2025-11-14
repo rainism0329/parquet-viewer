@@ -39,7 +39,7 @@ dependencies {
         exclude(group = "org.slf4j")
     }
     // build.gradle
-    implementation("org.mvel:mvel2:2.4.12.Final")
+    implementation("org.mvel:mvel2:2.5.2.Final")
 
     // JUnit 测试框架
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

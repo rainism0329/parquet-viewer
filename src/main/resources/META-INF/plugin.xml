@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>1.5.2</version>
+    <version>1.5.5</version>
     <vendor email="bigphil.zhang@qq.com">Phil Zhang</vendor>
 
     <description>
@@ -43,12 +43,13 @@
         <ul>
             <li>✨ Enhanced readability for list and map fields:
                 <ul>
-                    <li>📋 Lists now display as <code>[1.1 2.2 3.3]</code></li>
+                    <li>📋 Lists now display as <code>[1.1, 2.2, 3.3]</code></li>
                     <li>🗺️ Maps now display as <code>{apple: 1.0, orange: 1.2}</code></li>
                     <li>🏗️ Nested group fields shown as <code>{lat: 1.23, lon: 4.56}</code></li>
                 </ul>
             </li>
             <li>🔍 Improved formatting for string, number, boolean, and null values</li>
+            <li>🐞 Fixed the issue caused by Java upgrade</li>
             <li>🙌 Thanks to <b>Balint Varga</b> for the great suggestion!</li>
         </ul>
     ]]>
