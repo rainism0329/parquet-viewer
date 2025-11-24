@@ -41,6 +41,13 @@
 
 ---
 
+## Author
+
+Created by **Phil Zhang**. 
+Visit my personal website: [Home Page](https://phil-zhang.netlify.app/)
+
+---
+
 ## Donate / 支持作者
 
 If you find this plugin useful, consider supporting its development:
