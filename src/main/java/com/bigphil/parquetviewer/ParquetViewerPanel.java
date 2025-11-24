@@ -659,6 +659,18 @@ public class ParquetViewerPanel {
         JLabel qrLabel = new JLabel(qrIcon);
         qrLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Add Personal Website link
+        JLabel websiteLabel = new JLabel("<html><u>Visit Author's Website</u></html>");
+        websiteLabel.setForeground(JBColor.BLUE);
+        websiteLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        websiteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        websiteLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BrowserUtil.browse("https://phil-zhang.netlify.app/");
+            }
+        });
+
         // Emotion-triggering message
         JLabel supportLabel = new JLabel("Enjoying the plugin?");
         supportLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -695,6 +707,8 @@ public class ParquetViewerPanel {
         donationPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         donationPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        donationPanel.add(websiteLabel);
+        donationPanel.add(Box.createVerticalStrut(8));
         donationPanel.add(qrLabel);
         donationPanel.add(Box.createVerticalStrut(10));
         donationPanel.add(supportLabel);
