@@ -1,7 +1,6 @@
 package com.bigphil.parquetviewer;
 
 import com.intellij.openapi.ui.ComboBox;
-import org.apache.parquet.schema.GroupType;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.Type;
 
@@ -13,8 +12,12 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +68,7 @@ public class ParquetViewerPanel {
     private long totalRowCount = 0;
     private Timer debounceTimer;
 
-    // Stats cache for the geeky view
+    // Stats cache
     private Map<String, ParquetService.ColumnDetails> currentColumnStats;
 
     public ParquetViewerPanel() {
@@ -127,7 +130,7 @@ public class ParquetViewerPanel {
     }
 
     private void initCenterPanel() {
-        // 1. Schema Tab
+        // --- 1. Schema Tab ---
         schemaTextArea = new JTextArea();
         schemaTextArea.setEditable(false);
         schemaTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -135,7 +138,23 @@ public class ParquetViewerPanel {
 
         schemaTree = new JTree(new DefaultMutableTreeNode("No Schema"));
         schemaTree.setTransferHandler(null);
-        schemaTree.setRowHeight(22); // Slightly taller for the geeky tags
+        schemaTree.setRowHeight(22);
+
+        // Geeky Feature: Schema Code Generation Popup
+        JPopupMenu schemaPopup = new JPopupMenu();
+        JMenuItem copyHiveItem = new JMenuItem("Copy as Hive DDL");
+        JMenuItem copyJavaItem = new JMenuItem("Copy as Java POJO");
+
+        copyHiveItem.addActionListener(e -> {
+            if (currentSchema != null) copyToClipboard(SchemaCodeGenerator.generateHiveDDL(currentSchema, "parquet_table"));
+        });
+        copyJavaItem.addActionListener(e -> {
+            if (currentSchema != null) copyToClipboard(SchemaCodeGenerator.generateJavaPojo(currentSchema, "ParquetRecord"));
+        });
+
+        schemaPopup.add(copyHiveItem);
+        schemaPopup.add(copyJavaItem);
+        schemaTree.setComponentPopupMenu(schemaPopup);
 
         schemaCardLayout = new CardLayout();
         schemaCardPanel = new JPanel(schemaCardLayout);
@@ -158,16 +177,47 @@ public class ParquetViewerPanel {
         schemaTabContainer.add(schemaToolbar, BorderLayout.NORTH);
         schemaTabContainer.add(schemaCardPanel, BorderLayout.CENTER);
 
-        // 2. Metadata Tab
+        // --- 2. Metadata Tab ---
         metadataTable = new JTable();
         metadataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        metadataTable.setEnabled(false); // Read-only
+        metadataTable.setEnabled(false);
         JScrollPane metaScroll = new JScrollPane(metadataTable);
 
-        // 3. Data Tab
+        // --- 3. Data Tab ---
         dataTable = new JTable();
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        dataTable.setDefaultEditor(Object.class, null); // Disable editing
         dataScrollPane = new JScrollPane(dataTable);
+
+        // Geeky Feature: View as Hex (MouseListener fix applied)
+        dataTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) { handleContextMenu(e); }
+            @Override
+            public void mouseReleased(MouseEvent e) { handleContextMenu(e); }
+
+            private void handleContextMenu(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    JTable source = (JTable) e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
+                    int col = source.columnAtPoint(e.getPoint());
+
+                    if (row >= 0 && col >= 0) {
+                        source.setRowSelectionInterval(row, row);
+                        source.setColumnSelectionInterval(col, col);
+
+                        JPopupMenu popup = new JPopupMenu();
+                        JMenuItem viewHexItem = new JMenuItem("View as Hex / Raw 🧐");
+                        viewHexItem.addActionListener(actionEvent -> {
+                            Object val = source.getValueAt(row, col);
+                            showHexDialog(val);
+                        });
+                        popup.add(viewHexItem);
+                        popup.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+        });
 
         dataFilterField = new HintTextField("e.g. name='Alice' AND age<30 — press Enter to apply");
         dataFilterField.addActionListener(e -> applyDataFilter());
@@ -184,7 +234,7 @@ public class ParquetViewerPanel {
         dataTabPanel.add(dataScrollPane, BorderLayout.CENTER);
         dataTabPanel.add(filterBar, BorderLayout.NORTH);
 
-        // Tabbed Pane configuration
+        // Tabbed Pane
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Schema", schemaTabContainer);
         tabbedPane.addTab("Metadata", metaScroll);
@@ -257,15 +307,12 @@ public class ParquetViewerPanel {
         applyColumnFilterBtn.addActionListener(e -> reloadDataView());
         columnSearchField.addActionListener(e -> reloadDataView());
 
-        // Tab Change Listener logic
+        // Tab Change Listener
         tabbedPane.addChangeListener(e -> {
             boolean isDataTab = tabbedPane.getSelectedIndex() == 2;
             boolean hasFile = currentFile != null;
             updateControlState(hasFile && isDataTab);
-
-            if (hasFile && isDataTab) {
-                updatePaginationState();
-            }
+            if (hasFile && isDataTab) updatePaginationState();
         });
     }
 
@@ -303,14 +350,12 @@ public class ParquetViewerPanel {
         totalRowLabel.setText("Total rows: " + String.format("%,d", totalRowCount));
         showAllRowsCheckbox.setSelected(false);
 
-        // 1. Load Stats for Geeky View
+        // Load stats
         currentColumnStats = ParquetService.readColumnStats(file);
 
-        // 2. Show Views
         showSchemaView();
         showMetadataView(metadata.extraMeta());
 
-        // 3. Set Tab and Disable Controls
         tabbedPane.setSelectedIndex(0);
         updateControlState(false);
 
@@ -329,14 +374,13 @@ public class ParquetViewerPanel {
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Schema: " + currentSchema.getName());
         for (Type field : currentSchema.getFields()) {
-            buildSchemaTree(root, field, null); // Pass null for root parent path
+            buildSchemaTree(root, field, null);
         }
         schemaTree.setModel(new DefaultTreeModel(root));
         for (int i = 0; i < schemaTree.getRowCount(); i++) schemaTree.expandRow(i);
     }
 
     private void buildSchemaTree(DefaultMutableTreeNode parent, Type type, String parentPath) {
-        // Construct full path for stats lookup
         String currentPath = (parentPath == null || parentPath.isEmpty())
                 ? type.getName()
                 : parentPath + "." + type.getName();
@@ -370,13 +414,6 @@ public class ParquetViewerPanel {
                 buildSchemaTree(groupNode, child, currentPath);
             }
         }
-    }
-
-    private String humanReadableByteCount(long bytes) {
-        if (bytes < 1024) return bytes + " B";
-        int exp = (int) (Math.log(bytes) / Math.log(1024));
-        String pre = "KMGTPE".charAt(exp-1) + "";
-        return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
     }
 
     private void showMetadataView(Map<String, String> meta) {
@@ -419,13 +456,67 @@ public class ParquetViewerPanel {
         updateFilterCountLabel();
     }
 
+    // --- Helper: Hex Dialog ---
+    private void showHexDialog(Object val) {
+        if (val == null) {
+            JOptionPane.showMessageDialog(mainPanel, "Value is null (0x00)", "Hex View", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        byte[] bytes = val.toString().getBytes(StandardCharsets.UTF_8);
+        StringBuilder hexBuilder = new StringBuilder();
+        StringBuilder charBuilder = new StringBuilder();
+
+        for (int i = 0; i < bytes.length; i++) {
+            byte b = bytes[i];
+            hexBuilder.append(String.format("%02X ", b));
+
+            char c = (char) b;
+            if (!Character.isISOControl(c)) charBuilder.append(c);
+            else charBuilder.append('.');
+
+            if ((i + 1) % 16 == 0) {
+                hexBuilder.append("  |  ").append(charBuilder).append("\n");
+                charBuilder.setLength(0);
+            }
+        }
+        if (charBuilder.length() > 0) {
+            while (charBuilder.length() < 16) {
+                hexBuilder.append("   ");
+                charBuilder.append(" ");
+            }
+            hexBuilder.append("  |  ").append(charBuilder).append("\n");
+        }
+
+        JTextArea area = new JTextArea(hexBuilder.toString());
+        area.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        area.setEditable(false);
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setPreferredSize(new Dimension(500, 300));
+
+        JOptionPane.showMessageDialog(mainPanel, scroll, "Hex / Raw View", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    // --- Helper: Copy to Clipboard ---
+    private void copyToClipboard(String text) {
+        StringSelection selection = new StringSelection(text);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
+        JOptionPane.showMessageDialog(mainPanel, "Code copied to clipboard! 📋", "Copied", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private String humanReadableByteCount(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(1024));
+        String pre = "KMGTPE".charAt(exp-1) + "";
+        return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
+    }
+
     private void updatePaginationState() {
         if (tabbedPane.getSelectedIndex() != 2) {
             prevButton.setEnabled(false);
             nextButton.setEnabled(false);
             return;
         }
-
         int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
         if (showAllRowsCheckbox.isSelected()) {
             pageInfoLabel.setText("All rows shown");
