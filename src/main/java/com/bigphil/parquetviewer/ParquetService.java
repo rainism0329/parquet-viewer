@@ -10,6 +10,7 @@ import org.apache.parquet.io.ColumnIOFactory;
 import org.apache.parquet.io.MessageColumnIO;
 import org.apache.parquet.io.RecordReader;
 import org.apache.parquet.schema.MessageType;
+import org.apache.parquet.schema.Type; // 新增导入
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +27,6 @@ public class ParquetService {
         try (ParquetFileReader reader = ParquetFileReader.open(new LocalInputFile(file))) {
             FileMetaData fmd = reader.getFooter().getFileMetaData();
             MessageType schema = fmd.getSchema();
-            // 保持 Step 1 的优化：直接从 Footer 获取总行数，不遍历数据
             long rowCount = reader.getRecordCount();
 
             Map<String, String> meta = new LinkedHashMap<>();
@@ -44,68 +44,75 @@ public class ParquetService {
         }
     }
 
-    /**
-     * Step 2 核心优化：Row Group Skipping (智能跳块)
-     */
     public static List<Object[]> readPageData(File file, MessageType schema, List<String> selectedColumns,
                                               int page, int pageSize, boolean showAll) throws IOException {
         List<Object[]> rows = new ArrayList<>();
 
+        // --- Step 3 核心优化: 构建 Projected Schema (列裁剪) ---
+        // 只将用户选中的列放入新的 Schema 中，Parquet Reader 将自动忽略未选中的列数据
+        List<Type> projectedFields = new ArrayList<>();
+        for (String col : selectedColumns) {
+            if (schema.containsField(col)) {
+                projectedFields.add(schema.getType(col));
+            }
+        }
+        // 防止空选导致异常（虽然 UI 层通常会拦截）
+        if (projectedFields.isEmpty()) {
+            return rows;
+        }
+        MessageType projectedSchema = new MessageType(schema.getName(), projectedFields);
+        // ----------------------------------------------------
+
         try (ParquetFileReader reader = ParquetFileReader.open(new LocalInputFile(file))) {
-            // 1. 计算目标数据的起始行号
             long startRow = showAll ? 0 : (long) (page - 1) * pageSize;
             long maxRows = showAll ? -1 : pageSize;
             long currentRow = 0;
 
-            // 2. 获取所有行组 (Row Groups/Blocks) 的元数据
             List<BlockMetaData> blocks = reader.getFooter().getBlocks();
 
             for (BlockMetaData block : blocks) {
                 long rowsInBlock = block.getRowCount();
 
-                // ---------------------------------------------------------
-                // 核心优化 A: 块级跳过 (Row Group Skipping)
-                // 如果当前块的所有数据都在目标起始行之前，直接跳过整个块的 IO 和解压
-                // ---------------------------------------------------------
+                // 优化 A: 块级跳过 (Row Group Skipping)
                 if (currentRow + rowsInBlock <= startRow) {
-                    reader.skipNextRowGroup(); // 极速跳过，不消耗 IO
+                    reader.skipNextRowGroup();
                     currentRow += rowsInBlock;
                     continue;
                 }
 
-                // 如果已经收集够了数据（且不是显示全部），则提前结束读取
                 if (maxRows != -1 && rows.size() >= maxRows) {
                     break;
                 }
 
-                // 3. 只有当块包含我们需要的数据时，才开始读取 (IO + 解压)
                 PageReadStore pageStore = reader.readNextRowGroup();
                 if (pageStore == null) break;
 
-                MessageColumnIO columnIO = new ColumnIOFactory().getColumnIO(schema);
-                RecordReader<Group> recordReader = columnIO.getRecordReader(pageStore, new GroupRecordConverter(schema));
+                // --- 关键点：使用 projectedSchema 初始化读取器 ---
+                // 这会告诉底层只加载相关的 Column Chunk，极大减少 IO 和内存
+                MessageColumnIO columnIO = new ColumnIOFactory().getColumnIO(projectedSchema);
+                RecordReader<Group> recordReader = columnIO.getRecordReader(pageStore, new GroupRecordConverter(projectedSchema));
+                // ---------------------------------------------
 
-                // 4. 块内遍历
                 for (long i = 0; i < rowsInBlock; i++) {
-                    // 核心优化 B 的修正: 块内行跳过
-                    // 修正：RecordReader 没有 skip() 方法，必须调用 read() 来消耗数据
+                    // 优化 B: 块内行跳过
                     if (currentRow < startRow) {
-                        recordReader.read(); // 虽然会构建对象，但比全量加载要好，且仅限于目标块内部
+                        recordReader.read(); // 这里现在也非常快，因为只反序列化选中的列
                         currentRow++;
                         continue;
                     }
 
-                    // 再次检查是否读满当前页
                     if (maxRows != -1 && rows.size() >= maxRows) {
                         break;
                     }
 
-                    // 真正的读取和格式化逻辑
                     Group group = recordReader.read();
                     Object[] row = new Object[selectedColumns.size()];
                     for (int j = 0; j < selectedColumns.size(); j++) {
                         try {
-                            int fieldIndex = schema.getFieldIndex(selectedColumns.get(j));
+                            String colName = selectedColumns.get(j);
+                            // --- 关键点：必须使用 projectedSchema 获取正确的字段索引 ---
+                            // 因为 Group 现在的结构是裁剪过的，索引可能和原 Schema 不同
+                            int fieldIndex = projectedSchema.getFieldIndex(colName);
                             row[j] = ParquetValueFormatter.format(group, fieldIndex);
                         } catch (Exception e) {
                             row[j] = "";
