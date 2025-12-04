@@ -30,7 +30,7 @@ public class ParquetViewerPanel {
     private JPanel schemaCardPanel;
     private CardLayout schemaCardLayout;
 
-    // Metadata UI (New)
+    // Metadata UI
     private JTable metadataTable;
 
     // Data UI
@@ -64,6 +64,9 @@ public class ParquetViewerPanel {
     private final int pageSize = 500;
     private long totalRowCount = 0;
     private Timer debounceTimer;
+
+    // Stats cache for the geeky view
+    private Map<String, ParquetService.ColumnDetails> currentColumnStats;
 
     public ParquetViewerPanel() {
         mainPanel = new JPanel();
@@ -132,6 +135,7 @@ public class ParquetViewerPanel {
 
         schemaTree = new JTree(new DefaultMutableTreeNode("No Schema"));
         schemaTree.setTransferHandler(null);
+        schemaTree.setRowHeight(22); // Slightly taller for the geeky tags
 
         schemaCardLayout = new CardLayout();
         schemaCardPanel = new JPanel(schemaCardLayout);
@@ -154,7 +158,7 @@ public class ParquetViewerPanel {
         schemaTabContainer.add(schemaToolbar, BorderLayout.NORTH);
         schemaTabContainer.add(schemaCardPanel, BorderLayout.CENTER);
 
-        // 2. Metadata Tab (New)
+        // 2. Metadata Tab
         metadataTable = new JTable();
         metadataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         metadataTable.setEnabled(false); // Read-only
@@ -180,10 +184,10 @@ public class ParquetViewerPanel {
         dataTabPanel.add(dataScrollPane, BorderLayout.CENTER);
         dataTabPanel.add(filterBar, BorderLayout.NORTH);
 
-        // Tabbed Pane
+        // Tabbed Pane configuration
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Schema", schemaTabContainer);
-        tabbedPane.addTab("Metadata", metaScroll); // 新增 Metadata 页签
+        tabbedPane.addTab("Metadata", metaScroll);
         tabbedPane.addTab("Data", dataTabPanel);
 
         contentPanel = new JPanel(new BorderLayout());
@@ -253,9 +257,8 @@ public class ParquetViewerPanel {
         applyColumnFilterBtn.addActionListener(e -> reloadDataView());
         columnSearchField.addActionListener(e -> reloadDataView());
 
-        // Tab Change Listener
+        // Tab Change Listener logic
         tabbedPane.addChangeListener(e -> {
-            // Index 0=Schema, 1=Metadata, 2=Data
             boolean isDataTab = tabbedPane.getSelectedIndex() == 2;
             boolean hasFile = currentFile != null;
             updateControlState(hasFile && isDataTab);
@@ -300,15 +303,16 @@ public class ParquetViewerPanel {
         totalRowLabel.setText("Total rows: " + String.format("%,d", totalRowCount));
         showAllRowsCheckbox.setSelected(false);
 
-        // 1. Show Schema
-        showSchemaView();
+        // 1. Load Stats for Geeky View
+        currentColumnStats = ParquetService.readColumnStats(file);
 
-        // 2. Show Metadata (New)
+        // 2. Show Views
+        showSchemaView();
         showMetadataView(metadata.extraMeta());
 
         // 3. Set Tab and Disable Controls
         tabbedPane.setSelectedIndex(0);
-        updateControlState(false); // 此时在 Schema 页，立刻禁用按钮
+        updateControlState(false);
 
         withLoadingDialog("Refreshing data...", () -> {
             try {
@@ -325,13 +329,56 @@ public class ParquetViewerPanel {
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Schema: " + currentSchema.getName());
         for (Type field : currentSchema.getFields()) {
-            buildSchemaTree(root, field);
+            buildSchemaTree(root, field, null); // Pass null for root parent path
         }
         schemaTree.setModel(new DefaultTreeModel(root));
         for (int i = 0; i < schemaTree.getRowCount(); i++) schemaTree.expandRow(i);
     }
 
-    // 新增：展示 Metadata
+    private void buildSchemaTree(DefaultMutableTreeNode parent, Type type, String parentPath) {
+        // Construct full path for stats lookup
+        String currentPath = (parentPath == null || parentPath.isEmpty())
+                ? type.getName()
+                : parentPath + "." + type.getName();
+
+        String statsHtml = "";
+        if (type.isPrimitive() && currentColumnStats != null) {
+            ParquetService.ColumnDetails detail = currentColumnStats.get(currentPath);
+            if (detail != null) {
+                statsHtml = String.format(
+                        "&nbsp;&nbsp;<font color='#e67e22' size='3'>[Size: %s]</font> <font color='#27ae60' size='3'>[Ratio: %s]</font> <font color='#7f8c8d' size='3'>[Nulls: %s]</font>",
+                        humanReadableByteCount(detail.totalCompressedSize),
+                        detail.getCompressionRatio(),
+                        detail.getNullPercentage()
+                );
+            }
+        }
+
+        String nodeLabel;
+        if (type.isPrimitive()) {
+            String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
+            nodeLabel = String.format("<html><b>%s</b> : <font color='blue'>%s</font>%s <font color='gray'>[%s]</font>%s</html>",
+                    type.getName(), type.asPrimitiveType().getPrimitiveTypeName(), originalType, type.getRepetition(), statsHtml);
+            parent.add(new DefaultMutableTreeNode(nodeLabel));
+        } else {
+            String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
+            nodeLabel = String.format("<html><b>%s</b>%s <font color='gray'>[%s]</font></html>",
+                    type.getName(), originalType, type.getRepetition());
+            DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(nodeLabel);
+            parent.add(groupNode);
+            for (Type child : type.asGroupType().getFields()) {
+                buildSchemaTree(groupNode, child, currentPath);
+            }
+        }
+    }
+
+    private String humanReadableByteCount(long bytes) {
+        if (bytes < 1024) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(1024));
+        String pre = "KMGTPE".charAt(exp-1) + "";
+        return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
+    }
+
     private void showMetadataView(Map<String, String> meta) {
         String[] columns = {"Property", "Value"};
         Object[][] data = new Object[meta.size()][2];
@@ -347,27 +394,8 @@ public class ParquetViewerPanel {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         metadataTable.setModel(model);
-
-        // 简单的列宽调整
         metadataTable.getColumnModel().getColumn(0).setPreferredWidth(150);
         metadataTable.getColumnModel().getColumn(1).setPreferredWidth(400);
-    }
-
-    private void buildSchemaTree(DefaultMutableTreeNode parent, Type type) {
-        String nodeLabel;
-        if (type.isPrimitive()) {
-            String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
-            nodeLabel = String.format("<html><b>%s</b> : <font color='blue'>%s</font>%s <font color='gray'>[%s]</font></html>",
-                    type.getName(), type.asPrimitiveType().getPrimitiveTypeName(), originalType, type.getRepetition());
-            parent.add(new DefaultMutableTreeNode(nodeLabel));
-        } else {
-            String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
-            nodeLabel = String.format("<html><b>%s</b>%s <font color='gray'>[%s]</font></html>",
-                    type.getName(), originalType, type.getRepetition());
-            DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(nodeLabel);
-            parent.add(groupNode);
-            for (Type child : type.asGroupType().getFields()) buildSchemaTree(groupNode, child);
-        }
     }
 
     private void showDataView(File file) throws IOException {
@@ -392,13 +420,11 @@ public class ParquetViewerPanel {
     }
 
     private void updatePaginationState() {
-        // --- 核心修复：只有在 Data Tab (index 2) 时才启用翻页逻辑 ---
         if (tabbedPane.getSelectedIndex() != 2) {
             prevButton.setEnabled(false);
             nextButton.setEnabled(false);
             return;
         }
-        // --------------------------------------------------------
 
         int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
         if (showAllRowsCheckbox.isSelected()) {
