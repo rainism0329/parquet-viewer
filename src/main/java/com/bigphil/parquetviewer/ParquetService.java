@@ -11,6 +11,7 @@ import org.apache.parquet.io.ColumnIOFactory;
 import org.apache.parquet.io.MessageColumnIO;
 import org.apache.parquet.io.RecordReader;
 import org.apache.parquet.schema.MessageType;
+import org.apache.parquet.schema.PrimitiveType; // 新增导入
 import org.apache.parquet.schema.Type;
 
 import java.io.File;
@@ -92,7 +93,7 @@ public class ParquetService {
                                               int page, int pageSize, boolean showAll) throws IOException {
         List<Object[]> rows = new ArrayList<>();
 
-        // --- Optimization: Column Projection ---
+        // Optimization: Column Projection
         List<Type> projectedFields = new ArrayList<>();
         for (String col : selectedColumns) {
             if (schema.containsField(col)) {
@@ -101,7 +102,6 @@ public class ParquetService {
         }
         if (projectedFields.isEmpty()) return rows;
         MessageType projectedSchema = new MessageType(schema.getName(), projectedFields);
-        // ---------------------------------------
 
         try (ParquetFileReader reader = ParquetFileReader.open(new LocalInputFile(file))) {
             long startRow = showAll ? 0 : (long) (page - 1) * pageSize;
@@ -113,7 +113,7 @@ public class ParquetService {
             for (BlockMetaData block : blocks) {
                 long rowsInBlock = block.getRowCount();
 
-                // --- Optimization: Row Group Skipping ---
+                // Optimization: Row Group Skipping
                 if (currentRow + rowsInBlock <= startRow) {
                     reader.skipNextRowGroup();
                     currentRow += rowsInBlock;
@@ -129,9 +129,8 @@ public class ParquetService {
                 RecordReader<Group> recordReader = columnIO.getRecordReader(pageStore, new GroupRecordConverter(projectedSchema));
 
                 for (long i = 0; i < rowsInBlock; i++) {
-                    // Skip rows within the block
                     if (currentRow < startRow) {
-                        recordReader.read(); // Consume without processing
+                        recordReader.read();
                         currentRow++;
                         continue;
                     }
@@ -142,9 +141,43 @@ public class ParquetService {
                     Object[] row = new Object[selectedColumns.size()];
                     for (int j = 0; j < selectedColumns.size(); j++) {
                         try {
-                            // Must use index from projected schema
-                            int fieldIndex = projectedSchema.getFieldIndex(selectedColumns.get(j));
-                            row[j] = ParquetValueFormatter.format(group, fieldIndex);
+                            String colName = selectedColumns.get(j);
+                            int fieldIndex = projectedSchema.getFieldIndex(colName);
+
+                            // --- 核心修改：保留原始数字类型 ---
+                            if (group.getFieldRepetitionCount(fieldIndex) == 0) {
+                                row[j] = null; // 显式 Null
+                            } else {
+                                Type type = projectedSchema.getType(fieldIndex);
+                                // 如果是基础类型且不是重复字段（List），尝试提取原始值
+                                if (type.isPrimitive() && !type.isRepetition(Type.Repetition.REPEATED)) {
+                                    PrimitiveType pt = type.asPrimitiveType();
+                                    switch (pt.getPrimitiveTypeName()) {
+                                        case INT32:
+                                            row[j] = group.getInteger(fieldIndex, 0);
+                                            break;
+                                        case INT64:
+                                            row[j] = group.getLong(fieldIndex, 0);
+                                            break;
+                                        case FLOAT:
+                                            row[j] = group.getFloat(fieldIndex, 0);
+                                            break;
+                                        case DOUBLE:
+                                            row[j] = group.getDouble(fieldIndex, 0);
+                                            break;
+                                        case BOOLEAN:
+                                            row[j] = group.getBoolean(fieldIndex, 0);
+                                            break;
+                                        default:
+                                            // 其他类型（如 Binary String, Int96 Timestamp）继续用 Formatter
+                                            row[j] = ParquetValueFormatter.format(group, fieldIndex);
+                                    }
+                                } else {
+                                    // 复杂类型或 List 继续用 Formatter 转 String
+                                    row[j] = ParquetValueFormatter.format(group, fieldIndex);
+                                }
+                            }
+                            // ---------------------------------
                         } catch (Exception e) {
                             row[j] = "";
                         }

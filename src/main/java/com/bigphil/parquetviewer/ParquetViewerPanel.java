@@ -3,8 +3,8 @@ package com.bigphil.parquetviewer;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
 import org.apache.parquet.schema.MessageType;
+import org.apache.parquet.schema.PrimitiveType; // 导入
 import org.apache.parquet.schema.Type;
 
 import javax.swing.*;
@@ -23,31 +23,22 @@ import java.util.List;
 import java.util.Map;
 
 public class ParquetViewerPanel {
+    // ... (成员变量保持不变)
     private final JPanel mainPanel;
     private JPanel contentPanel;
     private JPanel wholeContentPanel;
-
-    // Schema UI
     private JTextArea schemaTextArea;
     private JTree schemaTree;
     private JPanel schemaCardPanel;
     private CardLayout schemaCardLayout;
-
-    // Metadata UI
     private JTable metadataTable;
-
-    // Data UI
     private JTable dataTable;
     private JScrollPane dataScrollPane;
     private JPanel checkboxPanel;
     private JTextField columnSearchField;
     private JTextField dataFilterField;
-
-    // Common
     private JLabel fileLabel;
     private JTabbedPane tabbedPane;
-
-    // Bottom Controls
     private JLabel pageInfoLabel;
     private JLabel totalRowLabel;
     private JCheckBox showAllRowsCheckbox;
@@ -57,18 +48,14 @@ public class ParquetViewerPanel {
     private JLabel filterCountLabel;
     private JButton applyColumnFilterBtn;
     private ComboBox<String> exportFormatBox;
-
     private boolean hasMatchingColumns = true;
     private File currentFile;
     private MessageType currentSchema;
     private final List<String> allColumns = new ArrayList<>();
-
     private int currentPage = 1;
     private final int pageSize = 500;
     private long totalRowCount = 0;
     private Timer debounceTimer;
-
-    // Stats cache
     private Map<String, ParquetService.ColumnDetails> currentColumnStats;
 
     public ParquetViewerPanel() {
@@ -76,33 +63,29 @@ public class ParquetViewerPanel {
         mainPanel.setLayout(new OverlayLayout(mainPanel));
         wholeContentPanel = new JPanel(new BorderLayout());
         mainPanel.add(wholeContentPanel);
-
         initTopPanel();
         initLeftPanel();
         initCenterPanel();
         initBottomPanel();
-
         setupListeners();
         setupDragDrop();
-
         updateControlState(false);
     }
 
     public JPanel getContent() { return mainPanel; }
 
+    // ... (initTopPanel, initLeftPanel 保持不变) ...
     private void initTopPanel() {
         JButton chooseFileButton = new JButton("📁 Choose Parquet File");
         fileLabel = new JLabel("No file selected");
         JLabel tipLabel = new JLabel("Tip: You can also drag and drop a .parquet file to open it.");
         tipLabel.setForeground(Color.GRAY);
         tipLabel.setFont(tipLabel.getFont().deriveFont(Font.ITALIC, 11f));
-
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(chooseFileButton, BorderLayout.WEST);
         topPanel.add(fileLabel, BorderLayout.CENTER);
         topPanel.add(tipLabel, BorderLayout.EAST);
         wholeContentPanel.add(topPanel, BorderLayout.NORTH);
-
         chooseFileButton.addActionListener(e -> chooseFile());
     }
 
@@ -110,19 +93,15 @@ public class ParquetViewerPanel {
         columnSearchField = new HintTextField("Type column name...");
         columnSearchField.setToolTipText("Search columns");
         columnSearchField.setTransferHandler(null);
-
         checkboxPanel = new JPanel();
         checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
-
         applyColumnFilterBtn = new JButton("✔");
         applyColumnFilterBtn.setToolTipText("Apply column filter and refresh data");
         applyColumnFilterBtn.setPreferredSize(new Dimension(24, 20));
-
         JPanel leftPanel = new JPanel(new BorderLayout());
         JPanel filterRow = new JPanel(new BorderLayout());
         filterRow.add(columnSearchField, BorderLayout.CENTER);
         filterRow.add(applyColumnFilterBtn, BorderLayout.EAST);
-
         leftPanel.add(filterRow, BorderLayout.NORTH);
         leftPanel.add(new JScrollPane(checkboxPanel), BorderLayout.CENTER);
         leftPanel.setPreferredSize(new Dimension(200, 500));
@@ -130,12 +109,10 @@ public class ParquetViewerPanel {
     }
 
     private void initCenterPanel() {
-        // --- 1. Schema Tab ---
         schemaTextArea = new JTextArea();
         schemaTextArea.setEditable(false);
         schemaTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         schemaTextArea.setTransferHandler(null);
-
         schemaTree = new JTree(new DefaultMutableTreeNode("No Schema"));
         schemaTree.setTransferHandler(null);
         schemaTree.setRowHeight(22);
@@ -143,14 +120,12 @@ public class ParquetViewerPanel {
         JPopupMenu schemaPopup = new JPopupMenu();
         JMenuItem copyHiveItem = new JMenuItem("Copy as Hive DDL");
         JMenuItem copyJavaItem = new JMenuItem("Copy as Java POJO");
-
         copyHiveItem.addActionListener(e -> {
             if (currentSchema != null) copyToClipboard(SchemaCodeGenerator.generateHiveDDL(currentSchema, "parquet_table"));
         });
         copyJavaItem.addActionListener(e -> {
             if (currentSchema != null) copyToClipboard(SchemaCodeGenerator.generateJavaPojo(currentSchema, "ParquetRecord"));
         });
-
         schemaPopup.add(copyHiveItem);
         schemaPopup.add(copyJavaItem);
         schemaTree.setComponentPopupMenu(schemaPopup);
@@ -164,7 +139,6 @@ public class ParquetViewerPanel {
         JRadioButton treeRadio = new JRadioButton("Tree View");
         ButtonGroup group = new ButtonGroup();
         group.add(textRadio); group.add(treeRadio);
-
         textRadio.addActionListener(e -> schemaCardLayout.show(schemaCardPanel, "TEXT"));
         treeRadio.addActionListener(e -> schemaCardLayout.show(schemaCardPanel, "TREE"));
 
@@ -176,7 +150,6 @@ public class ParquetViewerPanel {
         schemaTabContainer.add(schemaToolbar, BorderLayout.NORTH);
         schemaTabContainer.add(schemaCardPanel, BorderLayout.CENTER);
 
-        // --- 2. Metadata Tab ---
         metadataTable = new JTable();
         metadataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         metadataTable.setEnabled(false);
@@ -185,20 +158,17 @@ public class ParquetViewerPanel {
         metadataTable.setRowHeight(24);
         JScrollPane metaScroll = new JScrollPane(metadataTable);
 
-        // --- 3. Data Tab ---
         dataTable = new JTable();
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        // dataTable.setDefaultEditor(Object.class, null); // Allow editing
 
+        // SmartCellRenderer handles Numbers correctly now
         dataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
-
         dataTable.setShowGrid(true);
         dataTable.setGridColor(new JBColor(new Color(220, 220, 220), new Color(80, 80, 80)));
         dataTable.setIntercellSpacing(new Dimension(1, 1));
         dataTable.setRowHeight(24);
 
         dataScrollPane = new JScrollPane(dataTable);
-
         JTable rowTable = new RowNumberTable(dataTable);
         dataScrollPane.setRowHeaderView(rowTable);
         dataScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
@@ -208,17 +178,14 @@ public class ParquetViewerPanel {
             public void mousePressed(MouseEvent e) { handleContextMenu(e); }
             @Override
             public void mouseReleased(MouseEvent e) { handleContextMenu(e); }
-
             private void handleContextMenu(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     JTable source = (JTable) e.getSource();
                     int row = source.rowAtPoint(e.getPoint());
                     int col = source.columnAtPoint(e.getPoint());
-
                     if (row >= 0 && col >= 0) {
                         source.setRowSelectionInterval(row, row);
                         source.setColumnSelectionInterval(col, col);
-
                         JPopupMenu popup = new JPopupMenu();
                         JMenuItem viewHexItem = new JMenuItem("View as Hex / Raw 🧐");
                         viewHexItem.addActionListener(actionEvent -> {
@@ -247,7 +214,6 @@ public class ParquetViewerPanel {
         dataTabPanel.add(dataScrollPane, BorderLayout.CENTER);
         dataTabPanel.add(filterBar, BorderLayout.NORTH);
 
-        // Tabbed Pane
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Schema", schemaTabContainer);
         tabbedPane.addTab("Metadata", metaScroll);
@@ -258,29 +224,24 @@ public class ParquetViewerPanel {
         wholeContentPanel.add(contentPanel, BorderLayout.CENTER);
     }
 
+    // ... (initBottomPanel, setupListeners, makeFlat, setupDragDrop, chooseFile, loadFile 保持不变) ...
     private void initBottomPanel() {
         prevButton = new JButton(AllIcons.Actions.Back);
         prevButton.setToolTipText("Previous Page");
         makeFlat(prevButton);
-
         nextButton = new JButton(AllIcons.Actions.Forward);
         nextButton.setToolTipText("Next Page");
         makeFlat(nextButton);
-
         pageInfoLabel = new JLabel("Page 0 of 0");
         showAllRowsCheckbox = new JCheckBox("Show all rows");
         exportFormatBox = new ComboBox<>(new String[]{"CSV", "JSON"});
-
         exportButton = new JButton("Export CSV", AllIcons.ToolbarDecorator.Export);
-
         filterCountLabel = new JLabel("Showing 0 of 0 rows");
         totalRowLabel = new JLabel("Total rows: 0");
-
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 10, 5, 10);
         gbc.fill = GridBagConstraints.NONE;
-
         JPanel leftGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         leftGroup.add(prevButton);
         leftGroup.add(pageInfoLabel);
@@ -288,18 +249,15 @@ public class ParquetViewerPanel {
         leftGroup.add(showAllRowsCheckbox);
         gbc.gridx = 0; gbc.weightx = 0.3; gbc.anchor = GridBagConstraints.WEST;
         bottomPanel.add(leftGroup, gbc);
-
         JPanel centerGroup = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         centerGroup.add(new JLabel("Export type:"));
         centerGroup.add(exportFormatBox); centerGroup.add(exportButton);
         gbc.gridx = 1; gbc.weightx = 0.4; gbc.anchor = GridBagConstraints.CENTER;
         bottomPanel.add(centerGroup, gbc);
-
         JPanel rightGroup = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         rightGroup.add(filterCountLabel); rightGroup.add(totalRowLabel);
         gbc.gridx = 2; gbc.weightx = 0.3; gbc.anchor = GridBagConstraints.EAST;
         bottomPanel.add(rightGroup, gbc);
-
         wholeContentPanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -315,14 +273,12 @@ public class ParquetViewerPanel {
         prevButton.addActionListener(e -> changePage(-1));
         nextButton.addActionListener(e -> changePage(1));
         showAllRowsCheckbox.addActionListener(e -> reloadDataView());
-
         exportFormatBox.addActionListener(e -> {
             String selected = (String) exportFormatBox.getSelectedItem();
             String format = (selected == null ? "CSV" : selected.toUpperCase());
             exportButton.setText("Export " + format);
             exportButton.setToolTipText("Export as " + format);
         });
-
         exportButton.addActionListener(e -> {
             if ("JSON".equalsIgnoreCase((String) exportFormatBox.getSelectedItem())) {
                 ParquetExporter.exportJson(mainPanel, dataTable, currentFile);
@@ -330,16 +286,13 @@ public class ParquetViewerPanel {
                 ParquetExporter.exportCsv(mainPanel, dataTable, currentFile);
             }
         });
-
         columnSearchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { updateCheckboxes(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { updateCheckboxes(); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updateCheckboxes(); }
         });
-
         applyColumnFilterBtn.addActionListener(e -> reloadDataView());
         columnSearchField.addActionListener(e -> reloadDataView());
-
         tabbedPane.addChangeListener(e -> {
             boolean isDataTab = tabbedPane.getSelectedIndex() == 2;
             boolean hasFile = currentFile != null;
@@ -368,28 +321,21 @@ public class ParquetViewerPanel {
 
     private void loadFile(File file) throws IOException {
         ParquetService.ParquetMetadata metadata = ParquetService.readMetadata(file);
-
         currentFile = file;
         fileLabel.setText("File: " + file.getName());
         currentSchema = metadata.schema();
         totalRowCount = metadata.rowCount();
-
         allColumns.clear();
         currentSchema.getFields().forEach(f -> allColumns.add(f.getName()));
-
         updateCheckboxes();
         currentPage = 1;
         totalRowLabel.setText("Total rows: " + String.format("%,d", totalRowCount));
         showAllRowsCheckbox.setSelected(false);
-
         currentColumnStats = ParquetService.readColumnStats(file);
-
         showSchemaView();
         showMetadataView(metadata.extraMeta());
-
         tabbedPane.setSelectedIndex(0);
         updateControlState(false);
-
         withLoadingDialog("Refreshing data...", () -> {
             try {
                 showDataView(currentFile);
@@ -399,10 +345,10 @@ public class ParquetViewerPanel {
         });
     }
 
+    // ... (showSchemaView, buildSchemaTree, toHex, showMetadataView 保持不变) ...
     private void showSchemaView() {
         schemaTextArea.setText(currentSchema.toString());
         schemaTextArea.setCaretPosition(0);
-
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Schema: " + currentSchema.getName());
         for (Type field : currentSchema.getFields()) {
             buildSchemaTree(root, field, null);
@@ -411,12 +357,10 @@ public class ParquetViewerPanel {
         for (int i = 0; i < schemaTree.getRowCount(); i++) schemaTree.expandRow(i);
     }
 
-    // --- 核心优化：动态颜色构建 Schema 树 ---
     private void buildSchemaTree(DefaultMutableTreeNode parent, Type type, String parentPath) {
         String currentPath = (parentPath == null || parentPath.isEmpty())
                 ? type.getName()
                 : parentPath + "." + type.getName();
-
         String statsHtml = "";
         if (type.isPrimitive() && currentColumnStats != null) {
             ParquetService.ColumnDetails detail = currentColumnStats.get(currentPath);
@@ -429,34 +373,19 @@ public class ParquetViewerPanel {
                 );
             }
         }
-
-        // 使用 JBColor 定义自适应颜色
-        // 类型颜色：Light模式深蓝，Dark模式亮蓝
         Color typeColorObj = new JBColor(new Color(0x0033B3), new Color(0x589DF6));
         String typeColor = toHex(typeColorObj);
-
-        // 属性颜色：灰色
         String attrColor = toHex(JBColor.GRAY);
-
         String nodeLabel;
         if (type.isPrimitive()) {
             String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
             nodeLabel = String.format("<html><b>%s</b> : <font color='%s'>%s</font>%s <font color='%s'>[%s]</font>%s</html>",
-                    type.getName(),
-                    typeColor,
-                    type.asPrimitiveType().getPrimitiveTypeName(),
-                    originalType,
-                    attrColor,
-                    type.getRepetition(),
-                    statsHtml);
+                    type.getName(), typeColor, type.asPrimitiveType().getPrimitiveTypeName(), originalType, attrColor, type.getRepetition(), statsHtml);
             parent.add(new DefaultMutableTreeNode(nodeLabel));
         } else {
             String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
             nodeLabel = String.format("<html><b>%s</b>%s <font color='%s'>[%s]</font></html>",
-                    type.getName(),
-                    originalType,
-                    attrColor,
-                    type.getRepetition());
+                    type.getName(), originalType, attrColor, type.getRepetition());
             DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(nodeLabel);
             parent.add(groupNode);
             for (Type child : type.asGroupType().getFields()) {
@@ -465,7 +394,6 @@ public class ParquetViewerPanel {
         }
     }
 
-    // 辅助方法：Color 转 Hex 字符串
     private String toHex(Color color) {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
@@ -479,7 +407,6 @@ public class ParquetViewerPanel {
             data[i][1] = entry.getValue();
             i++;
         }
-
         DefaultTableModel model = new DefaultTableModel(data, columns) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
@@ -497,7 +424,12 @@ public class ParquetViewerPanel {
         List<Object[]> rows = ParquetService.readPageData(file, currentSchema, selectedColumns,
                 currentPage, pageSize, showAllRowsCheckbox.isSelected());
 
-        DefaultTableModel model = new DefaultTableModel(rows.toArray(new Object[0][]), selectedColumns.toArray());
+        // --- 核心更新：使用自定义 Model 来支持正确的数字排序 ---
+        ParquetTableModel model = new ParquetTableModel(
+                rows.toArray(new Object[0][]),
+                selectedColumns.toArray(),
+                currentSchema
+        );
         dataTable.setModel(model);
 
         JViewport rowHeader = dataScrollPane.getRowHeader();
@@ -517,24 +449,21 @@ public class ParquetViewerPanel {
         updateFilterCountLabel();
     }
 
+    // ... (showHexDialog, copyToClipboard, humanReadableByteCount, updatePaginationState, changePage, reloadDataView, applyDataFilter, updateCheckboxes, getSelectedColumns, updateFilterCountLabel, updateControlState, showError, withLoadingDialog 保持不变) ...
     private void showHexDialog(Object val) {
         if (val == null) {
             JOptionPane.showMessageDialog(mainPanel, "Value is null (0x00)", "Hex View", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-
         byte[] bytes = val.toString().getBytes(StandardCharsets.UTF_8);
         StringBuilder hexBuilder = new StringBuilder();
         StringBuilder charBuilder = new StringBuilder();
-
         for (int i = 0; i < bytes.length; i++) {
             byte b = bytes[i];
             hexBuilder.append(String.format("%02X ", b));
-
             char c = (char) b;
             if (!Character.isISOControl(c)) charBuilder.append(c);
             else charBuilder.append('.');
-
             if ((i + 1) % 16 == 0) {
                 hexBuilder.append("  |  ").append(charBuilder).append("\n");
                 charBuilder.setLength(0);
@@ -547,13 +476,11 @@ public class ParquetViewerPanel {
             }
             hexBuilder.append("  |  ").append(charBuilder).append("\n");
         }
-
         JTextArea area = new JTextArea(hexBuilder.toString());
         area.setFont(new Font("Monospaced", Font.PLAIN, 12));
         area.setEditable(false);
         JScrollPane scroll = new JScrollPane(area);
         scroll.setPreferredSize(new Dimension(500, 300));
-
         JOptionPane.showMessageDialog(mainPanel, scroll, "Hex / Raw View", JOptionPane.PLAIN_MESSAGE);
     }
 
@@ -705,6 +632,43 @@ public class ParquetViewerPanel {
     // INNER CLASSES: CLEAN & SMART UI
     // ==========================================
 
+    // --- 新增：自定义 TableModel 以支持数字排序 ---
+    private static class ParquetTableModel extends DefaultTableModel {
+        private final MessageType schema;
+        private final String[] columns;
+
+        public ParquetTableModel(Object[][] data, Object[] columnNames, MessageType schema) {
+            super(data, columnNames);
+            this.schema = schema;
+            this.columns = new String[columnNames.length];
+            for(int i=0; i<columnNames.length; i++) this.columns[i] = columnNames[i].toString();
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // 根据 Parquet Schema 返回正确的 Class，以便 JTable 使用正确的 Comparator
+            try {
+                String colName = columns[columnIndex];
+                if (schema.containsField(colName)) {
+                    Type type = schema.getType(colName);
+                    if (type.isPrimitive() && !type.isRepetition(Type.Repetition.REPEATED)) {
+                        PrimitiveType pt = type.asPrimitiveType();
+                        switch (pt.getPrimitiveTypeName()) {
+                            case INT32: return Integer.class;
+                            case INT64: return Long.class;
+                            case FLOAT: return Float.class;
+                            case DOUBLE: return Double.class;
+                            case BOOLEAN: return Boolean.class;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // ignore
+            }
+            return Object.class;
+        }
+    }
+
     private static class SmartCellRenderer extends DefaultTableCellRenderer {
         private final Color nullColor = JBColor.GRAY;
         private final Color evenRowColor = new JBColor(new Color(245, 248, 250), new Color(60, 63, 65));
@@ -716,7 +680,6 @@ public class ParquetViewerPanel {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             if (!isSelected) {
-                // Zebra Striping
                 setBackground(row % 2 == 0 ? table.getBackground() : evenRowColor);
             } else {
                 setBackground(table.getSelectionBackground());
@@ -732,7 +695,9 @@ public class ParquetViewerPanel {
                 if (!isSelected) setForeground(table.getForeground());
             }
 
+            // 核心修改：数字也保持左对齐 (如果用户想改回右对齐，改这里即可)
             setHorizontalAlignment(SwingConstants.LEFT);
+
             return this;
         }
     }
