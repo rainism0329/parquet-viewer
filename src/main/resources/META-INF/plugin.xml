@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.netlify.app/">Phil Zhang</vendor>
 
     <description>
