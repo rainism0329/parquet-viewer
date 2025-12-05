@@ -3,7 +3,7 @@ package com.bigphil.parquetviewer;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil; // 引入 UIUtil
+import com.intellij.util.ui.UIUtil;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.Type;
 
@@ -188,14 +188,10 @@ public class ParquetViewerPanel {
         // --- 3. Data Tab ---
         dataTable = new JTable();
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        // dataTable.setDefaultEditor(Object.class, null); // Allow editing
 
-        // 修复：移除禁用编辑的代码，现在允许编辑
-        // dataTable.setDefaultEditor(Object.class, null);
-
-        // ** UI Fix: Smart Cell Renderer (Unified Font, Zebra Striping, Left Align) **
         dataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
 
-        // ** UI Fix: Restore Grid Lines **
         dataTable.setShowGrid(true);
         dataTable.setGridColor(new JBColor(new Color(220, 220, 220), new Color(80, 80, 80)));
         dataTable.setIntercellSpacing(new Dimension(1, 1));
@@ -203,7 +199,6 @@ public class ParquetViewerPanel {
 
         dataScrollPane = new JScrollPane(dataTable);
 
-        // Row Headers (Line Numbers)
         JTable rowTable = new RowNumberTable(dataTable);
         dataScrollPane.setRowHeaderView(rowTable);
         dataScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
@@ -416,6 +411,7 @@ public class ParquetViewerPanel {
         for (int i = 0; i < schemaTree.getRowCount(); i++) schemaTree.expandRow(i);
     }
 
+    // --- 核心优化：动态颜色构建 Schema 树 ---
     private void buildSchemaTree(DefaultMutableTreeNode parent, Type type, String parentPath) {
         String currentPath = (parentPath == null || parentPath.isEmpty())
                 ? type.getName()
@@ -434,22 +430,44 @@ public class ParquetViewerPanel {
             }
         }
 
+        // 使用 JBColor 定义自适应颜色
+        // 类型颜色：Light模式深蓝，Dark模式亮蓝
+        Color typeColorObj = new JBColor(new Color(0x0033B3), new Color(0x589DF6));
+        String typeColor = toHex(typeColorObj);
+
+        // 属性颜色：灰色
+        String attrColor = toHex(JBColor.GRAY);
+
         String nodeLabel;
         if (type.isPrimitive()) {
             String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
-            nodeLabel = String.format("<html><b>%s</b> : <font color='blue'>%s</font>%s <font color='gray'>[%s]</font>%s</html>",
-                    type.getName(), type.asPrimitiveType().getPrimitiveTypeName(), originalType, type.getRepetition(), statsHtml);
+            nodeLabel = String.format("<html><b>%s</b> : <font color='%s'>%s</font>%s <font color='%s'>[%s]</font>%s</html>",
+                    type.getName(),
+                    typeColor,
+                    type.asPrimitiveType().getPrimitiveTypeName(),
+                    originalType,
+                    attrColor,
+                    type.getRepetition(),
+                    statsHtml);
             parent.add(new DefaultMutableTreeNode(nodeLabel));
         } else {
             String originalType = (type.getOriginalType() != null) ? " (" + type.getOriginalType() + ")" : "";
-            nodeLabel = String.format("<html><b>%s</b>%s <font color='gray'>[%s]</font></html>",
-                    type.getName(), originalType, type.getRepetition());
+            nodeLabel = String.format("<html><b>%s</b>%s <font color='%s'>[%s]</font></html>",
+                    type.getName(),
+                    originalType,
+                    attrColor,
+                    type.getRepetition());
             DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(nodeLabel);
             parent.add(groupNode);
             for (Type child : type.asGroupType().getFields()) {
                 buildSchemaTree(groupNode, child, currentPath);
             }
         }
+    }
+
+    // 辅助方法：Color 转 Hex 字符串
+    private String toHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
     private void showMetadataView(Map<String, String> meta) {
@@ -687,16 +705,8 @@ public class ParquetViewerPanel {
     // INNER CLASSES: CLEAN & SMART UI
     // ==========================================
 
-    /**
-     * Smart Renderer:
-     * 1. Uses Zebra Striping for readability.
-     * 2. Uses default font for consistency.
-     * 3. Handles <null> values explicitly.
-     * 4. Keeps numbers Left-aligned as requested.
-     */
     private static class SmartCellRenderer extends DefaultTableCellRenderer {
         private final Color nullColor = JBColor.GRAY;
-        // Subtle zebra colors
         private final Color evenRowColor = new JBColor(new Color(245, 248, 250), new Color(60, 63, 65));
 
         @Override
@@ -705,16 +715,14 @@ public class ParquetViewerPanel {
                                                        int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-            // 1. Zebra Striping (only if not selected)
             if (!isSelected) {
-                // Use default table background for odd rows to match theme safely
+                // Zebra Striping
                 setBackground(row % 2 == 0 ? table.getBackground() : evenRowColor);
             } else {
                 setBackground(table.getSelectionBackground());
                 setForeground(table.getSelectionForeground());
             }
 
-            // 2. Value Rendering
             if (value == null || value.toString().isEmpty()) {
                 setText("<null>");
                 if (!isSelected) setForeground(nullColor);
@@ -724,16 +732,11 @@ public class ParquetViewerPanel {
                 if (!isSelected) setForeground(table.getForeground());
             }
 
-            // 3. Always Left Align (as requested)
             setHorizontalAlignment(SwingConstants.LEFT);
-
             return this;
         }
     }
 
-    /**
-     * Fixed Row Header for Line Numbers
-     */
     private static class RowNumberTable extends JTable {
         private final JTable mainTable;
 
