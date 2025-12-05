@@ -1,14 +1,14 @@
 package com.bigphil.parquetviewer;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil; // 引入 UIUtil
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.Type;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
@@ -56,7 +56,7 @@ public class ParquetViewerPanel {
     private JButton exportButton;
     private JLabel filterCountLabel;
     private JButton applyColumnFilterBtn;
-    private JComboBox<String> exportFormatBox;
+    private ComboBox<String> exportFormatBox;
 
     private boolean hasMatchingColumns = true;
     private File currentFile;
@@ -140,7 +140,6 @@ public class ParquetViewerPanel {
         schemaTree.setTransferHandler(null);
         schemaTree.setRowHeight(22);
 
-        // Geeky Feature: Schema Code Generation Popup
         JPopupMenu schemaPopup = new JPopupMenu();
         JMenuItem copyHiveItem = new JMenuItem("Copy as Hive DDL");
         JMenuItem copyJavaItem = new JMenuItem("Copy as Java POJO");
@@ -181,15 +180,34 @@ public class ParquetViewerPanel {
         metadataTable = new JTable();
         metadataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         metadataTable.setEnabled(false);
+        metadataTable.setShowGrid(true);
+        metadataTable.setGridColor(JBColor.LIGHT_GRAY);
+        metadataTable.setRowHeight(24);
         JScrollPane metaScroll = new JScrollPane(metadataTable);
 
         // --- 3. Data Tab ---
         dataTable = new JTable();
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        dataTable.setDefaultEditor(Object.class, null); // Disable editing
+
+        // 修复：移除禁用编辑的代码，现在允许编辑
+        // dataTable.setDefaultEditor(Object.class, null);
+
+        // ** UI Fix: Smart Cell Renderer (Unified Font, Zebra Striping, Left Align) **
+        dataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
+
+        // ** UI Fix: Restore Grid Lines **
+        dataTable.setShowGrid(true);
+        dataTable.setGridColor(new JBColor(new Color(220, 220, 220), new Color(80, 80, 80)));
+        dataTable.setIntercellSpacing(new Dimension(1, 1));
+        dataTable.setRowHeight(24);
+
         dataScrollPane = new JScrollPane(dataTable);
 
-        // Geeky Feature: View as Hex (MouseListener fix applied)
+        // Row Headers (Line Numbers)
+        JTable rowTable = new RowNumberTable(dataTable);
+        dataScrollPane.setRowHeaderView(rowTable);
+        dataScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
+
         dataTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) { handleContextMenu(e); }
@@ -246,12 +264,20 @@ public class ParquetViewerPanel {
     }
 
     private void initBottomPanel() {
-        prevButton = new JButton("<< Prev");
-        nextButton = new JButton("Next >>");
+        prevButton = new JButton(AllIcons.Actions.Back);
+        prevButton.setToolTipText("Previous Page");
+        makeFlat(prevButton);
+
+        nextButton = new JButton(AllIcons.Actions.Forward);
+        nextButton.setToolTipText("Next Page");
+        makeFlat(nextButton);
+
         pageInfoLabel = new JLabel("Page 0 of 0");
         showAllRowsCheckbox = new JCheckBox("Show all rows");
         exportFormatBox = new ComboBox<>(new String[]{"CSV", "JSON"});
-        exportButton = new JButton("Export CSV");
+
+        exportButton = new JButton("Export CSV", AllIcons.ToolbarDecorator.Export);
+
         filterCountLabel = new JLabel("Showing 0 of 0 rows");
         totalRowLabel = new JLabel("Total rows: 0");
 
@@ -261,8 +287,10 @@ public class ParquetViewerPanel {
         gbc.fill = GridBagConstraints.NONE;
 
         JPanel leftGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        leftGroup.add(prevButton); leftGroup.add(pageInfoLabel);
-        leftGroup.add(nextButton); leftGroup.add(showAllRowsCheckbox);
+        leftGroup.add(prevButton);
+        leftGroup.add(pageInfoLabel);
+        leftGroup.add(nextButton);
+        leftGroup.add(showAllRowsCheckbox);
         gbc.gridx = 0; gbc.weightx = 0.3; gbc.anchor = GridBagConstraints.WEST;
         bottomPanel.add(leftGroup, gbc);
 
@@ -280,6 +308,14 @@ public class ParquetViewerPanel {
         wholeContentPanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    private void makeFlat(JButton btn) {
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setFocusPainted(false);
+        btn.setOpaque(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
     private void setupListeners() {
         prevButton.addActionListener(e -> changePage(-1));
         nextButton.addActionListener(e -> changePage(1));
@@ -287,7 +323,9 @@ public class ParquetViewerPanel {
 
         exportFormatBox.addActionListener(e -> {
             String selected = (String) exportFormatBox.getSelectedItem();
-            exportButton.setText("Export " + (selected == null ? "CSV" : selected.toUpperCase()));
+            String format = (selected == null ? "CSV" : selected.toUpperCase());
+            exportButton.setText("Export " + format);
+            exportButton.setToolTipText("Export as " + format);
         });
 
         exportButton.addActionListener(e -> {
@@ -307,7 +345,6 @@ public class ParquetViewerPanel {
         applyColumnFilterBtn.addActionListener(e -> reloadDataView());
         columnSearchField.addActionListener(e -> reloadDataView());
 
-        // Tab Change Listener
         tabbedPane.addChangeListener(e -> {
             boolean isDataTab = tabbedPane.getSelectedIndex() == 2;
             boolean hasFile = currentFile != null;
@@ -350,7 +387,6 @@ public class ParquetViewerPanel {
         totalRowLabel.setText("Total rows: " + String.format("%,d", totalRowCount));
         showAllRowsCheckbox.setSelected(false);
 
-        // Load stats
         currentColumnStats = ParquetService.readColumnStats(file);
 
         showSchemaView();
@@ -433,6 +469,7 @@ public class ParquetViewerPanel {
         metadataTable.setModel(model);
         metadataTable.getColumnModel().getColumn(0).setPreferredWidth(150);
         metadataTable.getColumnModel().getColumn(1).setPreferredWidth(400);
+        metadataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
     }
 
     private void showDataView(File file) throws IOException {
@@ -444,6 +481,12 @@ public class ParquetViewerPanel {
 
         DefaultTableModel model = new DefaultTableModel(rows.toArray(new Object[0][]), selectedColumns.toArray());
         dataTable.setModel(model);
+
+        JViewport rowHeader = dataScrollPane.getRowHeader();
+        if (rowHeader != null && rowHeader.getView() instanceof RowNumberTable) {
+            ((RowNumberTable) rowHeader.getView()).setModel(model);
+        }
+
         applyDataFilter();
 
         for (int i = 0; i < dataTable.getColumnCount(); i++) {
@@ -456,7 +499,6 @@ public class ParquetViewerPanel {
         updateFilterCountLabel();
     }
 
-    // --- Helper: Hex Dialog ---
     private void showHexDialog(Object val) {
         if (val == null) {
             JOptionPane.showMessageDialog(mainPanel, "Value is null (0x00)", "Hex View", JOptionPane.INFORMATION_MESSAGE);
@@ -497,7 +539,6 @@ public class ParquetViewerPanel {
         JOptionPane.showMessageDialog(mainPanel, scroll, "Hex / Raw View", JOptionPane.PLAIN_MESSAGE);
     }
 
-    // --- Helper: Copy to Clipboard ---
     private void copyToClipboard(String text) {
         StringSelection selection = new StringSelection(text);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
@@ -640,5 +681,93 @@ public class ParquetViewerPanel {
             catch (Exception ex) { SwingUtilities.invokeLater(() -> showError("❌ Failed: " + ex.getMessage())); }
             finally { SwingUtilities.invokeLater(loadingDialog::dispose); }
         }).start();
+    }
+
+    // ==========================================
+    // INNER CLASSES: CLEAN & SMART UI
+    // ==========================================
+
+    /**
+     * Smart Renderer:
+     * 1. Uses Zebra Striping for readability.
+     * 2. Uses default font for consistency.
+     * 3. Handles <null> values explicitly.
+     * 4. Keeps numbers Left-aligned as requested.
+     */
+    private static class SmartCellRenderer extends DefaultTableCellRenderer {
+        private final Color nullColor = JBColor.GRAY;
+        // Subtle zebra colors
+        private final Color evenRowColor = new JBColor(new Color(245, 248, 250), new Color(60, 63, 65));
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus,
+                                                       int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // 1. Zebra Striping (only if not selected)
+            if (!isSelected) {
+                // Use default table background for odd rows to match theme safely
+                setBackground(row % 2 == 0 ? table.getBackground() : evenRowColor);
+            } else {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            }
+
+            // 2. Value Rendering
+            if (value == null || value.toString().isEmpty()) {
+                setText("<null>");
+                if (!isSelected) setForeground(nullColor);
+            } else {
+                String val = value.toString();
+                setText(val);
+                if (!isSelected) setForeground(table.getForeground());
+            }
+
+            // 3. Always Left Align (as requested)
+            setHorizontalAlignment(SwingConstants.LEFT);
+
+            return this;
+        }
+    }
+
+    /**
+     * Fixed Row Header for Line Numbers
+     */
+    private static class RowNumberTable extends JTable {
+        private final JTable mainTable;
+
+        public RowNumberTable(JTable mainTable) {
+            this.mainTable = mainTable;
+            setAutoCreateColumnsFromModel(false);
+            setModel(mainTable.getModel());
+            setSelectionModel(mainTable.getSelectionModel());
+            setRowHeight(mainTable.getRowHeight());
+            getColumnModel().addColumn(new TableColumn());
+            getColumnModel().getColumn(0).setCellRenderer(new RowNumberRenderer());
+            setPreferredScrollableViewportSize(new Dimension(40, 0));
+            setFocusable(false);
+            setShowGrid(false);
+            setIntercellSpacing(new Dimension(0, 0));
+        }
+
+        @Override
+        public int getRowCount() { return mainTable.getRowCount(); }
+
+        @Override
+        public boolean isCellEditable(int row, int column) { return false; }
+
+        private static class RowNumberRenderer extends DefaultTableCellRenderer {
+            public RowNumberRenderer() {
+                setHorizontalAlignment(JLabel.CENTER);
+                setBackground(JBColor.PanelBackground);
+                setForeground(JBColor.GRAY);
+            }
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                setText(String.valueOf(row + 1));
+                return this;
+            }
+        }
     }
 }
