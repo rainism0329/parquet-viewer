@@ -77,7 +77,7 @@ public class FilterHelpDialog {
         JLabel qrLabel = new JLabel(qrIcon);
         qrLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel websiteLabel = createLink("Visit Author's Website", "https://phil-zhang.netlify.app/");
+        JLabel websiteLabel = createLink("Visit Author's Website", "https://phil-the-guy.zeabur.app/");
         JLabel paypalLabel = createLink("Donate via PayPal", "https://www.paypal.me/bigphilzhang");
         JLabel kofiLabel = createLink("Donate via Ko-fi", "https://ko-fi.com/philipzhang51603");
 

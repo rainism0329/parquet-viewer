@@ -1,15 +1,15 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>2.2.3</version>
-    <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.netlify.app/">Phil Zhang</vendor>
+    <version>2.2.5</version>
+    <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.zeabur.app/">Phil Zhang</vendor>
 
     <description>
         <![CDATA[
-          <b>Parquet Viewer 2.2.3 - The Ultimate Parquet Tool for Geeks!</b><br/><br/>
+          <b>Parquet Viewer 2.2.5 - The Ultimate Parquet Tool for Geeks!</b><br/><br/>
 
           <b>Parquet Viewer</b> is a lightweight, high-performance IntelliJ IDEA plugin that allows you to open, explore, and analyze <code>.parquet</code> files directly within your IDE.<br/>
-          Version 2.2.3 brings a completely rewritten core engine and a stunning new UI designed for big data professionals.<br/><br/>
+          Version 2.2.5 brings a completely rewritten core engine and a stunning new UI designed for big data professionals.<br/><br/>
 
           <b>🚀 Extreme Performance (New Engine):</b>
           <ul>
@@ -46,7 +46,7 @@
           <p>Apache 2.0</p>
 
           <b>About the Author:</b>
-          <br/>Check out my <a href="https://phil-the-guy.netlify.app/">Personal Website</a> for more projects.<br/>
+          <br/>Check out my <a href="https://phil-the-guy.zeabur.app/">Personal Website</a> for more projects.<br/>
 
           <b>Support:</b>
           <br/>If you find this plugin useful, consider supporting it:<br/>
@@ -58,7 +58,7 @@
     </description>
 
     <change-notes><![CDATA[
-        <b>2.2.3 - The Major "Geek" Update</b>
+        <b>2.2.5 - The Major "Geek" Update</b>
         <br/><br/>
         This version is a complete rewrite focusing on performance and developer productivity.
         <ul>

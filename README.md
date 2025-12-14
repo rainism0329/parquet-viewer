@@ -44,7 +44,7 @@
 ## Author
 
 Created by **Phil Zhang**. 
-Visit my personal website: [Home Page](https://phil-the-guy.netlify.app/)
+Visit my personal website: [Home Page](https://phil-the-guy.zeabur.app/)
 
 ---
 
