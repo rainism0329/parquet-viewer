@@ -1,87 +1,66 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer</name>
-    <version>2.2.5</version>
+    <version>2.3.0</version>
     <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.zeabur.app/">Phil Zhang</vendor>
 
     <description>
         <![CDATA[
-          <b>Parquet Viewer 2.2.5 - The Ultimate Parquet Tool for Geeks!</b><br/><br/>
+          <b>Parquet Viewer - The Ultimate Tool for Big Data Geeks.</b><br/><br/>
 
-          <b>Parquet Viewer</b> is a lightweight, high-performance IntelliJ IDEA plugin that allows you to open, explore, and analyze <code>.parquet</code> files directly within your IDE.<br/>
-          Version 2.2.5 brings a completely rewritten core engine and a stunning new UI designed for big data professionals.<br/><br/>
+          <b>Parquet Viewer</b> is a lightweight, high-performance IntelliJ IDEA plugin designed for developers who need to inspect <code>.parquet</code> files with precision and style.<br/>
+          Version 2.3 brings native numeric sorting, regex filtering, and a "Gamer Mode" for the UI.<br/><br/>
 
-          <b>🚀 Extreme Performance (New Engine):</b>
+          <b>🚀 Extreme Performance:</b>
           <ul>
-            <li><b>Instant Open:</b> Reads metadata in O(1) time. Opens GB-sized files instantly without scanning the whole file.</li>
-            <li><b>Smart Pagination:</b> Implements <b>Row Group Skipping</b>. Flipping to page 10,000 is now as fast as page 1.</li>
-            <li><b>Column Projection:</b> Only reads the columns you select, drastically reducing memory usage and IO.</li>
+            <li><b>Instant Open:</b> Reads metadata in O(1) time. Opens GB-sized files instantly.</li>
+            <li><b>Smart IO:</b> Implements <b>Row Group Skipping</b> and <b>Column Projection</b> to minimize memory usage.</li>
           </ul>
 
           <b>✨ Geeky Features:</b>
           <ul>
-            <li><b>X-Ray Schema Tree:</b> View deep stats like <b>Compression Ratio</b>, <b>Null %</b>, and <b>Compressed Size</b> directly in the schema view.</li>
-            <li><b>Code Generation:</b> Right-click any schema node to instantly generate <b>Hive DDL</b> or <b>Java POJO</b> code.</li>
-            <li><b>Hex / Raw View:</b> Right-click data cells to inspect binary data, debug encoding issues, or view raw hex dumps.</li>
-            <li><b>Metadata Inspector:</b> A dedicated tab to view file properties, creator info, and user-defined key-values.</li>
+            <li><b>Native Sorting:</b> Correctly sorts numeric columns (Int, Long, Double) by value, not by string.</li>
+            <li><b>X-Ray Schema:</b> View compression ratio, null percentage, and data size directly in the schema tree.</li>
+            <li><b>Hex View:</b> Right-click any cell to inspect raw binary data and debug encoding issues.</li>
+            <li><b>Code Gen:</b> Generate <b>Hive DDL</b> and <b>Java POJO</b> from schema with one click.</li>
           </ul>
 
-          <b>🎨 Modern UI Experience:</b>
+          <b>🎨 Modern UI & Easter Eggs:</b>
           <ul>
-            <li><b>Native Integration:</b> Redesigned with IntelliJ native icons, colors, and <b>JetBrains Mono</b> font support.</li>
-            <li><b>Enhanced Data Grid:</b> Features Excel-style <b>Row Headers</b> (line numbers), <b>Zebra Striping</b>, and explicit <code>&lt;null&gt;</code> rendering.</li>
-            <li><b>Seamless UX:</b> Improved drag-and-drop support, flat toolbar buttons, and responsive controls.</li>
-          </ul>
-
-          <b>Core Features:</b>
-          <ul>
-            <li>Schema view (Switchable between Tree & Text modes).</li>
-            <li>Data preview with advanced filtering (MVEL syntax support).</li>
-            <li>Column selector to hide irrelevant fields.</li>
-            <li>Export filtered results to CSV and JSON.</li>
-            <li>Full Dark Mode support.</li>
+            <li><b>Data Grid:</b> Excel-style row headers, zebra striping, and explicit <code>&lt;null&gt;</code> rendering.</li>
+            <li><b>Geek Mode:</b> Try typing <code>rgb</code> or <code>phil</code> in the filter box for a surprise! 🌈</li>
           </ul>
 
           <b>License:</b>
           <p>Apache 2.0</p>
 
           <b>About the Author:</b>
-          <br/>Check out my <a href="https://phil-the-guy.zeabur.app/">Personal Website</a> for more projects.<br/>
+          <br/>Check out my <a href="https://phil-the-guy.zeabur.app/">Personal Website</a>.<br/>
 
           <b>Support:</b>
           <br/>If you find this plugin useful, consider supporting it:<br/>
           <a href="https://www.paypal.me/bigphilzhang">Donate via PayPal</a><br/>
-          <a href="https://ko-fi.com/philipzhang51603">Donate via Ko-fi</a><br/>
-          Donate via Alipay:<br/>
-          <img src="https://raw.githubusercontent.com/rainism0329/springclouddemo/master/1341746696680_.pic.jpg" width="160"/>
+          <a href="https://ko-fi.com/philipzhang51603">Donate via Ko-fi</a>
         ]]>
     </description>
 
     <change-notes><![CDATA[
-        <b>2.2.5 - The Major "Geek" Update</b>
+        <b>2.3.0 - The "Rainbow" Update</b>
         <br/><br/>
-        This version is a complete rewrite focusing on performance and developer productivity.
         <ul>
-            <li>🚀 <b>Performance Overhaul:</b> Implemented <b>Row Group Skipping</b> and <b>Column Projection</b>. Large files (GBs) now open and scroll instantly.</li>
-            <li>🧬 <b>Advanced Schema View:</b> The schema tree now displays "geeky" stats: Compression Ratio, Null Percentage, and Size per column.</li>
-            <li>💻 <b>Code Generation:</b> Added context menu to generate <b>Hive DDL</b> and <b>Java POJO</b> directly from the schema.</li>
-            <li>🧐 <b>Hex Viewer:</b> Added "View as Hex / Raw" to data cells for debugging binary data.</li>
-            <li>🎨 <b>UI Redesign:</b>
-                <ul>
-                    <li>Added Row Numbers (Excel-style) to the data table.</li>
-                    <li>Updated to use native IntelliJ icons and flat toolbar buttons.</li>
-                    <li>Unified fonts (JetBrains Mono) and explicit <code>&lt;null&gt;</code> rendering.</li>
-                </ul>
-            </li>
-            <li>ℹ️ <b>Metadata Tab:</b> Added a new tab to view detailed file metadata and key-value pairs.</li>
-            <li>🐛 <b>Improvements:</b> Fixed drag-and-drop issues on input fields, optimized memory usage, and fixed pagination button logic.</li>
+            <li>🔢 <b>Improvement:</b> Implemented <b>Native Numeric Sorting</b>. Integers and Floats now sort by value instead of lexicographically.</li>
+            <li>🌈 <b>Easter Eggs:</b> Added hidden visual modes. Try typing <b>rgb</b> or <b>phil</b> in the filter field!</li>
+            <li>🎨 <b>UI Polish:</b> Fixed Zebra Striping rendering issues for numeric columns.</li>
+            <li>🐛 <b>Fix:</b> Resolved MVEL class loader issues to ensure stable filtering expression execution.</li>
+            <li>🚀 <b>Performance:</b> Further optimized Lazy Map evaluation for complex filters.</li>
         </ul>
     ]]>
     </change-notes>
 
-    <idea-version since-build="173.0"/>
+    <idea-version since-build="242"/>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
@@ -89,8 +68,5 @@
                     icon="/icons/Parquet Viewer T.svg"
                     anchor="bottom"/>
     </extensions>
-
-    <actions>
-    </actions>
 
 </idea-plugin>

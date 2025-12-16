@@ -3,7 +3,6 @@ package com.bigphil.parquetviewer;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 import org.apache.parquet.schema.Type;
@@ -68,9 +67,12 @@ public class ParquetViewerPanel {
     private final int pageSize = 500;
     private long totalRowCount = 0;
     private Timer debounceTimer;
-
-    // Stats cache
     private Map<String, ParquetService.ColumnDetails> currentColumnStats;
+
+    // --- Easter Egg State ---
+    private boolean isRGBMode = false;
+    private Timer rgbTimer;
+    private float hueOffset = 0.0f;
 
     public ParquetViewerPanel() {
         mainPanel = new JPanel();
@@ -85,11 +87,23 @@ public class ParquetViewerPanel {
 
         setupListeners();
         setupDragDrop();
+        setupRGBTimer(); // Initialize the RGB timer
 
         updateControlState(false);
     }
 
     public JPanel getContent() { return mainPanel; }
+
+    private void setupRGBTimer() {
+        // Update at 30 FPS for smooth rainbow effect
+        rgbTimer = new Timer(33, e -> {
+            if (isRGBMode && dataTable.isShowing()) {
+                hueOffset += 0.005f;
+                if (hueOffset > 1.0f) hueOffset = 0.0f;
+                dataTable.repaint();
+            }
+        });
+    }
 
     private void initTopPanel() {
         JButton chooseFileButton = new JButton("📁 Choose Parquet File");
@@ -131,7 +145,6 @@ public class ParquetViewerPanel {
     }
 
     private void initCenterPanel() {
-        // --- 1. Schema Tab ---
         schemaTextArea = new JTextArea();
         schemaTextArea.setEditable(false);
         schemaTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -177,7 +190,7 @@ public class ParquetViewerPanel {
         schemaTabContainer.add(schemaToolbar, BorderLayout.NORTH);
         schemaTabContainer.add(schemaCardPanel, BorderLayout.CENTER);
 
-        // --- 2. Metadata Tab ---
+        // Metadata Tab
         metadataTable = new JTable();
         metadataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         metadataTable.setEnabled(false);
@@ -186,11 +199,11 @@ public class ParquetViewerPanel {
         metadataTable.setRowHeight(24);
         JScrollPane metaScroll = new JScrollPane(metadataTable);
 
-        // --- 3. Data Tab ---
+        // Data Tab
         dataTable = new JTable();
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        // --- 核心修复：为所有类型注册带斑马纹的渲染器 ---
+        // Use the new Easter Egg capable renderer
         SmartCellRenderer smartRenderer = new SmartCellRenderer();
         dataTable.setDefaultRenderer(Object.class, smartRenderer);
         dataTable.setDefaultRenderer(Integer.class, smartRenderer);
@@ -198,7 +211,6 @@ public class ParquetViewerPanel {
         dataTable.setDefaultRenderer(Float.class, smartRenderer);
         dataTable.setDefaultRenderer(Double.class, smartRenderer);
         dataTable.setDefaultRenderer(Boolean.class, smartRenderer);
-        // ----------------------------------------------------
 
         dataTable.setShowGrid(true);
         dataTable.setGridColor(new JBColor(new Color(220, 220, 220), new Color(80, 80, 80)));
@@ -255,7 +267,6 @@ public class ParquetViewerPanel {
         dataTabPanel.add(dataScrollPane, BorderLayout.CENTER);
         dataTabPanel.add(filterBar, BorderLayout.NORTH);
 
-        // Tabbed Pane
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Schema", schemaTabContainer);
         tabbedPane.addTab("Metadata", metaScroll);
@@ -264,6 +275,9 @@ public class ParquetViewerPanel {
         contentPanel = new JPanel(new BorderLayout());
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
         wholeContentPanel.add(contentPanel, BorderLayout.CENTER);
+
+        // Metadata table uses renderer without RGB effect usually, but let's keep it simple
+        metadataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
     }
 
     private void initBottomPanel() {
@@ -437,7 +451,6 @@ public class ParquetViewerPanel {
             }
         }
 
-        // Use JBColor for adaptive colors
         Color typeColorObj = new JBColor(new Color(0x0033B3), new Color(0x589DF6));
         String typeColor = toHex(typeColorObj);
         String attrColor = toHex(JBColor.GRAY);
@@ -481,10 +494,7 @@ public class ParquetViewerPanel {
         metadataTable.setModel(model);
         metadataTable.getColumnModel().getColumn(0).setPreferredWidth(150);
         metadataTable.getColumnModel().getColumn(1).setPreferredWidth(400);
-
-        // Also use SmartRenderer for Metadata to keep look & feel consistent
-        SmartCellRenderer smartRenderer = new SmartCellRenderer();
-        metadataTable.setDefaultRenderer(Object.class, smartRenderer);
+        metadataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
     }
 
     private void showDataView(File file) throws IOException {
@@ -613,16 +623,63 @@ public class ParquetViewerPanel {
         }
     }
 
+    // --- 核心改动：应用过滤时检测彩蛋指令 ---
     private void applyDataFilter() {
+        String text = dataFilterField.getText().trim();
+
+        // 1. RGB Mode Easter Egg
+        if ("rgb".equalsIgnoreCase(text)) {
+            toggleRGBMode();
+            dataFilterField.setText("");
+            return;
+        }
+
+        // 2. Author/Phil Easter Egg
+        if ("phil".equalsIgnoreCase(text) || "author".equalsIgnoreCase(text)) {
+            showAuthorCredits();
+            dataFilterField.setText("");
+            return;
+        }
+
+        // Normal Filter Logic
         try {
             DataFilterParser parser = new DataFilterParser(dataTable.getModel());
-            RowFilter<TableModel, Integer> filter = parser.parse(dataFilterField.getText().trim());
+            RowFilter<TableModel, Integer> filter = parser.parse(text);
             TableRowSorter<TableModel> sorter = new TableRowSorter<>(dataTable.getModel());
             sorter.setRowFilter(filter);
             dataTable.setRowSorter(sorter);
             updateFilterCountLabel();
         } catch (Exception e) {}
     }
+
+    private void toggleRGBMode() {
+        isRGBMode = !isRGBMode;
+        if (isRGBMode) {
+            rgbTimer.start();
+            JOptionPane.showMessageDialog(mainPanel, "🌈 RGB Gamer Mode Activated! 🌈\nFPS Boosted +100%", "System Override", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            rgbTimer.stop();
+            dataTable.repaint(); // Reset
+            JOptionPane.showMessageDialog(mainPanel, "RGB Mode Deactivated.", "System", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    private void showAuthorCredits() {
+        String art = """
+                <html><pre>
+                 ____  _     _ _ 
+                |  _ \\| |__ (_) |
+                | |_) | '_ \\| | |
+                |  __/| | | | | |
+                |_|   |_| |_|_|_|
+                
+                Created by Phil Zhang
+                The Parquet Wizard 🧙‍♂️
+                </pre></html>
+                """;
+        JOptionPane.showMessageDialog(mainPanel, art, "About the Author", JOptionPane.PLAIN_MESSAGE);
+    }
+    // ----------------------------------------
 
     private void updateCheckboxes() {
         checkboxPanel.removeAll();
@@ -702,10 +759,6 @@ public class ParquetViewerPanel {
         }).start();
     }
 
-    // ==========================================
-    // INNER CLASSES: CLEAN & SMART UI
-    // ==========================================
-
     private static class ParquetTableModel extends DefaultTableModel {
         private final MessageType schema;
         private final String[] columns;
@@ -741,7 +794,9 @@ public class ParquetViewerPanel {
         }
     }
 
-    private static class SmartCellRenderer extends DefaultTableCellRenderer {
+    // --- 核心改动：支持 RGB 模式的渲染器 ---
+    // 非静态类，以便访问外部的 isRGBMode 和 hueOffset
+    private class SmartCellRenderer extends DefaultTableCellRenderer {
         private final Color nullColor = JBColor.GRAY;
         private final Color evenRowColor = new JBColor(new Color(245, 248, 250), new Color(60, 63, 65));
 
@@ -751,20 +806,38 @@ public class ParquetViewerPanel {
                                                        int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-            if (!isSelected) {
-                setBackground(row % 2 == 0 ? table.getBackground() : evenRowColor);
+            // 1. RGB Mode Logic
+            if (isRGBMode) {
+                // Calculate hue based on row index and time offset
+                float hue = hueOffset + (row * 0.05f);
+                Color rainbowColor = Color.getHSBColor(hue, 0.4f, 1.0f); // Pastel rainbow
+
+                if (isSelected) {
+                    // Keep selection clearly visible but tinted
+                    setBackground(table.getSelectionBackground());
+                    setForeground(table.getSelectionForeground());
+                } else {
+                    setBackground(rainbowColor);
+                    setForeground(Color.BLACK); // Force black text for contrast on rainbow
+                }
             } else {
-                setBackground(table.getSelectionBackground());
-                setForeground(table.getSelectionForeground());
+                // 2. Normal Zebra Logic
+                if (!isSelected) {
+                    setBackground(row % 2 == 0 ? table.getBackground() : evenRowColor);
+                    setForeground(table.getForeground());
+                } else {
+                    setBackground(table.getSelectionBackground());
+                    setForeground(table.getSelectionForeground());
+                }
             }
 
+            // 3. Value Rendering
             if (value == null || value.toString().isEmpty()) {
                 setText("<null>");
-                if (!isSelected) setForeground(nullColor);
+                if (!isSelected && !isRGBMode) setForeground(nullColor);
             } else {
                 String val = value.toString();
                 setText(val);
-                if (!isSelected) setForeground(table.getForeground());
             }
 
             setHorizontalAlignment(SwingConstants.LEFT);
