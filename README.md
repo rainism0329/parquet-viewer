@@ -70,4 +70,4 @@ Thank you for your support!
 
 ## License
 
-Apache 2.0
+Please refer to the [End User License Agreement (EULA)](https://phil-the-guy.zeabur.app/plugins-eula.html)
