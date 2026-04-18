@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 public class FilterHelpDialog {
 
     public static void show(Component parent) {
-        // --- 1. 构建内容 (保持原有的 HTML 内容) ---
+        // --- 1. 构建内容 (加入彩蛋提示) ---
         String helpText = "<html><body style='width: 320px'>"
                 + "<h3>Supported Filter Syntax</h3>"
                 + "<table cellpadding='4' cellspacing='0'>"
@@ -32,10 +32,20 @@ public class FilterHelpDialog {
                 + "<li>All string comparisons are case-sensitive</li>"
                 + "<li>Use single quotes around string values</li>"
                 + "<li>Use AND / OR and parentheses to combine expressions</li>"
-                + "</ul></body></html>";
+                + "</ul>"
+                // ✨ 核心修改：追加 Easter Egg 隐藏线索
+                + "<br><hr style='border: 1px dashed gray;'>"
+                + "<p style='color: gray; font-size: 10px; margin-top: 5px;'>"
+                + "👾 <b>System Overrides (Easter Eggs):</b><br>"
+                + "Type commands directly into the filter bar:<br>"
+                + "&nbsp;• <b>rgb</b> - Boost your FPS.<br>"
+                + "&nbsp;• <b>matrix</b> (or <b>crt</b>) - Wake up, Neo."
+                + "</p>"
+                + "</body></html>";
 
         JLabel htmlLabel = new JLabel(helpText);
-        htmlLabel.setPreferredSize(new Dimension(400, 320));
+        // ✨ 高度从 320 稍微增加到 420，确保彩蛋文字能完全显示
+        htmlLabel.setPreferredSize(new Dimension(400, 520));
 
         // --- 2. 组装主面板 ---
         JPanel mainContent = new JPanel(new BorderLayout(15, 0));
@@ -54,6 +64,7 @@ public class FilterHelpDialog {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         JButton closeButton = new JButton("Close");
+        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         closeButton.addActionListener(e -> dialog.dispose());
         buttonPanel.add(closeButton);
 
@@ -65,9 +76,6 @@ public class FilterHelpDialog {
         // --- 4. 核心修改：设置位置 ---
         // 如果想让弹窗在 IDEA 窗口正中间：
         dialog.setLocationRelativeTo(windowAncestor);
-
-        // 或者，如果你更喜欢它永远在【屏幕正中间】（无视 IDE 位置），请使用下面这行：
-        // dialog.setLocationRelativeTo(null);
 
         dialog.setVisible(true);
     }

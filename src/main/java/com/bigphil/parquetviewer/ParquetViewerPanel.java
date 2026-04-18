@@ -71,6 +71,7 @@ public class ParquetViewerPanel {
 
     // --- Easter Egg State ---
     private boolean isRGBMode = false;
+    private boolean isCRTMode = false; // 新增：CRT 模式标志
     private Timer rgbTimer;
     private float hueOffset = 0.0f;
 
@@ -87,7 +88,7 @@ public class ParquetViewerPanel {
 
         setupListeners();
         setupDragDrop();
-        setupRGBTimer(); // Initialize the RGB timer
+        setupRGBTimer();
 
         updateControlState(false);
     }
@@ -95,7 +96,6 @@ public class ParquetViewerPanel {
     public JPanel getContent() { return mainPanel; }
 
     private void setupRGBTimer() {
-        // Update at 30 FPS for smooth rainbow effect
         rgbTimer = new Timer(33, e -> {
             if (isRGBMode && dataTable.isShowing()) {
                 hueOffset += 0.005f;
@@ -190,7 +190,6 @@ public class ParquetViewerPanel {
         schemaTabContainer.add(schemaToolbar, BorderLayout.NORTH);
         schemaTabContainer.add(schemaCardPanel, BorderLayout.CENTER);
 
-        // Metadata Tab
         metadataTable = new JTable();
         metadataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         metadataTable.setEnabled(false);
@@ -199,11 +198,29 @@ public class ParquetViewerPanel {
         metadataTable.setRowHeight(24);
         JScrollPane metaScroll = new JScrollPane(metadataTable);
 
-        // Data Tab
-        dataTable = new JTable();
+        // --- 核心修复：高性能 CRT 扫描线绘制 ---
+        dataTable = new JTable() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (isCRTMode) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setColor(new Color(0, 255, 0, 18));
+
+                    // 仅获取当前可视区域进行绘制，避免几百万像素的全量循环卡死 UI
+                    Rectangle clip = g.getClipBounds();
+                    if (clip != null) {
+                        int startY = clip.y - (clip.y % 3); // 对齐扫描线相位
+                        for (int y = startY; y < clip.y + clip.height; y += 3) {
+                            g2.drawLine(clip.x, y, clip.x + clip.width, y);
+                        }
+                    }
+                    g2.dispose();
+                }
+            }
+        };
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        // Use the new Easter Egg capable renderer
         SmartCellRenderer smartRenderer = new SmartCellRenderer();
         dataTable.setDefaultRenderer(Object.class, smartRenderer);
         dataTable.setDefaultRenderer(Integer.class, smartRenderer);
@@ -253,6 +270,8 @@ public class ParquetViewerPanel {
         });
 
         dataFilterField = new HintTextField("e.g. name='Alice' AND age<30 — press Enter to apply");
+        // ✨ 新增这行：极客风的悬停提示，提示有隐藏协议
+        dataFilterField.setToolTipText("<html>Enter filter expression.<br><font color='gray'><i>Hidden protocols [rgb, crt, matrix, phil] are standing by...</i></font></html>");
         dataFilterField.addActionListener(e -> applyDataFilter());
         dataFilterField.setTransferHandler(null);
 
@@ -277,7 +296,6 @@ public class ParquetViewerPanel {
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
         wholeContentPanel.add(contentPanel, BorderLayout.CENTER);
 
-        // Metadata table uses renderer without RGB effect usually, but let's keep it simple
         metadataTable.setDefaultRenderer(Object.class, new SmartCellRenderer());
     }
 
@@ -292,9 +310,12 @@ public class ParquetViewerPanel {
 
         pageInfoLabel = new JLabel("Page 0 of 0");
         showAllRowsCheckbox = new JCheckBox("Show all rows");
+        showAllRowsCheckbox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         exportFormatBox = new ComboBox<>(new String[]{"CSV", "JSON"});
+        exportFormatBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         exportButton = new JButton("Export CSV", AllIcons.ToolbarDecorator.Export);
+        exportButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         filterCountLabel = new JLabel("Showing 0 of 0 rows");
         totalRowLabel = new JLabel("Total rows: 0");
@@ -502,6 +523,7 @@ public class ParquetViewerPanel {
         List<String> selectedColumns = getSelectedColumns();
         if (selectedColumns.isEmpty()) return;
 
+        // IO 读取属于耗时操作，保留在后台线程中执行
         List<Object[]> rows = ParquetService.readPageData(file, currentSchema, selectedColumns,
                 currentPage, pageSize, showAllRowsCheckbox.isSelected());
 
@@ -510,23 +532,27 @@ public class ParquetViewerPanel {
                 selectedColumns.toArray(),
                 currentSchema
         );
-        dataTable.setModel(model);
 
-        JViewport rowHeader = dataScrollPane.getRowHeader();
-        if (rowHeader != null && rowHeader.getView() instanceof RowNumberTable) {
-            ((RowNumberTable) rowHeader.getView()).setModel(model);
-        }
+        // --- 核心修复：更新 UI 必须回到主线程 (EDT) ---
+        SwingUtilities.invokeLater(() -> {
+            dataTable.setModel(model);
 
-        applyDataFilter();
+            JViewport rowHeader = dataScrollPane.getRowHeader();
+            if (rowHeader != null && rowHeader.getView() instanceof RowNumberTable) {
+                ((RowNumberTable) rowHeader.getView()).setModel(model);
+            }
 
-        for (int i = 0; i < dataTable.getColumnCount(); i++) {
-            TableColumn column = dataTable.getColumnModel().getColumn(i);
-            column.setMinWidth(40);
-            column.setPreferredWidth(100);
-        }
+            applyDataFilter();
 
-        updatePaginationState();
-        updateFilterCountLabel();
+            for (int i = 0; i < dataTable.getColumnCount(); i++) {
+                TableColumn column = dataTable.getColumnModel().getColumn(i);
+                column.setMinWidth(40);
+                column.setPreferredWidth(100);
+            }
+
+            updatePaginationState();
+            updateFilterCountLabel();
+        });
     }
 
     private void showHexDialog(Object val) {
@@ -616,7 +642,7 @@ public class ParquetViewerPanel {
                 try {
                     showDataView(currentFile);
                 } catch (IOException ex) {
-                    showError("❌ Failed: " + ex.getMessage());
+                    SwingUtilities.invokeLater(() -> showError("❌ Failed: " + ex.getMessage()));
                 }
             }));
             debounceTimer.setRepeats(false);
@@ -624,25 +650,27 @@ public class ParquetViewerPanel {
         }
     }
 
-    // --- 核心改动：应用过滤时检测彩蛋指令 ---
     private void applyDataFilter() {
         String text = dataFilterField.getText().trim();
 
-        // 1. RGB Mode Easter Egg
         if ("rgb".equalsIgnoreCase(text)) {
             toggleRGBMode();
             dataFilterField.setText("");
             return;
         }
 
-        // 2. Author/Phil Easter Egg
+        if ("crt".equalsIgnoreCase(text) || "matrix".equalsIgnoreCase(text)) {
+            toggleCRTMode();
+            dataFilterField.setText("");
+            return;
+        }
+
         if ("phil".equalsIgnoreCase(text) || "author".equalsIgnoreCase(text)) {
             showAuthorCredits();
             dataFilterField.setText("");
             return;
         }
 
-        // Normal Filter Logic
         try {
             DataFilterParser parser = new DataFilterParser(dataTable.getModel());
             RowFilter<TableModel, Integer> filter = parser.parse(text);
@@ -656,12 +684,28 @@ public class ParquetViewerPanel {
     private void toggleRGBMode() {
         isRGBMode = !isRGBMode;
         if (isRGBMode) {
+            if (isCRTMode) isCRTMode = false;
             rgbTimer.start();
             JOptionPane.showMessageDialog(mainPanel, "🌈 RGB Gamer Mode Activated! 🌈\nFPS Boosted +100%", "System Override", JOptionPane.INFORMATION_MESSAGE);
         } else {
             rgbTimer.stop();
-            dataTable.repaint(); // Reset
+            dataTable.repaint();
             JOptionPane.showMessageDialog(mainPanel, "RGB Mode Deactivated.", "System", JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    private void toggleCRTMode() {
+        isCRTMode = !isCRTMode;
+        if (isCRTMode) {
+            if (isRGBMode) {
+                isRGBMode = false;
+                rgbTimer.stop();
+            }
+            dataTable.repaint();
+            JOptionPane.showMessageDialog(mainPanel, "Wake up, Neo...\nMatrix CRT Mode Activated 📟", "System Override", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            dataTable.repaint();
+            JOptionPane.showMessageDialog(mainPanel, "CRT Mode Deactivated.", "System", JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -680,7 +724,6 @@ public class ParquetViewerPanel {
                 """;
         JOptionPane.showMessageDialog(mainPanel, art, "About the Author", JOptionPane.PLAIN_MESSAGE);
     }
-    // ----------------------------------------
 
     private void updateCheckboxes() {
         checkboxPanel.removeAll();
@@ -788,15 +831,11 @@ public class ParquetViewerPanel {
                         }
                     }
                 }
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception e) {}
             return Object.class;
         }
     }
 
-    // --- 核心改动：支持 RGB 模式的渲染器 ---
-    // 非静态类，以便访问外部的 isRGBMode 和 hueOffset
     private class SmartCellRenderer extends DefaultTableCellRenderer {
         private final Color nullColor = JBColor.GRAY;
         private final Color evenRowColor = new JBColor(new Color(245, 248, 250), new Color(60, 63, 65));
@@ -807,22 +846,29 @@ public class ParquetViewerPanel {
                                                        int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-            // 1. RGB Mode Logic
             if (isRGBMode) {
-                // Calculate hue based on row index and time offset
                 float hue = hueOffset + (row * 0.05f);
-                Color rainbowColor = Color.getHSBColor(hue, 0.4f, 1.0f); // Pastel rainbow
-
+                Color rainbowColor = Color.getHSBColor(hue, 0.4f, 1.0f);
                 if (isSelected) {
-                    // Keep selection clearly visible but tinted
                     setBackground(table.getSelectionBackground());
                     setForeground(table.getSelectionForeground());
                 } else {
                     setBackground(rainbowColor);
-                    setForeground(Color.BLACK); // Force black text for contrast on rainbow
+                    setForeground(Color.BLACK);
                 }
-            } else {
-                // 2. Normal Zebra Logic
+            }
+            else if (isCRTMode) {
+                Color crtBg = new Color(5, 18, 5);
+                Color crtFg = new Color(50, 255, 50);
+                if (isSelected) {
+                    setBackground(crtFg);
+                    setForeground(crtBg);
+                } else {
+                    setBackground(crtBg);
+                    setForeground(crtFg);
+                }
+            }
+            else {
                 if (!isSelected) {
                     setBackground(row % 2 == 0 ? table.getBackground() : evenRowColor);
                     setForeground(table.getForeground());
@@ -832,10 +878,9 @@ public class ParquetViewerPanel {
                 }
             }
 
-            // 3. Value Rendering
             if (value == null || value.toString().isEmpty()) {
                 setText("<null>");
-                if (!isSelected && !isRGBMode) setForeground(nullColor);
+                if (!isSelected && !isRGBMode && !isCRTMode) setForeground(nullColor);
             } else {
                 String val = value.toString();
                 setText(val);
