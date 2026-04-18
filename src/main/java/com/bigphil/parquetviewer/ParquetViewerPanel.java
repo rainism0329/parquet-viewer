@@ -258,6 +258,7 @@ public class ParquetViewerPanel {
 
         JButton helpButton = new JButton("?");
         helpButton.addActionListener(e -> FilterHelpDialog.show(mainPanel));
+        helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         JPanel filterBar = new JPanel(new BorderLayout(5, 5));
         filterBar.add(dataFilterField, BorderLayout.CENTER);
