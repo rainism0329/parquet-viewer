@@ -117,7 +117,7 @@ public class ParquetViewerPanel {
     private void initTopPanel() {
         JButton chooseFileButton = new JButton("📁 Choose Parquet File");
         fileLabel = new JLabel("No file selected");
-        JLabel tipLabel = new JLabel("Tip: Drag and drop to open. (The filter bar accepts more than just queries...)");
+        JLabel tipLabel = new JLabel("Tip: You can also drag and drop a .parquet file to open it.");
         tipLabel.setForeground(Color.GRAY);
         tipLabel.setFont(tipLabel.getFont().deriveFont(Font.ITALIC, 11f));
 
