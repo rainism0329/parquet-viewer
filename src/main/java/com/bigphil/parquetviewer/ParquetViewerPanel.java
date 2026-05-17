@@ -694,7 +694,11 @@ public class ParquetViewerPanel {
             sorter.setRowFilter(filter);
             dataTable.setRowSorter(sorter);
             updateFilterCountLabel();
-        } catch (Exception e) {}
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(mainPanel,
+                    e.getMessage(),
+                    "Filter Error", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void toggleRGBMode() {

@@ -4,6 +4,7 @@ import org.mvel2.MVEL;
 
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,15 @@ public class DataFilterParser {
 
         String preprocessed = MvelExpressionPreprocessor.preprocess(filterText);
 
+        Serializable compiled;
+        try {
+            compiled = MVEL.compileExpression(preprocessed);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                    "\"" + filterText + "\" is not a valid filter expression.\n\n" +
+                    "Click the ? button for supported filter syntax.", e);
+        }
+
         return new RowFilter<>() {
             public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
                 Map<String, Object> rowVars = new HashMap<>();
@@ -29,7 +39,7 @@ public class DataFilterParser {
                 }
 
                 try {
-                    Object result = MVEL.eval(preprocessed, rowVars);
+                    Object result = MVEL.executeExpression(compiled, rowVars);
                     return Boolean.TRUE.equals(result);
                 } catch (Exception e) {
                     return false;
