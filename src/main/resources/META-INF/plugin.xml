@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
-    <name>Parquet Viewer - Query, Inspect & More</name>
+    <name>Parquet Viewer - Query, Inspect &amp; More</name>
     <version>2.5.0</version>
     <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.zeabur.app/">Phil Zhang</vendor>
 
@@ -64,7 +64,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
-                    id="Parquet Viewer - Query, Inspect & More"
+                    id="Parquet Viewer - Query, Inspect &amp; More"
                     icon="/icons/Parquet Viewer T.svg"
                     anchor="bottom"/>
     </extensions>
