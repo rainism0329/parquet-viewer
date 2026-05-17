@@ -57,8 +57,8 @@ public class MvelExpressionPreprocessor {
         //    (Leading and/or trailing '%' determine use of contains/startsWith/endsWith)
         //    (If no '%' at either end, use an equals comparison)
         // For case-insensitivity, both field value and pattern are lower-cased in the comparison.
-        Pattern likePattern = Pattern.compile("(?i)\\b([A-Za-z0-9_\\.]+)\\s+like\\s+'([^']*)'");
-        Pattern notLikePattern = Pattern.compile("(?i)\\b([A-Za-z0-9_\\.]+)\\s+not\\s+like\\s+'([^']*)'");
+        Pattern likePattern = Pattern.compile("(?i)(\\S+)\\s+like\\s+'([^']*)'");
+        Pattern notLikePattern = Pattern.compile("(?i)(\\S+)\\s+not\\s+like\\s+'([^']*)'");
 
         // Replace NOT LIKE first to avoid conflict with LIKE.
         Matcher m = notLikePattern.matcher(expr);
@@ -90,8 +90,8 @@ public class MvelExpressionPreprocessor {
         // Convert "field IN (val1, val2, ...)" to a series of comparisons joined by ||.
         // Numeric values will be compared directly (using ==), string literals will be compared
         // case-insensitively (field.toLowerCase().equals("value")).
-        Pattern inPattern = Pattern.compile("(?i)\\b([A-Za-z0-9_\\.]+)\\s+in\\s*\\(([^)]*)\\)");
-        Pattern notInPattern = Pattern.compile("(?i)\\b([A-Za-z0-9_\\.]+)\\s+not\\s+in\\s*\\(([^)]*)\\)");
+        Pattern inPattern = Pattern.compile("(?i)(\\S+)\\s+in\\s*\\(([^)]*)\\)");
+        Pattern notInPattern = Pattern.compile("(?i)(\\S+)\\s+not\\s+in\\s*\\(([^)]*)\\)");
 
         // Replace NOT IN first
         m = notInPattern.matcher(expr);

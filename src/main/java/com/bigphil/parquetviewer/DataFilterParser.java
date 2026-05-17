@@ -4,7 +4,6 @@ import org.mvel2.MVEL;
 
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +21,9 @@ public class DataFilterParser {
 
         String preprocessed = MvelExpressionPreprocessor.preprocess(filterText);
 
-        Serializable compiled;
+        // Validate syntax early, before applying to rows
         try {
-            compiled = MVEL.compileExpression(preprocessed);
+            MVEL.compileExpression(preprocessed);
         } catch (Exception e) {
             throw new IllegalArgumentException(
                     "\"" + filterText + "\" is not a valid filter expression.\n\n" +
@@ -39,7 +38,7 @@ public class DataFilterParser {
                 }
 
                 try {
-                    Object result = MVEL.executeExpression(compiled, rowVars);
+                    Object result = MVEL.eval(preprocessed, rowVars);
                     return Boolean.TRUE.equals(result);
                 } catch (Exception e) {
                     return false;
