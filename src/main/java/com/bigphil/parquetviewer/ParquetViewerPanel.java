@@ -551,6 +551,13 @@ public class ParquetViewerPanel {
 
         // 核心修复：UI 更新必须回到 EDT 线程
         SwingUtilities.invokeLater(() -> {
+            // 保存用户调整过的列宽，setModel() 会销毁旧 TableColumn
+            java.util.Map<String, Integer> savedWidths = new java.util.HashMap<>();
+            for (int i = 0; i < dataTable.getColumnCount(); i++) {
+                TableColumn col = dataTable.getColumnModel().getColumn(i);
+                savedWidths.put(col.getHeaderValue().toString(), col.getWidth());
+            }
+
             dataTable.setModel(model);
 
             JViewport rowHeader = dataScrollPane.getRowHeader();
@@ -563,7 +570,8 @@ public class ParquetViewerPanel {
             for (int i = 0; i < dataTable.getColumnCount(); i++) {
                 TableColumn column = dataTable.getColumnModel().getColumn(i);
                 column.setMinWidth(40);
-                column.setPreferredWidth(100);
+                String colName = column.getHeaderValue().toString();
+                column.setPreferredWidth(savedWidths.getOrDefault(colName, 100));
             }
 
             updatePaginationState();
