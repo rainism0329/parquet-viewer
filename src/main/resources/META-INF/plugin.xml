@@ -1,15 +1,14 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
-    <name>Parquet Viewer</name>
-    <version>2.3.3</version>
+    <name>Parquet Viewer - Query, Inspect & More</name>
+    <version>2.5.0</version>
     <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.zeabur.app/">Phil Zhang</vendor>
 
     <description>
         <![CDATA[
-          <b>Parquet Viewer - The Ultimate Tool for Big Data Geeks.</b><br/><br/>
+          <b>Parquet Viewer - Query, Inspect & More.</b><br/><br/>
 
-          <b>Parquet Viewer</b> is a lightweight, high-performance IntelliJ IDEA plugin designed for developers who need to inspect <code>.parquet</code> files with precision and style.<br/>
-          Version 2.3.3 brings native numeric sorting, regex filtering, and a "Gamer Mode" for the UI.<br/><br/>
+          A lightweight, high-performance IntelliJ IDEA plugin to <b>query</b> <code>.parquet</code> files with SQL-like filters, <b>inspect</b> schema and statistics, and <b>more</b> — generate code, export data, and enjoy the geeky vibes.<br/><br/>
 
           <b>🚀 Extreme Performance:</b>
           <ul>
@@ -45,14 +44,15 @@
     </description>
 
     <change-notes><![CDATA[
-        <b>2.3.3 - The "Rainbow" Update</b>
+        <b>2.5.0 - Quality of Life Update</b>
         <br/><br/>
         <ul>
-            <li>🔢 <b>Improvement:</b> Implemented <b>Native Numeric Sorting</b>. Integers and Floats now sort by value instead of lexicographically.</li>
-            <li>🌈 <b>Easter Eggs:</b> Added hidden visual modes. Try typing <b>rgb</b> or <b>phil</b> in the filter field!</li>
-            <li>🎨 <b>UI Polish:</b> Fixed Zebra Striping rendering issues for numeric columns.</li>
-            <li>🐛 <b>Fix:</b> Resolved MVEL class loader issues to ensure stable filtering expression execution.</li>
-            <li>🚀 <b>Performance:</b> Further optimized Lazy Map evaluation for complex filters.</li>
+            <li>🔍 <b>Filter History:</b> Your last 20 filter expressions are saved and available from the dropdown (▾) next to the filter bar. Persists across IDE restarts. (Thanks for the suggestion, heavy users!)</li>
+            <li>💬 <b>Filter Error Feedback:</b> Invalid filter expressions now show a clear error message instead of failing silently. No more guessing why your data disappeared.</li>
+            <li>📏 <b>Column Width Persistence:</b> Manually resized column widths now survive page changes, column toggles, and filter refreshes.</li>
+            <li>🔧 <b>Special Character Column Names:</b> Columns with hyphens, dots, or Unicode characters now work correctly in LIKE and IN filter expressions.</li>
+            <li>🏗️ <b>Recursive Code Generation:</b> Hive DDL and Java POJO generation now fully expand nested STRUCT types instead of showing "STRUCT<...>".</li>
+            <li>🐛 <b>Bug Fixes:</b> Fixed MVEL expression compilation issue in IDE classloader environment. Various stability improvements.</li>
         </ul>
     ]]>
     </change-notes>
@@ -64,7 +64,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
-                    id="Parquet Viewer"
+                    id="Parquet Viewer - Query, Inspect & More"
                     icon="/icons/Parquet Viewer T.svg"
                     anchor="bottom"/>
     </extensions>

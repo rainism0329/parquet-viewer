@@ -76,10 +76,14 @@ intellijPlatform {
         }
 
         changeNotes = """
+            <b>2.5.0 - Quality of Life Update</b><br/><br/>
             <ul>
-                <li><b>2.0.0 Major Update:</b> Performance overhaul and UI redesign.</li>
-                <li>🚀 Implemented Row Group Skipping & Column Projection for instant large file loading.</li>
-                <li>🎨 New "Geeky" UI with Hex view, Code Generation, and native look & feel.</li>
+                <li>🔍 <b>Filter History:</b> Your last 20 filter expressions are saved and available from the dropdown (▾) next to the filter bar. Persists across IDE restarts.</li>
+                <li>💬 <b>Filter Error Feedback:</b> Invalid filter expressions now show a clear error message instead of failing silently.</li>
+                <li>📏 <b>Column Width Persistence:</b> Manually resized column widths now survive page changes and filter refreshes.</li>
+                <li>🔧 <b>Special Character Column Names:</b> Columns with hyphens, dots, or Unicode characters now work in LIKE and IN filters.</li>
+                <li>🏗️ <b>Recursive Code Generation:</b> Hive DDL and Java POJO now fully expand nested STRUCT types.</li>
+                <li>🐛 <b>Bug Fixes:</b> Fixed MVEL expression compilation in IDE classloader. Various stability improvements.</li>
             </ul>
         """.trimIndent()
     }

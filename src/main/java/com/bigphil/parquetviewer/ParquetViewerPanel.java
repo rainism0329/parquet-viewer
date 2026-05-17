@@ -288,13 +288,22 @@ public class ParquetViewerPanel {
         dataFilterField.addActionListener(e -> applyDataFilter());
         dataFilterField.setTransferHandler(null);
 
+        JButton historyButton = new JButton("▾");
+        historyButton.setToolTipText("Filter history");
+        historyButton.setMargin(new Insets(0, 2, 0, 2));
+        historyButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        historyButton.addActionListener(e -> showFilterHistory(historyButton));
+
         JButton helpButton = new JButton("?");
         helpButton.addActionListener(e -> FilterHelpDialog.show(mainPanel));
         helpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         JPanel filterBar = new JPanel(new BorderLayout(5, 5));
         filterBar.add(dataFilterField, BorderLayout.CENTER);
-        filterBar.add(helpButton, BorderLayout.EAST);
+        JPanel eastPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 2, 0));
+        eastPanel.add(historyButton);
+        eastPanel.add(helpButton);
+        filterBar.add(eastPanel, BorderLayout.EAST);
 
         JPanel dataTabPanel = new JPanel(new BorderLayout());
         dataTabPanel.add(dataScrollPane, BorderLayout.CENTER);
@@ -702,11 +711,40 @@ public class ParquetViewerPanel {
             sorter.setRowFilter(filter);
             dataTable.setRowSorter(sorter);
             updateFilterCountLabel();
+            FilterHistoryManager.add(text);
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(mainPanel,
                     e.getMessage(),
                     "Filter Error", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    private void showFilterHistory(Component invoker) {
+        List<String> history = FilterHistoryManager.getAll();
+        JPopupMenu popup = new JPopupMenu();
+
+        if (history.isEmpty()) {
+            JMenuItem empty = new JMenuItem("(no history)");
+            empty.setEnabled(false);
+            popup.add(empty);
+        } else {
+            for (String entry : history) {
+                JMenuItem item = new JMenuItem(entry);
+                item.addActionListener(e -> {
+                    dataFilterField.setText(entry);
+                    applyDataFilter();
+                });
+                popup.add(item);
+            }
+            popup.addSeparator();
+            JMenuItem clear = new JMenuItem("Clear history");
+            clear.addActionListener(e -> {
+                FilterHistoryManager.clear();
+            });
+            popup.add(clear);
+        }
+
+        popup.show(invoker, 0, invoker.getHeight());
     }
 
     private void toggleRGBMode() {
