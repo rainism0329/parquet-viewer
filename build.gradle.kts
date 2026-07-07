@@ -76,7 +76,7 @@ intellijPlatform {
         }
 
         changeNotes = """
-            <b>2.5.1 - Quality of Life Update</b><br/><br/>
+            <b>2.5.2 - Quality of Life Update</b><br/><br/>
             <ul>
                 <li>🔍 <b>Filter History:</b> Your last 20 filter expressions are saved and available from the dropdown (▾) next to the filter bar. Persists across IDE restarts.</li>
                 <li>💬 <b>Filter Error Feedback:</b> Invalid filter expressions now show a clear error message instead of failing silently.</li>

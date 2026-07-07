@@ -1,8 +1,8 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer - Query, Inspect &amp; More</name>
-    <version>2.5.1</version>
-    <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.zeabur.app/">Phil Zhang</vendor>
+    <version>2.5.2</version>
+    <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.netlify.app/">Phil Zhang</vendor>
 
     <description>
         <![CDATA[
@@ -44,7 +44,7 @@
     </description>
 
     <change-notes><![CDATA[
-        <b>2.5.1 - Quality of Life Update</b>
+        <b>2.5.2 - Quality of Life Update</b>
         <br/><br/>
         <ul>
             <li>🔍 <b>Filter History:</b> Your last 20 filter expressions are saved and available from the dropdown (▾) next to the filter bar. Persists across IDE restarts. (Thanks for the suggestion, heavy users!)</li>
