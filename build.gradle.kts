@@ -72,7 +72,7 @@ intellijPlatform {
         ideaVersion {
             // 兼容性范围设置
             sinceBuild = "242"
-            untilBuild = "261.*"
+            untilBuild = provider { null }
         }
 
         changeNotes = """
