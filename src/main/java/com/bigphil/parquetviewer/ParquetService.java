@@ -1,5 +1,7 @@
 package com.bigphil.parquetviewer;
 
+import com.intellij.openapi.progress.ProgressIndicator;
+import org.apache.parquet.ParquetReadOptions;
 import org.apache.parquet.column.page.PageReadStore;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.example.data.simple.convert.GroupRecordConverter;
@@ -21,6 +23,14 @@ import java.util.*;
 public class ParquetService {
 
     public record ParquetMetadata(MessageType schema, long rowCount, Map<String, String> extraMeta) {}
+
+    public record RowGroupDetails(int index, long rowCount, long totalByteSize,
+                                  long compressedSize, long startingPosition) {}
+
+    public record ParquetFileSummary(MessageType schema, long rowCount,
+                                     Map<String, String> extraMeta,
+                                     Map<String, ColumnDetails> columnStats,
+                                     List<RowGroupDetails> rowGroups) {}
 
     public static class ColumnDetails {
         public long totalCompressedSize = 0;
@@ -51,7 +61,7 @@ public class ParquetService {
     }
 
     public static ParquetMetadata readMetadata(File file) throws IOException {
-        try (ParquetFileReader reader = ParquetFileReader.open(new LocalInputFile(file))) {
+        try (ParquetFileReader reader = openReader(file)) {
             FileMetaData fmd = reader.getFooter().getFileMetaData();
             MessageType schema = fmd.getSchema();
             long rowCount = reader.getRecordCount();
@@ -71,9 +81,69 @@ public class ParquetService {
         }
     }
 
+    /**
+     * Reads the footer, file metadata, row-group information and column statistics in a
+     * single file-open operation. This is the preferred entry point for the viewer UI.
+     */
+    public static ParquetFileSummary readFileSummary(File file, ProgressIndicator indicator) throws IOException {
+        checkCanceled(indicator);
+        try (ParquetFileReader reader = openReader(file)) {
+            FileMetaData fileMetaData = reader.getFooter().getFileMetaData();
+            MessageType schema = fileMetaData.getSchema();
+            long rowCount = reader.getRecordCount();
+            List<BlockMetaData> blocks = reader.getFooter().getBlocks();
+
+            Map<String, String> metadata = new LinkedHashMap<>();
+            metadata.put("File Name", file.getName());
+            metadata.put("Full Path", file.getAbsolutePath());
+            metadata.put("File Size (bytes)", String.format("%,d", file.length()));
+            metadata.put("Last Modified", new Date(file.lastModified()).toString());
+            metadata.put("Total Rows", String.format("%,d", rowCount));
+            metadata.put("Columns", String.valueOf(schema.getFieldCount()));
+            metadata.put("Row Groups", String.valueOf(blocks.size()));
+            metadata.put("Created By", Objects.toString(fileMetaData.getCreatedBy(), "Unknown"));
+
+            Map<String, String> userMetadata = fileMetaData.getKeyValueMetaData();
+            if (userMetadata != null && !userMetadata.isEmpty()) {
+                userMetadata.forEach((key, value) -> metadata.put("UserMeta: " + key, value));
+            }
+
+            Map<String, ColumnDetails> statsMap = new LinkedHashMap<>();
+            List<RowGroupDetails> rowGroups = new ArrayList<>(blocks.size());
+            Set<String> codecs = new TreeSet<>();
+
+            for (int blockIndex = 0; blockIndex < blocks.size(); blockIndex++) {
+                checkCanceled(indicator);
+                BlockMetaData block = blocks.get(blockIndex);
+                long compressedSize = 0;
+                long startingPosition = Long.MAX_VALUE;
+
+                for (ColumnChunkMetaData column : block.getColumns()) {
+                    checkCanceled(indicator);
+                    compressedSize += column.getTotalSize();
+                    startingPosition = Math.min(startingPosition, column.getStartingPos());
+                    codecs.add(column.getCodec().name());
+                    String path = column.getPath().toDotString();
+                    statsMap.computeIfAbsent(path, ignored -> new ColumnDetails()).add(column);
+                }
+
+                rowGroups.add(new RowGroupDetails(
+                        blockIndex,
+                        block.getRowCount(),
+                        block.getTotalByteSize(),
+                        compressedSize,
+                        startingPosition == Long.MAX_VALUE ? -1 : startingPosition
+                ));
+            }
+            metadata.put("Compression", codecs.isEmpty() ? "Unknown" : String.join(", ", codecs));
+            checkCanceled(indicator);
+            return new ParquetFileSummary(schema, rowCount, metadata, statsMap, rowGroups);
+        }
+    }
+
     public static Map<String, ColumnDetails> readColumnStats(File file) throws IOException {
         Map<String, ColumnDetails> statsMap = new HashMap<>();
-        try (ParquetFileReader reader = ParquetFileReader.open(new LocalInputFile(file))) {
+        try (ParquetFileReader reader = openReader(file)) {
             List<BlockMetaData> blocks = reader.getFooter().getBlocks();
             for (BlockMetaData block : blocks) {
                 for (ColumnChunkMetaData column : block.getColumns()) {
@@ -90,8 +160,15 @@ public class ParquetService {
     }
 
     public static List<Object[]> readPageData(File file, MessageType schema, List<String> selectedColumns,
-                                              int page, int pageSize, boolean showAll) throws IOException {
+                                               int page, int pageSize, boolean showAll) throws IOException {
+        return readPageData(file, schema, selectedColumns, page, pageSize, showAll, null);
+    }
+
+    public static List<Object[]> readPageData(File file, MessageType schema, List<String> selectedColumns,
+                                              int page, int pageSize, boolean showAll,
+                                              ProgressIndicator indicator) throws IOException {
         List<Object[]> rows = new ArrayList<>();
+        checkCanceled(indicator);
 
         // Optimization: Column Projection
         List<Type> projectedFields = new ArrayList<>();
@@ -103,7 +180,8 @@ public class ParquetService {
         if (projectedFields.isEmpty()) return rows;
         MessageType projectedSchema = new MessageType(schema.getName(), projectedFields);
 
-        try (ParquetFileReader reader = ParquetFileReader.open(new LocalInputFile(file))) {
+        try (ParquetFileReader reader = openReader(file)) {
+            reader.setRequestedSchema(projectedSchema);
             long startRow = showAll ? 0 : (long) (page - 1) * pageSize;
             long maxRows = showAll ? -1 : pageSize;
             long currentRow = 0;
@@ -111,6 +189,7 @@ public class ParquetService {
             List<BlockMetaData> blocks = reader.getFooter().getBlocks();
 
             for (BlockMetaData block : blocks) {
+                checkCanceled(indicator);
                 long rowsInBlock = block.getRowCount();
 
                 // Optimization: Row Group Skipping
@@ -129,6 +208,7 @@ public class ParquetService {
                 RecordReader<Group> recordReader = columnIO.getRecordReader(pageStore, new GroupRecordConverter(projectedSchema));
 
                 for (long i = 0; i < rowsInBlock; i++) {
+                    if ((i & 0xFF) == 0) checkCanceled(indicator);
                     if (currentRow < startRow) {
                         recordReader.read();
                         currentRow++;
@@ -188,5 +268,19 @@ public class ParquetService {
             }
         }
         return rows;
+    }
+
+    private static ParquetFileReader openReader(File file) throws IOException {
+        ParquetReadOptions options = ParquetReadOptions.builder()
+                .withCodecFactory(new NativeCompressionCodecFactory())
+                .build();
+        return ParquetFileReader.open(new LocalInputFile(file), options);
+    }
+
+    private static void checkCanceled(ProgressIndicator indicator) {
+        if (indicator != null) indicator.checkCanceled();
+        if (Thread.currentThread().isInterrupted()) {
+            throw new com.intellij.openapi.progress.ProcessCanceledException();
+        }
     }
 }

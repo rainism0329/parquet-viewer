@@ -1,34 +1,26 @@
 <idea-plugin>
     <id>com.bigphil.parquetviewer</id>
     <name>Parquet Viewer - Query, Inspect &amp; More</name>
-    <version>2.5.2.1</version>
+    <version>1.4.1.3</version>
     <vendor email="bigphil.zhang@qq.com" url="https://phil-the-guy.netlify.app/">Phil Zhang</vendor>
 
     <description>
         <![CDATA[
           <b>Parquet Viewer - Query, Inspect & More.</b><br/><br/>
 
-          A lightweight, high-performance IntelliJ IDEA plugin to <b>query</b> <code>.parquet</code> files with SQL-like filters, <b>inspect</b> schema and statistics, and <b>more</b> — generate code, export data, and enjoy the geeky vibes.<br/><br/>
+          A fast, local-first IntelliJ Platform tool for exploring <code>.parquet</code> files without Spark, Hadoop services, notebooks, or uploading data.<br/><br/>
 
-          <b>🚀 Extreme Performance:</b>
+          <b>Professional data workflow:</b>
           <ul>
-            <li><b>Instant Open:</b> Reads metadata in O(1) time. Opens GB-sized files instantly.</li>
-            <li><b>Smart IO:</b> Implements <b>Row Group Skipping</b> and <b>Column Projection</b> to minimize memory usage.</li>
+            <li>Open several Parquet files in independent tool-window tabs.</li>
+            <li>Browse paged data or use bounded-memory virtualized Show All mode.</li>
+            <li>Filter loaded rows with SQL-like expressions and correctly typed sorting.</li>
+            <li>Inspect schema, row groups, compression and column statistics.</li>
+            <li>Choose visible columns and export the current view or whole file to CSV or JSON.</li>
+            <li>Generate Hive DDL and Java POJOs from nested schemas.</li>
           </ul>
 
-          <b>✨ Geeky Features:</b>
-          <ul>
-            <li><b>Native Sorting:</b> Correctly sorts numeric columns (Int, Long, Double) by value, not by string.</li>
-            <li><b>X-Ray Schema:</b> View compression ratio, null percentage, and data size directly in the schema tree.</li>
-            <li><b>Hex View:</b> Right-click any cell to inspect raw binary data and debug encoding issues.</li>
-            <li><b>Code Gen:</b> Generate <b>Hive DDL</b> and <b>Java POJO</b> from schema with one click.</li>
-          </ul>
-
-          <b>🎨 Modern UI & Easter Eggs:</b>
-          <ul>
-            <li><b>Data Grid:</b> Excel-style row headers, zebra striping, and explicit <code>&lt;null&gt;</code> rendering.</li>
-            <li><b>Geek Mode:</b> Try typing <code>rgb</code> or <code>phil</code> in the filter box for a surprise! 🌈</li>
-          </ul>
+          All file IO stays on the local machine. Long-running work is cancellable and runs outside the IDE UI thread.
 
           <b>License:</b>
           <p><a href="https://phil-the-guy.zeabur.app/plugins-eula.html">End User License Agreement (EULA)</a></p>
@@ -44,15 +36,13 @@
     </description>
 
     <change-notes><![CDATA[
-        <b>2.5.2 - Quality of Life Update</b>
+        <b>1.4.1.3 - Viewer Experience and Performance Update</b>
         <br/><br/>
         <ul>
-            <li>🔍 <b>Filter History:</b> Your last 20 filter expressions are saved and available from the dropdown (▾) next to the filter bar. Persists across IDE restarts. (Thanks for the suggestion, heavy users!)</li>
-            <li>💬 <b>Filter Error Feedback:</b> Invalid filter expressions now show a clear error message instead of failing silently. No more guessing why your data disappeared.</li>
-            <li>📏 <b>Column Width Persistence:</b> Manually resized column widths now survive page changes, column toggles, and filter refreshes.</li>
-            <li>🔧 <b>Special Character Column Names:</b> Columns with hyphens, dots, or Unicode characters now work correctly in LIKE and IN filter expressions.</li>
-            <li>🏗️ <b>Recursive Code Generation:</b> Hive DDL and Java POJO generation now fully expand nested STRUCT types instead of showing "STRUCT<...>".</li>
-            <li>🐛 <b>Bug Fixes:</b> Fixed MVEL expression compilation issue in IDE classloader environment. Various stability improvements.</li>
+            <li>Redesigned the tool window with multi-file tabs and native IntelliJ controls.</li>
+            <li>Added cancellable background loading and bounded-memory virtualized Show All mode.</li>
+            <li>Improved schema, metadata, column selection, filtering and streaming export.</li>
+            <li>Reduced runtime dependencies and fixed stability issues.</li>
         </ul>
     ]]>
     </change-notes>
@@ -60,13 +50,20 @@
     <idea-version since-build="242"/>
 
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.java</depends>
-
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.bigphil.parquetviewer.ParquetViewerToolWindowFactory"
-                    id="Parquet Viewer - Query, Inspect &amp; More"
+                    id="Parquet Viewer"
                     icon="/icons/Parquet Viewer T.svg"
                     anchor="bottom"/>
     </extensions>
+
+    <actions>
+        <action id="com.bigphil.parquetviewer.OpenInViewer"
+                class="com.bigphil.parquetviewer.OpenParquetInViewerAction"
+                text="Open in Parquet Viewer"
+                description="Open the selected Parquet file in the Parquet Viewer tool window">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
 
 </idea-plugin>

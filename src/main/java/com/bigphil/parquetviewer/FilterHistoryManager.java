@@ -12,13 +12,9 @@ public class FilterHistoryManager {
     private static final String DELIMITER = "";
     private static final int MAX_SIZE = 20;
 
-    private static final List<String> EASTER_EGGS =
-            List.of("rgb", "crt", "matrix", "phil", "author");
-
     public static void add(String filterText) {
         if (filterText == null || filterText.isBlank()) return;
         String trimmed = filterText.trim();
-        if (EASTER_EGGS.contains(trimmed.toLowerCase())) return;
 
         List<String> history = new ArrayList<>(getAll());
         history.remove(trimmed);

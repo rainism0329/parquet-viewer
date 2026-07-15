@@ -83,4 +83,74 @@ public class DataFilterParserTest {
         assertTrue(matches(filter, model, 1));
         assertFalse(matches(filter, model, 2));
     }
+
+    @Test
+    public void testBlankFilterReturnsNoFilter() {
+        TableModel model = createTestModel();
+        assertNull(new DataFilterParser(model).parse("   "));
+    }
+
+    @Test
+    public void testInvalidFilterReportsOriginalExpression() {
+        TableModel model = createTestModel();
+        IllegalArgumentException error = assertThrows(
+                IllegalArgumentException.class,
+                () -> new DataFilterParser(model).parse("age >")
+        );
+        assertTrue(error.getMessage().contains("age >"));
+    }
+
+    @Test
+    public void testCombinedFilterWithParentheses() {
+        TableModel model = createTestModel();
+        RowFilter<TableModel, Integer> filter = new DataFilterParser(model)
+                .parse("(name='Alice' OR name='Bob') AND age < 30");
+        assertFalse(matches(filter, model, 0));
+        assertTrue(matches(filter, model, 1));
+        assertFalse(matches(filter, model, 2));
+    }
+
+    @Test
+    public void testLikeFilterRemainsCaseSensitive() {
+        TableModel model = createTestModel();
+        RowFilter<TableModel, Integer> filter = new DataFilterParser(model).parse("name LIKE 'A%'");
+        assertTrue(matches(filter, model, 0));
+
+        RowFilter<TableModel, Integer> lowerCaseFilter = new DataFilterParser(model).parse("name LIKE 'a%'");
+        assertFalse(matches(lowerCaseFilter, model, 0));
+    }
+
+    @Test
+    public void testSpecialCharacterAndUnicodeColumnNames() {
+        TableModel model = new DefaultTableModel(
+                new Object[][]{{"Alice", "EU", "成功"}, {"Bob", "US", "失败"}},
+                new String[]{"user-name", "region.code", "状态"}
+        );
+        RowFilter<TableModel, Integer> filter = new DataFilterParser(model)
+                .parse("user-name LIKE 'Ali%' AND region.code='EU' AND 状态='成功'");
+        assertTrue(matches(filter, model, 0));
+        assertFalse(matches(filter, model, 1));
+    }
+
+    @Test
+    public void testOverlappingColumnNamesUseLongestMatch() {
+        TableModel model = new DefaultTableModel(
+                new Object[][]{{1, 10}, {2, 20}},
+                new String[]{"id", "user_id"}
+        );
+        RowFilter<TableModel, Integer> filter = new DataFilterParser(model).parse("user_id=20 AND id=2");
+        assertFalse(matches(filter, model, 0));
+        assertTrue(matches(filter, model, 1));
+    }
+
+    @Test
+    public void testColumnNameInsideStringLiteralIsNotAliased() {
+        TableModel model = new DefaultTableModel(
+                new Object[][]{{"name"}, {"other"}},
+                new String[]{"name"}
+        );
+        RowFilter<TableModel, Integer> filter = new DataFilterParser(model).parse("name='name'");
+        assertTrue(matches(filter, model, 0));
+        assertFalse(matches(filter, model, 1));
+    }
 }

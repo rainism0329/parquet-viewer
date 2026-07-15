@@ -7,8 +7,6 @@ import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 
-import org.apache.hadoop.fs.Path;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -56,7 +54,8 @@ public class ParquetTestFileGenerator {
                 throw new IOException("Failed to delete existing file: " + file.getAbsolutePath());
             }
         }
-        ParquetWriter<GenericRecord> writer = AvroParquetWriter.<GenericRecord>builder(new Path(file.getPath()))
+        ParquetWriter<GenericRecord> writer = AvroParquetWriter.<GenericRecord>builder(
+                        new LocalTestOutputFile(file.toPath()))
                 .withSchema(schema)
                 .withCompressionCodec(CompressionCodecName.SNAPPY)
                 .build();

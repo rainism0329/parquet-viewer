@@ -1,6 +1,7 @@
 package com.bigphil.parquetviewer;
 
 import org.apache.parquet.schema.GroupType;
+import org.apache.parquet.schema.LogicalTypeAnnotation;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.Type;
 
@@ -74,7 +75,8 @@ public class SchemaCodeGenerator {
             case FLOAT -> "FLOAT";
             case DOUBLE -> "DOUBLE";
             case BOOLEAN -> "BOOLEAN";
-            case BINARY -> (type.getOriginalType() != null && type.getOriginalType().toString().equals("UTF8")) ? "STRING" : "BINARY";
+            case BINARY -> type.getLogicalTypeAnnotation() instanceof LogicalTypeAnnotation.StringLogicalTypeAnnotation
+                    ? "STRING" : "BINARY";
             case INT96 -> "TIMESTAMP";
             default -> "STRING";
         };

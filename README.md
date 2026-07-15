@@ -1,73 +1,68 @@
-# Parquet Viewer for IntelliJ IDEA
-
+# Parquet Viewer for IntelliJ Platform
 
 [![Version](https://img.shields.io/jetbrains/plugin/v/27306-parquet-viewer)](https://plugins.jetbrains.com/plugin/27306-parquet-viewer)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/27306-parquet-viewer)](https://plugins.jetbrains.com/plugin/27306-parquet-viewer)
 
+Explore local `.parquet` files inside an IntelliJ Platform tool window. Data stays on the local machine and no Spark, Hadoop service, notebook, or upload is required.
 
+## Highlights
 
-**Parquet Viewer** is a lightweight and intuitive IntelliJ IDEA plugin that allows you to open and explore `.parquet` files directly within the IDE — no need for external tools like Spark, Hadoop, or Jupyter.
+- Open several files in independent, closable tool-window tabs
+- Read file metadata and data pages on cancellable background tasks
+- Browse with regular pagination or bounded-memory virtualized **Show all** mode
+- Search and choose visible columns without losing the current selection
+- Filter loaded rows with SQL-like expressions and persistent history
+- Sort numeric values by their real types
+- Distinguish `NULL`, empty strings, loading cells, numbers, booleans, and text
+- Copy cells, rectangular selections, rows as JSON, or inspect full/hex values
+- Inspect searchable schema, row groups, compression, null counts, and column sizes
+- Generate Hive DDL and Java POJOs from nested schemas
+- Stream the current view or whole file to UTF-8 CSV/JSON
 
+## Open a file
 
----
+1. Open **Parquet Viewer** from the IDE tool-window bar.
+2. Choose **Open Parquet File…**, or drop one or more `.parquet` files into the window.
+3. Use the file tabs to switch between independent viewing sessions.
 
-## Features
+The viewer also remembers recently opened files for the current project.
 
-- Open `.parquet` files from your local system
-- View schema in a collapsible tree format
-- Explore data in a tabular format with pagination
-- Filter columns by name
-- Select visible columns with a column selector
-- Multi-row filtering by value (per-column filters)
-- Auto-resize column widths
-- Export data to CSV
+## Row display modes
 
----
+- **Paged** — loads a configurable number of rows at a time.
+- **Show all · Smart** — materializes small results and automatically virtualizes large ones.
+- **Show all · Memory** — explicitly loads all selected columns into IDE memory after a safety warning.
+- **Show all · Virtual** — exposes continuous all-row scrolling while retaining only a bounded page cache.
 
-## Getting Started
+## Filter examples
 
-1. Install the plugin from [JETBRAINS Marketplace](https://plugins.jetbrains.com/plugin/27306-parquet-viewer) 
-2. Launch IntelliJ IDEA
-3. Open the **Parquet Viewer Tool Window**
-4. Click **"Choose Parquet File"** and select a `.parquet` file
-5. Use the **Schema** and **Data** tabs to explore file contents
+```text
+name = 'Alice'
+age >= 30 AND status != 'DISABLED'
+country IN ('US', 'UK')
+email IS NULL
+name LIKE 'A%'
+```
 
----
+Filters currently apply to the rows loaded in the grid. Column names containing dots, hyphens, or Unicode characters are supported.
 
-## Screenshots
+## Development
 
-![image](https://github.com/user-attachments/assets/ab3521f3-3753-4b97-956b-b0740f9b365e)
-<img src="https://github.com/user-attachments/assets/0c00aaeb-c0bc-4038-8c4a-17fa52e88858" width="500"/>
+The project requires JDK 21. The repository includes Gradle Wrapper files:
 
----
+```shell
+./gradlew unitTest
+./gradlew buildPlugin
+```
 
-## Author
+## Author and support
 
-Created by **Phil Zhang**. 
-Visit my personal website: [Home Page](https://phil-the-guy.zeabur.app/)
+Created by **Phil Zhang**.
 
----
-
-## Donate / 支持作者
-
-If you find this plugin useful, consider supporting its development:
- 
-[**Donate via PayPal**](https://www.paypal.com/paypalme/bigphilzhang)
-
-OR
-
-[**Donate via Ko-fi**](https://ko-fi.com/philipzhang51603)
-
-OR
-
-**Alipay (支付宝打赏二维码):**
-
-![Alipay QR](https://raw.githubusercontent.com/rainism0329/springclouddemo/master/1341746696680_.pic.jpg)
-
-Thank you for your support!
-
----
+- [Author website](https://phil-the-guy.zeabur.app/)
+- [PayPal](https://www.paypal.com/paypalme/bigphilzhang)
+- [Ko-fi](https://ko-fi.com/philipzhang51603)
 
 ## License
 
-Please refer to the [End User License Agreement (EULA)](https://phil-the-guy.zeabur.app/plugins-eula.html)
+See the [End User License Agreement](https://phil-the-guy.zeabur.app/plugins-eula.html).

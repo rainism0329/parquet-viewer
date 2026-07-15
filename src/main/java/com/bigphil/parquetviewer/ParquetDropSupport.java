@@ -4,6 +4,7 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import javax.swing.*;
 
@@ -31,8 +32,12 @@ public class ParquetDropSupport {
         new DropTarget(target, new DropTargetListener() {
             @Override
             public void dragEnter(DropTargetDragEvent dtde) {
-                overlay.showOverlay();
-                dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    overlay.showOverlay();
+                    dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                } else {
+                    dtde.rejectDrag();
+                }
             }
 
             @Override
@@ -49,24 +54,31 @@ public class ParquetDropSupport {
                     if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                         @SuppressWarnings("unchecked")
                         List<File> files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
+                        boolean accepted = false;
                         for (File f : files) {
-                            if (f.getName().toLowerCase().endsWith(".parquet")) {
-                                parquetFileHandler.accept(f);
-                                return;
+                            if (f.isFile() && f.getName().toLowerCase(Locale.ROOT).endsWith(".parquet")) {
+                                accepted = true;
+                                SwingUtilities.invokeLater(() -> parquetFileHandler.accept(f));
                             }
                         }
-                        JOptionPane.showMessageDialog(target,
-                                "Only .parquet files are supported.",
-                                "Unsupported File",
-                                JOptionPane.WARNING_MESSAGE);
+                        if (!accepted) {
+                            JOptionPane.showMessageDialog(target,
+                                    "Only .parquet files are supported.",
+                                    "Unsupported File",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
+                        dtde.dropComplete(accepted);
+                        return;
                     }
+                    dtde.dropComplete(false);
                 } catch (Exception ex) {
+                    dtde.dropComplete(false);
                     JOptionPane.showMessageDialog(target,
                             "Failed to handle dropped file: " + ex.getMessage(),
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } finally {
-                    dtde.dropComplete(true);
+                    overlay.hideOverlay();
                 }
             }
 

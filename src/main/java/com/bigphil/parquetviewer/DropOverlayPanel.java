@@ -1,31 +1,32 @@
 package com.bigphil.parquetviewer;
 
+import com.intellij.ui.JBColor;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import java.awt.*;
 
 public class DropOverlayPanel extends JPanel {
-    private boolean visible = false;
-
     public DropOverlayPanel() {
         setOpaque(false);
         setVisible(false);
         setLayout(new BorderLayout());
 
-        JLabel label = new JLabel("Drop to open...", SwingConstants.CENTER);
-        label.setFont(new Font("SansSerif", Font.BOLD, 28));
-        label.setForeground(new Color(100, 100, 100, 160));
+        JBLabel label = new JBLabel("Drop Parquet files to open", SwingConstants.CENTER);
+        label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize2D() + 8f));
+        label.setForeground(JBColor.foreground());
         add(label, BorderLayout.CENTER);
     }
 
     public void showOverlay() {
-        visible = true;
         setVisible(true);
         repaint();
     }
 
     public void hideOverlay() {
-        visible = false;
         setVisible(false);
         repaint();
     }
@@ -36,15 +37,17 @@ public class DropOverlayPanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g.create();
 
-        // Semi-transparent dark background for overlay
-        g2.setColor(new Color(30, 30, 30, 180)); // dark gray with alpha
+        Color background = UIUtil.getPanelBackground();
+        g2.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 224));
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        // Dashed light border rectangle
         float[] dash = {6f, 6f};
-        g2.setColor(new Color(180, 180, 180, 180)); // light gray dash border
-        g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, dash, 0));
-        g2.drawRect(10, 10, getWidth() - 20, getHeight() - 20);
+        Color border = JBColor.border();
+        g2.setColor(new Color(border.getRed(), border.getGreen(), border.getBlue(), 220));
+        g2.setStroke(new BasicStroke(JBUI.scale(2), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, dash, 0));
+        int inset = JBUI.scale(12);
+        g2.drawRoundRect(inset, inset, getWidth() - inset * 2, getHeight() - inset * 2,
+                JBUI.scale(12), JBUI.scale(12));
 
         g2.dispose();
         super.paintComponent(g);
