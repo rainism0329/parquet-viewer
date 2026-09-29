@@ -8,6 +8,8 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.2.0"
 }
 
+version = "2.5.2.2"
+
 repositories {
     mavenCentral()
     // 新版插件必须添加这个
@@ -22,6 +24,11 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
+}
+
+// Keep the existing test directory usable on case-sensitive filesystems too.
+sourceSets.test {
+    java.setSrcDirs(listOf("src/Test/java"))
 }
 
 dependencies {
@@ -52,6 +59,9 @@ dependencies {
     // 测试框架
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.0")
+    // IntelliJ's 2024.2 test session listener still references JUnit 4 classes.
+    testRuntimeOnly("junit:junit:4.13.2")
 
     // =======================================================
     // 2. IntelliJ 平台配置 (适配 2024.2+)
@@ -76,6 +86,12 @@ intellijPlatform {
         }
 
         changeNotes = """
+            <b>2.5.2.2 - Open-source licensing</b><br/>
+            <ul>
+                <li>Document the project's Apache License 2.0 and link to the source code.</li>
+                <li>Include license and third-party notices in the distribution.</li>
+                <li>Add build and contribution instructions.</li>
+            </ul>
             <b>2.5.2 - Quality of Life Update</b><br/><br/>
             <ul>
                 <li>🔍 <b>Filter History:</b> Your last 20 filter expressions are saved and available from the dropdown (▾) next to the filter bar. Persists across IDE restarts.</li>
@@ -90,6 +106,19 @@ intellijPlatform {
 }
 
 tasks {
+    processResources {
+        from(files("LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md")) {
+            into("META-INF")
+        }
+        from("third-party-licenses") {
+            into("META-INF/third-party-licenses")
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
     // 即使有了 toolchain，显式指定编译选项也是好习惯
     withType<JavaCompile> {
         sourceCompatibility = "21"

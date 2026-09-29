@@ -16,5 +16,5 @@ out/
 # Logs
 *.log
 .claude
-test
+/test/
 .intellijPlatform
