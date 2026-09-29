@@ -1,0 +1,1273 @@
+[
+  {
+    "coordinate": "aopalliance:aopalliance:1.0",
+    "filename": "aopalliance-1.0.jar",
+    "sha256": "0addec670fedcd3f113c5c8091d783280d23f75e3acb841b61a9cdb079376a08",
+    "upstream_license_declaration": "Public domain",
+    "license_evidence": "hadoop-3.3.6/LICENSE-binary.txt",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "ch.qos.reload4j:reload4j:1.2.22",
+    "filename": "reload4j-1.2.22.jar",
+    "sha256": "222f90d3e69541218ef6e70547749d693bd4c1846817e5bd7949b3e28950f99f",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/ch/qos/reload4j/reload4j/1.2.22/reload4j-1.2.22.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.jackson.core:jackson-annotations:2.12.7",
+    "filename": "jackson-annotations-2.12.7.jar",
+    "sha256": "3cacef714a89f3d68b69fa11263afa55a6aa2fdef1fff93ded22caa16b54687c",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.12.7/jackson-annotations-2.12.7.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.jackson.core:jackson-core:2.12.7",
+    "filename": "jackson-core-2.12.7.jar",
+    "sha256": "3987a6a335046e226e56b81d69668fb5a91b155ea7fd96b0851adbb7d4ac1ca6",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.12.7/jackson-core-2.12.7.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.jackson.core:jackson-databind:2.12.7.1",
+    "filename": "jackson-databind-2.12.7.1.jar",
+    "sha256": "3f504cac405ce066d5665ff69541484d5322f35ac7a7ec6104cf86a01008e02d",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.12.7.1/jackson-databind-2.12.7.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.12.7",
+    "filename": "jackson-jaxrs-base-2.12.7.jar",
+    "sha256": "b91cdb52f41485aaf0d3518852bbdfcdb9e7033b12cc412eb7f35bd06c9f33d4",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-base/2.12.7/jackson-base-2.12.7.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.12.7",
+    "filename": "jackson-jaxrs-json-provider-2.12.7.jar",
+    "sha256": "ed6a6a17f423f53af100ff3b5be56e096727e9bc86517667f59496583cba85d5",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-base/2.12.7/jackson-base-2.12.7.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.12.7",
+    "filename": "jackson-module-jaxb-annotations-2.12.7.jar",
+    "sha256": "84686ef549abf053ee3632925b024be3f330bc6f34f7e166f0537799e7f90dbd",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-base/2.12.7/jackson-base-2.12.7.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.fasterxml.woodstox:woodstox-core:5.4.0",
+    "filename": "woodstox-core-5.4.0.jar",
+    "sha256": "dbb958cb89f1d45238b061e146249494ff887f5f42b671a3956e98956e0d5c53",
+    "upstream_license_declaration": "The Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/fasterxml/woodstox/woodstox-core/5.4.0/woodstox-core-5.4.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "com.github.luben:zstd-jni:1.5.0-1",
+    "filename": "zstd-jni-1.5.0-1.jar",
+    "sha256": "5264f7e82e37d46deb1af8b4d123043e1f1c5e923f1fabff7217fa702118acc7",
+    "upstream_license_declaration": "BSD 2-Clause License",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.0-1/zstd-jni-1.5.0-1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.github.pjfanning:jersey-json:1.20",
+    "filename": "jersey-json-1.20.jar",
+    "sha256": "54da7475ea584d4a13f328e72c795c7b5beecee2ef56a420a639d24a80f61666",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/github/pjfanning/jersey-json/1.20/jersey-json-1.20.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.github.stephenc.jcip:jcip-annotations:1.0-1",
+    "filename": "jcip-annotations-1.0-1.jar",
+    "sha256": "4fccff8382aafc589962c4edb262f6aa595e34f1e11e61057d1c6a96e8fc7323",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.code.findbugs:jsr305:3.0.2",
+    "filename": "jsr305-3.0.2.jar",
+    "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.code.gson:gson:2.9.0",
+    "filename": "gson-2.9.0.jar",
+    "sha256": "c96d60551331a196dac54b745aa642cd078ef89b6f267146b705f2c2cbef052d",
+    "upstream_license_declaration": "Apache-2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.9.0/gson-2.9.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.errorprone:error_prone_annotations:2.2.0",
+    "filename": "error_prone_annotations-2.2.0.jar",
+    "sha256": "6ebd22ca1b9d8ec06d41de8d64e0596981d9607b42035f9ed374f9de271a481a",
+    "upstream_license_declaration": "Apache 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.2.0/error_prone_annotations-2.2.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.guava:failureaccess:1.0",
+    "filename": "failureaccess-1.0.jar",
+    "sha256": "d084bef9cd07a8537a1753e4850a69b7e8bab1d1e22e9f3a1e4826309a7a2336",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/guava/guava-parent/26.0-android/guava-parent-26.0-android.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.guava:guava:27.0-jre",
+    "filename": "guava-27.0-jre.jar",
+    "sha256": "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/guava/guava-parent/27.0-jre/guava-parent-27.0-jre.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava",
+    "filename": "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+    "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/guava/guava-parent/26.0-android/guava-parent-26.0-android.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.inject.extensions:guice-servlet:4.0",
+    "filename": "guice-servlet-4.0.jar",
+    "sha256": "651e18a98af376ac0717d22ddc89863dbc0c7512e28340a6642a8612ab82b15d",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/inject/guice-parent/4.0/guice-parent-4.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.google.inject:guice:4.0",
+    "filename": "guice-4.0.jar",
+    "sha256": "b378ffc35e7f7125b3c5f3a461d4591ae1685e3c781392f0c854ed7b7581d6d2",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/inject/guice-parent/4.0/guice-parent-4.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE",
+      "LICENSE",
+      "NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.google.j2objc:j2objc-annotations:1.1",
+    "filename": "j2objc-annotations-1.1.jar",
+    "sha256": "2994a7eb78f2710bd3d3bfb639b2c94e219cedac0d4d084d516e78c16dddecf6",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.protobuf:protobuf-java:2.5.0",
+    "filename": "protobuf-java-2.5.0.jar",
+    "sha256": "e0c1c64575c005601725e7c6a02cebf9e1285e888f756b2a1d73ffa8d725cc74",
+    "upstream_license_declaration": "New BSD license",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.google.re2j:re2j:1.1",
+    "filename": "re2j-1.1.jar",
+    "sha256": "24ada84d1b5de584e3e84b06f0c7dd562cee6eafe8dea8083bd8eb123823bbe7",
+    "upstream_license_declaration": "The Go license",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/google/re2j/re2j/1.1/re2j-1.1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.jcraft:jsch:0.1.55",
+    "filename": "jsch-0.1.55.jar",
+    "sha256": "d492b15a6d2ea3f1cc39c422c953c40c12289073dbe8360d98c0f6f9ec74fc44",
+    "upstream_license_declaration": "Revised BSD",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/jcraft/jsch/0.1.55/jsch-0.1.55.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.nimbusds:nimbus-jose-jwt:9.8.1",
+    "filename": "nimbus-jose-jwt-9.8.1.jar",
+    "sha256": "7664cf8c6f2adadf600287812b32878277beda54912eab9d4c2932cd50cb704a",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/nimbusds/nimbus-jose-jwt/9.8.1/nimbus-jose-jwt-9.8.1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.squareup.okhttp3:okhttp:4.9.3",
+    "filename": "okhttp-4.9.3.jar",
+    "sha256": "93ecd6cba19d87dccfe566ec848d91aae799e3cf16c00709358ea69bd9227219",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.9.3/okhttp-4.9.3.pom",
+    "retained_jar_notices": [
+      "okhttp3/internal/publicsuffix/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "com.squareup.okio:okio:2.8.0",
+    "filename": "okio-jvm-2.8.0.jar",
+    "sha256": "4496b06e73982fcdd8a5393f46e5df2ce2fa4465df5895454cac68a32f09bbc8",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/squareup/okio/okio/2.8.0/okio-2.8.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.sun.jersey.contribs:jersey-guice:1.19.4",
+    "filename": "jersey-guice-1.19.4.jar",
+    "sha256": "8653320f79f20a369bfb9e6ff84be9315843bc4a048b37e1df13c777c7cfcb33",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-project/1.19.4/jersey-project-1.19.4.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.sun.jersey:jersey-client:1.19.4",
+    "filename": "jersey-client-1.19.4.jar",
+    "sha256": "639c825c5db580f8115bf49ffc893093526d2ed1079fbc929b6a5fbd0b2eda40",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-project/1.19.4/jersey-project-1.19.4.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.sun.jersey:jersey-core:1.19.4",
+    "filename": "jersey-core-1.19.4.jar",
+    "sha256": "64b03198e0264849d0fc341857ebcc9c882b1909a2dc35a0972fe7d901b826e5",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-project/1.19.4/jersey-project-1.19.4.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.sun.jersey:jersey-server:1.19.4",
+    "filename": "jersey-server-1.19.4.jar",
+    "sha256": "afc0f6cd21d4742d312cb511a8fa2a253213285f5425dda005708fd5928504e6",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-project/1.19.4/jersey-project-1.19.4.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.sun.jersey:jersey-servlet:1.19.4",
+    "filename": "jersey-servlet-1.19.4.jar",
+    "sha256": "08c80d4e83ad8d20dcfbc633235bfa68f8519ceddb8ad2d6d112e95f43288e90",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/jersey/jersey-project/1.19.4/jersey-project-1.19.4.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "com.sun.xml.bind:jaxb-impl:2.2.3-1",
+    "filename": "jaxb-impl-2.2.3-1.jar",
+    "sha256": "fa3e1499b192c310312bf02881274b68394aaea4c9563e6c554cc406ae644ff8",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/xml/bind/jaxb-impl/2.2.3-1/jaxb-impl-2.2.3-1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "commons-beanutils:commons-beanutils:1.9.4",
+    "filename": "commons-beanutils-1.9.4.jar",
+    "sha256": "7d938c81789028045c08c065e94be75fc280527620d5bd62b519d5838532368a",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/19/apache-19.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-cli:commons-cli:1.2",
+    "filename": "commons-cli-1.2.jar",
+    "sha256": "e7cd8951956d349b568b7ccfd4f5b2529a8c113e67c32b028f52ffda371259d9",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/4/apache-4.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-codec:commons-codec:1.15",
+    "filename": "commons-codec-1.15.jar",
+    "sha256": "b3e9f6d63a790109bf0d056611fbed1cf69055826defeb9894a71369d246ed63",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/23/apache-23.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-collections:commons-collections:3.2.2",
+    "filename": "commons-collections-3.2.2.jar",
+    "sha256": "eeeae917917144a68a741d4c0dff66aa5c5c5fd85593ff217bced3fc8ca783b8",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/16/apache-16.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE.txt",
+      "META-INF/LICENSE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-io:commons-io:2.8.0",
+    "filename": "commons-io-2.8.0.jar",
+    "sha256": "02f291e5d1243dc143496e3cbbb40a1ced47aa58f2d633d3e38780cd068d5074",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/23/apache-23.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-logging:commons-logging:1.2",
+    "filename": "commons-logging-1.2.jar",
+    "sha256": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/13/apache-13.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE.txt",
+      "META-INF/LICENSE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-net:commons-net:3.9.0",
+    "filename": "commons-net-3.9.0.jar",
+    "sha256": "e3c1566f821b84489308cd933f57e8c00dd8714dc96b898bef844386510d3461",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/27/apache-27.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "commons-pool:commons-pool:1.6",
+    "filename": "commons-pool-1.6.jar",
+    "sha256": "46c42b4a38dc6b2db53a9ee5c92c63db103665d56694e2cfce2c95d51a6860cc",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/9/apache-9.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "dnsjava:dnsjava:2.1.7",
+    "filename": "dnsjava-2.1.7.jar",
+    "sha256": "2c52a6fabd5af9331d73fc7787dafc32a56bd8019c49f89749c2eeef244e303c",
+    "upstream_license_declaration": "BSD 2-Clause license",
+    "license_evidence": "https://repo.maven.apache.org/maven2/dnsjava/dnsjava/2.1.7/dnsjava-2.1.7.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.airlift:aircompressor:0.21",
+    "filename": "aircompressor-0.21.jar",
+    "sha256": "e968bd7f31641ae94ea4ae12971337bdfab794349cc0baa9ccd54553cce712ac",
+    "upstream_license_declaration": "Apache License 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/airlift/aircompressor/0.21/aircompressor-0.21.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.dropwizard.metrics:metrics-core:3.2.4",
+    "filename": "metrics-core-3.2.4.jar",
+    "sha256": "a083e3f3bdf4173d7065cdd4521964394a840d586bf8653676203d18354a6d2c",
+    "upstream_license_declaration": "Apache License 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/dropwizard/metrics/metrics-parent/3.2.4/metrics-parent-3.2.4.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-buffer:4.1.63.Final",
+    "filename": "netty-buffer-4.1.63.Final.jar",
+    "sha256": "f7fb235fdf125bddb0b65cc3473a7cfef120a42ca07f3faf7cb381016cbd7d81",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-codec:4.1.63.Final",
+    "filename": "netty-codec-4.1.63.Final.jar",
+    "sha256": "642f48374272a19d8e323f9b775f468918e3965b212f1611c5ea1d8649979640",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-common:4.1.63.Final",
+    "filename": "netty-common-4.1.63.Final.jar",
+    "sha256": "c9fbf7c5e777f08475e8564a83d6b3cb1e855b6899a1d498684ba4849802e96c",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-handler:4.1.63.Final",
+    "filename": "netty-handler-4.1.63.Final.jar",
+    "sha256": "aafd714a00e03eae36b4addbde2be44db8baa358d0d36edc8fbb506486a555fc",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-resolver:4.1.63.Final",
+    "filename": "netty-resolver-4.1.63.Final.jar",
+    "sha256": "08ca66adc460cee7bfb3b9f48971e0a758633490ab0d35df05969922c1ab7393",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-transport-native-epoll:4.1.63.Final",
+    "filename": "netty-transport-native-epoll-4.1.63.Final.jar",
+    "sha256": "a2eeeeb80c3b8a3c97d5348e53a89496164f738c618562d136e25d8a481b537f",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-transport-native-unix-common:4.1.63.Final",
+    "filename": "netty-transport-native-unix-common-4.1.63.Final.jar",
+    "sha256": "342caefdda65c8f0fb55305f6b9031b6e533c88bf1d57307b30e540f4978a735",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty-transport:4.1.63.Final",
+    "filename": "netty-transport-4.1.63.Final.jar",
+    "sha256": "55f633ee6eed311cc7d8be8675267f2dae7467de3c79144d224be38d004d3fcf",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty-parent/4.1.63.Final/netty-parent-4.1.63.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "io.netty:netty:3.10.6.Final",
+    "filename": "netty-3.10.6.Final.jar",
+    "sha256": "8768a50fbe3d93a88d8e6000ea5d68e30f50dc915b3764c3c5870f70c4fb3b49",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/io/netty/netty/3.10.6.Final/netty-3.10.6.Final.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt",
+      "META-INF/license/LICENSE.base64.txt",
+      "META-INF/license/LICENSE.bouncycastle.txt",
+      "META-INF/license/LICENSE.commons-logging.txt",
+      "META-INF/license/LICENSE.felix.txt",
+      "META-INF/license/LICENSE.jboss-logging.txt",
+      "META-INF/license/LICENSE.jsr166y.txt",
+      "META-INF/license/LICENSE.jzlib.txt",
+      "META-INF/license/LICENSE.log4j.txt",
+      "META-INF/license/LICENSE.protobuf.txt",
+      "META-INF/license/LICENSE.slf4j.txt",
+      "META-INF/license/LICENSE.webbit.txt"
+    ]
+  },
+  {
+    "coordinate": "jakarta.activation:jakarta.activation-api:1.2.1",
+    "filename": "jakarta.activation-api-1.2.1.jar",
+    "sha256": "8b0a0f52fa8b05c5431921a063ed866efaa41dadf2e3a7ee3e1961f2b0d9645b",
+    "upstream_license_declaration": "EDL 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/com/sun/activation/all/1.2.1/all-1.2.1.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE.md",
+      "META-INF/LICENSE.md"
+    ]
+  },
+  {
+    "coordinate": "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2",
+    "filename": "jakarta.xml.bind-api-2.3.2.jar",
+    "sha256": "69156304079bdeed9fc0ae3b39389f19b3cc4ba4443bc80508995394ead742ea",
+    "upstream_license_declaration": "Eclipse Distribution License - v 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api-parent/2.3.2/jakarta.xml.bind-api-parent-2.3.2.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.md",
+      "META-INF/NOTICE.md"
+    ]
+  },
+  {
+    "coordinate": "javax.inject:javax.inject:1",
+    "filename": "javax.inject-1.jar",
+    "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff",
+    "upstream_license_declaration": "Apache-2.0 (source headers)",
+    "license_evidence": "https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1-sources.jar",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "javax.servlet.jsp:jsp-api:2.1",
+    "filename": "jsp-api-2.1.jar",
+    "sha256": "545f4e7dc678ffb4cf8bd0fd40b4a4470a409a787c0ea7d0ad2f08d56112987b",
+    "upstream_license_declaration": "CDDL / GPLv2 with Classpath Exception (upstream Hadoop release declaration)",
+    "license_evidence": "hadoop-3.3.6/LICENSE-binary.txt",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "javax.servlet:javax.servlet-api:3.1.0",
+    "filename": "javax.servlet-api-3.1.0.jar",
+    "sha256": "af456b2dd41c4e82cf54f3e743bc678973d9fe35bd4d3071fa05c7e5333b8482",
+    "upstream_license_declaration": "CDDL + GPLv2 with classpath exception",
+    "license_evidence": "https://repo.maven.apache.org/maven2/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt"
+    ]
+  },
+  {
+    "coordinate": "javax.ws.rs:jsr311-api:1.1.1",
+    "filename": "jsr311-api-1.1.1.jar",
+    "sha256": "ab1534b73b5fa055808e6598a5e73b599ccda28c3159c3c0908977809422ee4a",
+    "upstream_license_declaration": "CDDL License",
+    "license_evidence": "https://repo.maven.apache.org/maven2/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "javax.xml.bind:jaxb-api:2.2.11",
+    "filename": "jaxb-api-2.2.11.jar",
+    "sha256": "273d82f8653b53ad9d00ce2b2febaef357e79a273560e796ff3fcfec765f8910",
+    "upstream_license_declaration": "CDDL 1.1; GPL2 w/ CPE",
+    "license_evidence": "https://repo.maven.apache.org/maven2/javax/xml/bind/jaxb-api/2.2.11/jaxb-api-2.2.11.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.apache.avro:avro:1.11.1",
+    "filename": "avro-1.11.1.jar",
+    "sha256": "1213dfffe9295daa3d986713ae36b8daad36bfba039810264bca1cdac0cf8b6a",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/27/apache-27.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.commons:commons-compress:1.21",
+    "filename": "commons-compress-1.21.jar",
+    "sha256": "6aecfd5459728a595601cfa07258d131972ffc39b492eb48bdd596577a2f244a",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/23/apache-23.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.commons:commons-configuration2:2.8.0",
+    "filename": "commons-configuration2-2.8.0.jar",
+    "sha256": "e5c46e4b0b1acddbc96651838c19d3df70da92dfb5107a6e4c42cb92d3a300bd",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/24/apache-24.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.commons:commons-lang3:3.12.0",
+    "filename": "commons-lang3-3.12.0.jar",
+    "sha256": "d919d904486c037f8d193412da0c92e22a9fa24230b9d67a57855c5c31c7e94e",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/23/apache-23.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.commons:commons-math3:3.1.1",
+    "filename": "commons-math3-3.1.1.jar",
+    "sha256": "a07e39d31c46032879f0a48ae1bd0142b17dd67664c008b50216e9891f346c54",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/9/apache-9.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE.txt",
+      "META-INF/LICENSE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.commons:commons-text:1.10.0",
+    "filename": "commons-text-1.10.0.jar",
+    "sha256": "770cd903fa7b604d1f7ef7ba17f84108667294b2b478be8ed1af3bffb4ae0018",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/27/apache-27.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.curator:curator-client:5.2.0",
+    "filename": "curator-client-5.2.0.jar",
+    "sha256": "345ec409bc026e114e8fd471a9273f631a3a494f0e091b092c1ac94499ddee4f",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/curator/apache-curator/5.2.0/apache-curator-5.2.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.curator:curator-framework:5.2.0",
+    "filename": "curator-framework-5.2.0.jar",
+    "sha256": "9a6b6ec713bd4145fa6912f2197a1f642806c10d4ba87561dfec551f6eaec4f1",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/curator/apache-curator/5.2.0/apache-curator-5.2.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.curator:curator-recipes:5.2.0",
+    "filename": "curator-recipes-5.2.0.jar",
+    "sha256": "45e755b95763c9db8b8c465098ec72a33ee7c82132145a32dc9844d699c5b7f3",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/curator/apache-curator/5.2.0/apache-curator-5.2.0.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop.thirdparty:hadoop-shaded-guava:1.1.1",
+    "filename": "hadoop-shaded-guava-1.1.1.jar",
+    "sha256": "66711253edbb9a172efbf12e8b4511cd413627d069e0f5a62ea475b4e14093f8",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/thirdparty/hadoop-thirdparty/1.1.1/hadoop-thirdparty-1.1.1.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE-binary",
+      "META-INF/NOTICE.txt",
+      "META-INF/licenses-binary/LICENSE.protobuf.txt",
+      "META-INF/LICENSE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop.thirdparty:hadoop-shaded-protobuf_3_7:1.1.1",
+    "filename": "hadoop-shaded-protobuf_3_7-1.1.1.jar",
+    "sha256": "4b4f70f14576cabec34607a035b58aaefa6c042d693328d90de79db581966f8b",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/thirdparty/hadoop-thirdparty/1.1.1/hadoop-thirdparty-1.1.1.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE-binary",
+      "META-INF/licenses-binary/LICENSE.protobuf.txt",
+      "META-INF/NOTICE.txt",
+      "META-INF/LICENSE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-annotations:3.3.6",
+    "filename": "hadoop-annotations-3.3.6.jar",
+    "sha256": "02444e5dec3ef67251b61816001d3a0b1374b0334ed847b1d77f0750234c12d9",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-auth:3.3.6",
+    "filename": "hadoop-auth-3.3.6.jar",
+    "sha256": "bb477b94b2a653cdca1e83d7525152108d9faeca74409c22b8f989659abea607",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-common:3.3.6",
+    "filename": "hadoop-common-3.3.6.jar",
+    "sha256": "10b8edb304bccc10a939d29edde128d0f6d95129427ec69f5cc7003ba8c6b737",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-hdfs-client:3.3.6",
+    "filename": "hadoop-hdfs-client-3.3.6.jar",
+    "sha256": "fee1e4addd705a281aafdf02f41426a07ec00382327c44b43e4542818e62c483",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-mapreduce-client-core:3.3.6",
+    "filename": "hadoop-mapreduce-client-core-3.3.6.jar",
+    "sha256": "deb286d201c2ef7621e6eaddd477992a8b8523ae030fe57c9e80b255ad759db3",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-yarn-api:3.3.6",
+    "filename": "hadoop-yarn-api-3.3.6.jar",
+    "sha256": "990aeae3721f161d4be40861ce929a945787ca7fa34ce87b49485d4a3da05b03",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-yarn-client:3.3.6",
+    "filename": "hadoop-yarn-client-3.3.6.jar",
+    "sha256": "abe973bcf087693545afe28ddf2cf08e6e16f206f39e7079f025441b65e0a6cf",
+    "upstream_license_declaration": "Apache-2.0 (JAR LICENSE)",
+    "license_evidence": "Embedded META-INF/LICENSE or META-INF/LICENSE.txt",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.hadoop:hadoop-yarn-common:3.3.6",
+    "filename": "hadoop-yarn-common-3.3.6.jar",
+    "sha256": "d6ed616e3daaac9a8a66195876d52d6039f06733b8759d9a2cd9f253287535e7",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/hadoop/hadoop-main/3.3.6/hadoop-main-3.3.6.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE.txt",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.apache.httpcomponents:httpclient:4.5.13",
+    "filename": "httpclient-4.5.13.jar",
+    "sha256": "6fe9026a566c6a5001608cf3fc32196641f6c1e5e1986d1037ccdbd5f31ef743",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-client/4.5.13/httpcomponents-client-4.5.13.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.httpcomponents:httpcore:4.4.13",
+    "filename": "httpcore-4.4.13.jar",
+    "sha256": "e06e89d40943245fcfa39ec537cdbfce3762aecde8f9c597780d2b00c2b43424",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-core/4.4.13/httpcomponents-core-4.4.13.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-admin:1.0.1",
+    "filename": "kerb-admin-1.0.1.jar",
+    "sha256": "27b012f556b02bdf4ecd0742a7ecdd725a562e95a194e3413662fe2e781ff889",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-client:1.0.1",
+    "filename": "kerb-client-1.0.1.jar",
+    "sha256": "020fa95a809b96358ab95d43666471838372659af1cbc3f24ef73c29374e9af0",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-common:1.0.1",
+    "filename": "kerb-common-1.0.1.jar",
+    "sha256": "f62bb275781f8092bb6252e4ed201c9f5e4ab7a3d49b650ab58c87862b0bb2de",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-core:1.0.1",
+    "filename": "kerb-core-1.0.1.jar",
+    "sha256": "4db26bc4a106603044d8883f7280abc803b055b36f5c510a3fffc41e5de4c651",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-crypto:1.0.1",
+    "filename": "kerb-crypto-1.0.1.jar",
+    "sha256": "af94527564908b5a8ccfdfa8e67dd61c09e062459a0110d85115c42fc8f82b41",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-identity:1.0.1",
+    "filename": "kerb-identity-1.0.1.jar",
+    "sha256": "35fd995cc7a0c71f86adaf716dee34f6e4d1e473eff452a74f4430bd196e6424",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-server:1.0.1",
+    "filename": "kerb-server-1.0.1.jar",
+    "sha256": "dff4eebc6cadaa8bdc1084fc1d4c20fda954aed74913845e79c89572768e463f",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-simplekdc:1.0.1",
+    "filename": "kerb-simplekdc-1.0.1.jar",
+    "sha256": "9c9976a603833c001a8a4a4e5b2ea0a6775a84e5656b0eca1fe4eb4d068ceda7",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerb-util:1.0.1",
+    "filename": "kerb-util-1.0.1.jar",
+    "sha256": "9cb1a2715a35cbabc9e8f1be3287bb086100763847e2f17577b72a025f8adaab",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerby-asn1:1.0.1",
+    "filename": "kerby-asn1-1.0.1.jar",
+    "sha256": "010a3c33e5b652f11cb29a6e66826a24331e526cf58662dccb4d6695fc6ca59d",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerby-config:1.0.1",
+    "filename": "kerby-config-1.0.1.jar",
+    "sha256": "244520e9bd61e8cd40a475fe615fbea45ca042fc9d50780df30bc7146f77b8c9",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerby-pkix:1.0.1",
+    "filename": "kerby-pkix-1.0.1.jar",
+    "sha256": "0410bc1950b57f4792ea6b86df59a2ee87e4ad69b33a17ded438e6686894346a",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerby-util:1.0.1",
+    "filename": "kerby-util-1.0.1.jar",
+    "sha256": "db7e2f329e160aaac305268ccb7287c16cf5542cffdd786a8592212df7c315aa",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:kerby-xdr:1.0.1",
+    "filename": "kerby-xdr-1.0.1.jar",
+    "sha256": "c24e2d9fbaef40a0a61ee36c19e41db5141bfbe7a2669be0227dee86ccca6d6f",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.kerby:token-provider:1.0.1",
+    "filename": "token-provider-1.0.1.jar",
+    "sha256": "022c92d7438b60789bc212f53f1f33ced2656ba8bf073a1f587df51e083e368a",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/apache/18/apache-18.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-avro:1.13.1",
+    "filename": "parquet-avro-1.13.1.jar",
+    "sha256": "5a08438385193de70a961e6a2c82084401106def11f74c3dcec4d5ee166e7561",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-column:1.13.1",
+    "filename": "parquet-column-1.13.1.jar",
+    "sha256": "3ff4222b5da77cc85e3fee623ff9779f991a1a0987125e68bc642ff913ec5612",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-common:1.13.1",
+    "filename": "parquet-common-1.13.1.jar",
+    "sha256": "4a2d7a8eb395bbc8d202fa74b272e45374a1034b351028824ad46925366297ea",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-encoding:1.13.1",
+    "filename": "parquet-encoding-1.13.1.jar",
+    "sha256": "0c921d275bbcc31552ee94d383ea38b2615110790d59f11ad07ffe5f3f0c23b3",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-format-structures:1.13.1",
+    "filename": "parquet-format-structures-1.13.1.jar",
+    "sha256": "57b3e31e9502a1121dc481a3017fc2f20d1d6116da82dd58155a69b10b28e1e6",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-hadoop:1.13.1",
+    "filename": "parquet-hadoop-1.13.1.jar",
+    "sha256": "5b86f191d0bbfe866d194bd1a336fa79d049d342fb7a05aefcf31ea266792a40",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.parquet:parquet-jackson:1.13.1",
+    "filename": "parquet-jackson-1.13.1.jar",
+    "sha256": "d1e66f2a392d1777425688d3439b7f57d08c4404a81ae95bb247a16cfc773da1",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/parquet/parquet/1.13.1/parquet-1.13.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.yetus:audience-annotations:0.13.0",
+    "filename": "audience-annotations-0.13.0.jar",
+    "sha256": "3bfbb397b06f63a2a0a361f62ed32cf199bd92ddd48ea99281f4987edec9777b",
+    "upstream_license_declaration": "Apache-2.0 (JAR LICENSE)",
+    "license_evidence": "Embedded META-INF/LICENSE or META-INF/LICENSE.txt",
+    "retained_jar_notices": [
+      "META-INF/NOTICE",
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.apache.zookeeper:zookeeper-jute:3.6.3",
+    "filename": "zookeeper-jute-3.6.3.jar",
+    "sha256": "6f463ade2b777f81e6c3e145b3fc03d4b39131b73dcf8c7f4b89ac4b1bacc9c5",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/zookeeper/parent/3.6.3/parent-3.6.3.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.apache.zookeeper:zookeeper:3.6.3",
+    "filename": "zookeeper-3.6.3.jar",
+    "sha256": "ac44de96d37a80d463c1e01aaa2ea86b19490fa17a37438d14491456c0e4a911",
+    "upstream_license_declaration": "Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/apache/zookeeper/parent/3.6.3/parent-3.6.3.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.checkerframework:checker-qual:2.5.2",
+    "filename": "checker-qual-2.5.2.jar",
+    "sha256": "64b02691c8b9d4e7700f8ee2e742dce7ea2c6e81e662b7522c9ee3bf568c040a",
+    "upstream_license_declaration": "The MIT License",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/2.5.2/checker-qual-2.5.2.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.codehaus.jettison:jettison:1.1",
+    "filename": "jettison-1.1.jar",
+    "sha256": "377940288b0643c48780137f6f68578937e1ea5ca2b73830a820c50a7b7ed801",
+    "upstream_license_declaration": "Apache-2.0 (JAR LICENSE)",
+    "license_evidence": "Embedded META-INF/LICENSE or META-INF/LICENSE.txt",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.codehaus.mojo:animal-sniffer-annotations:1.17",
+    "filename": "animal-sniffer-annotations-1.17.jar",
+    "sha256": "92654f493ecfec52082e76354f0ebf87648dc3d5cec2e3c3cdb947c016747a53",
+    "upstream_license_declaration": "MIT license",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/codehaus/mojo/animal-sniffer-parent/1.17/animal-sniffer-parent-1.17.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.codehaus.woodstox:stax2-api:4.2.1",
+    "filename": "stax2-api-4.2.1.jar",
+    "sha256": "678567e48b51a42c65c699f266539ad3d676d4b1a5b0ad7d89ece8b9d5772579",
+    "upstream_license_declaration": "The BSD License",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/codehaus/woodstox/stax2-api/4.2.1/stax2-api-4.2.1.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty.websocket:websocket-api:9.4.51.v20230217",
+    "filename": "websocket-api-9.4.51.v20230217.jar",
+    "sha256": "4817b49e75475b4f1a9556b54c851b628eeeb2a3df81a2abfff7f7797df33711",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty.websocket:websocket-client:9.4.51.v20230217",
+    "filename": "websocket-client-9.4.51.v20230217.jar",
+    "sha256": "085c523fbe0db6dbf5c0d3458e93f4c41178a50191ca2307077b0227a6f1670c",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty.websocket:websocket-common:9.4.51.v20230217",
+    "filename": "websocket-common-9.4.51.v20230217.jar",
+    "sha256": "2845ca38265a4c49ca076e5cf1a28ac35b740a3eeddf3fa29189b13d0c4ce689",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-client:9.4.51.v20230217",
+    "filename": "jetty-client-9.4.51.v20230217.jar",
+    "sha256": "57ea919f61df25bf2193af4d009bba67f6c02bc6134c0b1006613a1f1c3221a7",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-http:9.4.51.v20230217",
+    "filename": "jetty-http-9.4.51.v20230217.jar",
+    "sha256": "924d254a7e4dcbb699b722940b005bfe1bd4a68a8d44d7dcf3e0a935faafbba2",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-io:9.4.51.v20230217",
+    "filename": "jetty-io-9.4.51.v20230217.jar",
+    "sha256": "b73b26c5a531b02af0d775f0574c2889665449168723e4322d36de6e8e74848f",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-security:9.4.51.v20230217",
+    "filename": "jetty-security-9.4.51.v20230217.jar",
+    "sha256": "57aa5bc98356f12c7b0025470ca0ba2af91b58fc7c9549cea6b194d64f02aaa6",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-server:9.4.51.v20230217",
+    "filename": "jetty-server-9.4.51.v20230217.jar",
+    "sha256": "72f19a7f88e91244d5170045d7d44143508845b01196f87b2a1b56a5ad16d378",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-servlet:9.4.51.v20230217",
+    "filename": "jetty-servlet-9.4.51.v20230217.jar",
+    "sha256": "c3b468238313c078f3f48eaec3b6317fcc9c8ebbe0d58d992bd4361796e2b9bb",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-util-ajax:9.4.51.v20230217",
+    "filename": "jetty-util-ajax-9.4.51.v20230217.jar",
+    "sha256": "fb0e92684423b2c9b0818259faa95a75a700003623a9af1a8ca1ab6603a53679",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-util:9.4.51.v20230217",
+    "filename": "jetty-util-9.4.51.v20230217.jar",
+    "sha256": "9fac4168b1ae543c5c29f48008cd118c70779aa701d60f37f52b57c104b6536e",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-webapp:9.4.51.v20230217",
+    "filename": "jetty-webapp-9.4.51.v20230217.jar",
+    "sha256": "a5bf73002a45e5b476b3ff0ffebee6c7e59b17393c19a80edea5772bef7ad9bd",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.eclipse.jetty:jetty-xml:9.4.51.v20230217",
+    "filename": "jetty-xml-9.4.51.v20230217.jar",
+    "sha256": "6d7d68dfd7e58559505bee8cc14089cb54d7715be719074da62c50364d1ebf97",
+    "upstream_license_declaration": "Apache Software License - Version 2.0; Eclipse Public License - Version 1.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-project/9.4.51.v20230217/jetty-project-9.4.51.v20230217.pom",
+    "retained_jar_notices": [
+      "META-INF/LICENSE",
+      "META-INF/NOTICE.txt"
+    ]
+  },
+  {
+    "coordinate": "org.jetbrains.kotlin:kotlin-stdlib:2.1.0",
+    "filename": "kotlin-stdlib-2.1.0.jar",
+    "sha256": "d6f91b7b0f306cca299fec74fb7c34e4874d6f5ec5b925a0b4de21901e119c3f",
+    "upstream_license_declaration": "The Apache License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.1.0/kotlin-stdlib-2.1.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.jetbrains:annotations:13.0",
+    "filename": "annotations-13.0.jar",
+    "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.jline:jline:3.9.0",
+    "filename": "jline-3.9.0.jar",
+    "sha256": "d2b986fd15d05e0b900faba776c1de9b4dc4a4fcdfeaa12a8ab8fb2b290ed527",
+    "upstream_license_declaration": "The BSD License",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/jline/jline-parent/3.9.0/jline-parent-3.9.0.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.mvel:mvel2:2.5.2.Final",
+    "filename": "mvel2-2.5.2.Final.jar",
+    "sha256": "77d14116dfad5259aa3c21e177fb5455b2c86f4873f49828fdb6000ebe77660d",
+    "upstream_license_declaration": "The Apache Software License, Version 2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/mvel/mvel2/2.5.2.Final/mvel2-2.5.2.Final.pom",
+    "retained_jar_notices": []
+  },
+  {
+    "coordinate": "org.xerial.snappy:snappy-java:1.1.8.3",
+    "filename": "snappy-java-1.1.8.3.jar",
+    "sha256": "d371202c03bd165f6fd660f63ae597fbb4c91b81bfc6e12cf6b2a93ace93a800",
+    "upstream_license_declaration": "Apache-2.0",
+    "license_evidence": "https://repo.maven.apache.org/maven2/org/xerial/snappy/snappy-java/1.1.8.3/snappy-java-1.1.8.3.pom",
+    "retained_jar_notices": []
+  }
+]

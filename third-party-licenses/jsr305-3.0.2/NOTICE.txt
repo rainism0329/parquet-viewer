@@ -1,0 +1,9 @@
+The following notice applies to javax.annotation.concurrent.GuardedBy,
+Immutable, NotThreadSafe, and ThreadSafe in jsr305 3.0.2.
+
+/*
+ * Copyright (c) 2005 Brian Goetz
+ * Released under the Creative Commons Attribution License
+ *   (http://creativecommons.org/licenses/by/2.5)
+ * Official home: http://www.jcip.net
+ */

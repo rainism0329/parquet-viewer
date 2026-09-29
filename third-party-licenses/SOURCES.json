@@ -1,0 +1,359 @@
+[
+  {
+    "path": "hadoop-3.3.6/LICENSE-binary.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/LICENSE-binary",
+    "sha256": "2ff86ad167855854319d641984495ca05bc9bfb784cfb0b8f5b91700160c8ee5"
+  },
+  {
+    "path": "hadoop-3.3.6/NOTICE-binary.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/NOTICE-binary",
+    "sha256": "9b978804366ea0fd0d9e2d15f46203546c73374e80eaa33b7994ee65157319f9"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-bloomfilter.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-bloomfilter.txt",
+    "sha256": "3c2d86c2d79d95771261b906a343f47e6da5519a5db8037d979878cce3368726"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-cddl-gplv2-ce.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-cddl-gplv2-ce.txt",
+    "sha256": "73ea57eb3a5fefae6531afdea3d2f192740b370aa7e27fbb6582a810e4dc3292"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-checker-framework.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-checker-framework.txt",
+    "sha256": "f231d8c8878ba11dbd8d715cb5ee303f5c73bed248ab329163cc2a56cbb669d1"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-dnsjava.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-dnsjava.txt",
+    "sha256": "1a179760249e9640a225f8cdbd6121c8491df86c3728e54eff701f0755fb757b"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jaf.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jaf.txt",
+    "sha256": "c56e52168c596cb8ca8dca3a648886f19924461928eb8102f5eb31710aee9e31"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jakarta.xml.bind-api.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jakarta.xml.bind-api.txt",
+    "sha256": "4c24e8705b9ee6c699ae5fb10c1f6c171385ca1d78de48f0cd92e4810cd84dc4"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jline.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jline.txt",
+    "sha256": "fa57597d06699c8706f82b6d3cb373dd1ee9fb8d7d89bf5d8c1cb32c09d24a44"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jquery.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jquery.txt",
+    "sha256": "439c68e3deb46be0299cc9593793bb72dffabe8ea6c3eb11f886d90eef79f111"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jsch.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jsch.txt",
+    "sha256": "fe0d71fcb3d4fb8a0a46176f720d23a43d408a245206daf23d9d67a9bad607d4"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jsr305.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jsr305.txt",
+    "sha256": "8f15721b6995e21205a9ec53dab5bb31fad1eb472aa0c8a0799c2ed1ad6b956c"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-jstree.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-jstree.txt",
+    "sha256": "fde9fb0281eab2802554e3590cdebd6b7e9ed70adc1564044414439bebfb1abb"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-protobuf.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-protobuf.txt",
+    "sha256": "95bc0839fe9ffb3baf1b5ad8f5c347b58a07196387b3939c9f121d48461443dc"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-re2j.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-re2j.txt",
+    "sha256": "e0e578093d59dbe82627e7ebd88223ffb6d09de03b2159e318ad08b18b993d3b"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-slicing-by-8.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-slicing-by-8.txt",
+    "sha256": "2e8eb7f0de6c0df20e1b120e36e21518163109931f5278418975bac447b4b151"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-datatables.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-datatables.txt",
+    "sha256": "baf89d0e99b1c659ba95d85d057314cc7d269f73c16c443cd0d379587c1f9e96"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-d3.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-d3.txt",
+    "sha256": "f8535aa676b11e4578d2cebf14df108e7cb597018a6ae762fbc98867a4984861"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-dust.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-dust.txt",
+    "sha256": "191a6ad98e778831ff7482c50080d04c136ec78dcc1a6d5c1c3d1af4547d2efc"
+  },
+  {
+    "path": "hadoop-3.3.6/licenses-binary/LICENSE-moment.txt",
+    "source": "https://raw.githubusercontent.com/apache/hadoop/rel/release-3.3.6/licenses-binary/LICENSE-moment.txt",
+    "sha256": "083d7ecb4001d0f33d163a4fe9875e3e6ef1ad637f8e583d4132901bf8fe2681"
+  },
+  {
+    "path": "netty-4.1.63.Final/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/LICENSE.txt",
+    "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+  },
+  {
+    "path": "netty-4.1.63.Final/NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/NOTICE.txt",
+    "sha256": "df578edf48270bcfe2d0bf5bffb340880f2795a3b06a18e2c20f61f3917a8f7f"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.aalto-xml.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.aalto-xml.txt",
+    "sha256": "0aa53cc1a4a38c02b26f43be9e429e331a14154472973506168eb0c4e26e0d5b"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.base64.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.base64.txt",
+    "sha256": "922754f715103e9366d1099f85bfea7df192d3d457cd7e222786321c9ab01954"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.bouncycastle.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.bouncycastle.txt",
+    "sha256": "3ad769df48f54692f561debc1be6134efb95b63b6e5031b8167f821bd82a204f"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.caliper.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.caliper.txt",
+    "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.commons-lang.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.commons-lang.txt",
+    "sha256": "3e4af21da9cb8a50d6a8f32225d7630fbf94a263e89945489d4863585f4aca4e"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.commons-logging.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.commons-logging.txt",
+    "sha256": "3e4af21da9cb8a50d6a8f32225d7630fbf94a263e89945489d4863585f4aca4e"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.compress-lzf.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.compress-lzf.txt",
+    "sha256": "95eab05f6010cc64dedb668523c01fc9f48665cded448de86404b14a7a557ddd"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.dnsinfo.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.dnsinfo.txt",
+    "sha256": "f0bdf5682bf317b1f85c80ed32cb4c7bf77b5a231dee485aa92d983673b7c58f"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.harmony.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.harmony.txt",
+    "sha256": "3e4af21da9cb8a50d6a8f32225d7630fbf94a263e89945489d4863585f4aca4e"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.hpack.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.hpack.txt",
+    "sha256": "62fb8a3a9621dc2388174caaabe9c2317b694bb9a1d46c98bcf5655b68f51be3"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.hyper-hpack.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.hyper-hpack.txt",
+    "sha256": "763a9342a04df62046c9dc748a5287934eb0a5331c6863b3ca0aee20e18cb4ed"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.jboss-marshalling.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.jboss-marshalling.txt",
+    "sha256": "ff420781e0005270cd1894a265e526dec4eb332f99df62a481b06672db202290"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.jbzip2.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.jbzip2.txt",
+    "sha256": "77edfb9953d4a58f573c40280f9703df301b1f28e68b556914a561b03559c5e9"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.jctools.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.jctools.txt",
+    "sha256": "3e4af21da9cb8a50d6a8f32225d7630fbf94a263e89945489d4863585f4aca4e"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.jfastlz.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.jfastlz.txt",
+    "sha256": "06c1bf4cd5304c64bb72a6e03b461c389c35af26d623e3add7d828c398482e1d"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.jsr166y.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.jsr166y.txt",
+    "sha256": "17869cb6184447de9663a752a7663c118a9ed0d4ce0a2208986afc75206e1bbb"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.jzlib.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.jzlib.txt",
+    "sha256": "2ce9cdc96c015e5bb03fb1b565f33ffc7590c35ff2a33abe923e299135c01ce1"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.libdivsufsort.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.libdivsufsort.txt",
+    "sha256": "a801f489b279d91b8afc67d41e3769ec4df476fda218d63f4326c005db881541"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.log4j.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.log4j.txt",
+    "sha256": "3e4af21da9cb8a50d6a8f32225d7630fbf94a263e89945489d4863585f4aca4e"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.lz4.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.lz4.txt",
+    "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.lzma-java.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.lzma-java.txt",
+    "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.mvn-wrapper.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.mvn-wrapper.txt",
+    "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.nghttp2-hpack.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.nghttp2-hpack.txt",
+    "sha256": "6b94f3abc1aabd0c72a7c7d92a77f79dda7c8a0cb3df839a97890b4116a2de2a"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.protobuf.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.protobuf.txt",
+    "sha256": "8fa16eae6ec99dfa982ab552ecbf9e98421bf5062356538cac4cd0c7bacd0093"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.slf4j.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.slf4j.txt",
+    "sha256": "e45deaad2824e38410545e2ed8ced91eccd13bc03b41643a4bd79c96e106e106"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.snappy.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.snappy.txt",
+    "sha256": "38139f9e51ce002fccec3b6cf2011a24e18e5096b8e6ad715f718828fa0b57d1"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/LICENSE.webbit.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/LICENSE.webbit.txt",
+    "sha256": "9a746c7a218e6ee1ef719a39a0a66454c82ada93c60f06f9f819b505f6401046"
+  },
+  {
+    "path": "netty-4.1.63.Final/license/NOTICE.harmony.txt",
+    "source": "https://raw.githubusercontent.com/netty/netty/netty-4.1.63.Final/license/NOTICE.harmony.txt",
+    "sha256": "9cea0d3fe0550735946cec78eaf6cfccce153ae06bdcdf17fa3b9f8d9b22196a"
+  },
+  {
+    "path": "snappy-java-1.1.8.3/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/xerial/snappy-java/1.1.8.3/LICENSE",
+    "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+  },
+  {
+    "path": "snappy-java-1.1.8.3/NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/xerial/snappy-java/1.1.8.3/NOTICE",
+    "sha256": "78b00027754ed5ee229875f016975064eac5a7c433962748ebd41ba6d868746e"
+  },
+  {
+    "path": "zstd-jni-1.5.0-1/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/luben/zstd-jni/v1.5.0-1/LICENSE",
+    "sha256": "c6a6a8926f2f1732603e4b75779a5f6ce79238eb79bc36dcc5b7feb509bc6cd9"
+  },
+  {
+    "path": "zstd-jni-1.5.0-1/src-main-native-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/luben/zstd-jni/v1.5.0-1/src/main/native/LICENSE",
+    "sha256": "2c1a7fa704df8f3a606f6fc010b8b5aaebf403f3aeec339a12048f1ba7331a0b"
+  },
+  {
+    "path": "zstd-jni-1.5.0-1/src-main-native-COPYING.txt",
+    "source": "https://raw.githubusercontent.com/luben/zstd-jni/v1.5.0-1/src/main/native/COPYING",
+    "sha256": "f9c375a1be4a41f7b70301dd83c91cb89e41567478859b77eef375a52d782505"
+  },
+  {
+    "path": "aircompressor-0.21/license.txt",
+    "source": "https://raw.githubusercontent.com/airlift/aircompressor/0.21/license.txt",
+    "sha256": "8c6db340475136df3c1201d458fa5755698eace76e510471ecc9d857d6083dac"
+  },
+  {
+    "path": "aircompressor-0.21/notice.md",
+    "source": "https://raw.githubusercontent.com/airlift/aircompressor/0.21/notice.md",
+    "sha256": "304b0042470fde5507ff68f05d5e3a5545494d8f3c8f11f5cd4b7789da0b4ea1"
+  },
+  {
+    "path": "kotlin-2.1.0/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.1.0/license/LICENSE.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "kotlin-2.1.0/NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.1.0/license/NOTICE.txt",
+    "sha256": "0b09a83d3ef7795c7dec65e815866597c066c53898f2852a76599b8f5552941a"
+  },
+  {
+    "path": "mvel2-2.5.2.Final/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/mvel/mvel/mvel2-2.5.2.Final/LICENSE.txt",
+    "sha256": "c0ebb6acdd62265e73a8047ec28733ba8349926b2ffde6954c415956194ab27e"
+  },
+  {
+    "path": "animal-sniffer-annotations-1.17/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/mojohaus/animal-sniffer/animal-sniffer-parent-1.17/animal-sniffer-annotations/pom.xml",
+    "extraction": "Verbatim first XML comment containing MIT copyright/license notice",
+    "sha256": "1ad171f3dcce3e7c6998c4f4bcd5b351048f579a9620d516920b5a6cb1a701d1"
+  },
+  {
+    "path": "parquet-1.13.1/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/apache/parquet-mr/apache-parquet-1.13.1/LICENSE",
+    "sha256": "89e36a8358fea60cc18867b9d02b31b469e407573d566d5011f392079f8f4bb4"
+  },
+  {
+    "path": "parquet-1.13.1/NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/apache/parquet-mr/apache-parquet-1.13.1/NOTICE",
+    "sha256": "4ac4a40291bb3a564bcb0b4439c18c7564f3ed4e3e5f18f1e92efae118f375a3"
+  },
+  {
+    "path": "zookeeper-3.6.3/LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/apache/zookeeper/release-3.6.3/LICENSE.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "zookeeper-3.6.3/NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/apache/zookeeper/release-3.6.3/NOTICE.txt",
+    "sha256": "b65fba0955296026d155cb669a19780c33ead527fb0ed575148febe72274265a"
+  },
+  {
+    "path": "okhttp-4.9.3/MPL-2.0.txt",
+    "source": "https://www.mozilla.org/media/MPL/2.0/index.815ca599c9df.txt",
+    "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85"
+  },
+  {
+    "path": "okhttp-4.9.3/NOTICE.txt",
+    "source": "https://raw.githubusercontent.com/square/okhttp/parent-4.9.3/okhttp/src/main/resources/okhttp3/internal/publicsuffix/NOTICE",
+    "sha256": "8a9c58fbded5ea3474315e4a9824ca8b1486098a1a03e897e0b19419d5e1876a"
+  },
+  {
+    "path": "jsr305-3.0.2/NOTICE.txt",
+    "source": "https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar!/javax/annotation/concurrent/GuardedBy.java",
+    "extraction": "Verbatim source header with explanatory scope",
+    "sha256": "57f73c1cc537d2aa3920093c2b78dbc03c637598470e3c94a412277641d45aac"
+  },
+  {
+    "path": "jsr305-3.0.2/CC-BY-2.5.txt",
+    "source": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/CC-BY-2.5.txt",
+    "sha256": "82d2eddedf451177a12c9753e518352f7f90fd4ca3542111c499be981e9a9600"
+  },
+  {
+    "path": "snappy-java-1.1.8.3/COPYING3.txt",
+    "source": "https://raw.githubusercontent.com/gcc-mirror/gcc/releases/gcc-9.2.0/COPYING3",
+    "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+  },
+  {
+    "path": "snappy-java-1.1.8.3/COPYING.RUNTIME.txt",
+    "source": "https://raw.githubusercontent.com/gcc-mirror/gcc/releases/gcc-9.2.0/COPYING.RUNTIME",
+    "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74"
+  }
+]
