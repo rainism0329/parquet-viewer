@@ -1,0 +1,12 @@
+Parquet Viewer
+Copyright 2025-2026 Phil Zhang and contributors
+
+This distribution includes software developed by The Apache Software Foundation
+(https://www.apache.org/).
+
+Third-party components retain their own copyright and license notices.
+See THIRD_PARTY_NOTICES.md, the accompanying third-party-licenses directory,
+and the license and notice files inside the bundled dependency JARs.
+
+JetBrains and IntelliJ IDEA are trademarks of JetBrains s.r.o.
+This is an independently developed plugin; JetBrains is not its licensor.

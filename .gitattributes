@@ -1,0 +1,5 @@
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+LICENSE text eol=lf
+# Preserve upstream license bytes so the recorded SHA-256 values stay valid.
+third-party-licenses/** -text
